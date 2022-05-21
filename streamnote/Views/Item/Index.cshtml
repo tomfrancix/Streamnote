@@ -1,0 +1,56 @@
+﻿@model IEnumerable<streamnote.Models.Descriptors.ItemDescriptor>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1 style="margin-bottom: -10px;">Your Posts</h1>
+
+    <a asp-action="Create" class="btn btn-success" style="float: right; margin: -30px 0 30px 0;">Create New</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th style="width: 40%;">
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th style="width:50%">
+                Details
+            </th>
+            <th style="width: 10%;">
+                Actions
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @{
+                    if (item.Image == null || item.ImageContentType == null)
+                    {
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png" 
+                             style="width: 100%;" />
+                    }
+                    else
+                    {
+                        <img src="data:@item.ImageContentType;base64,@Convert.ToBase64String(item.Image)"    style="width: 100%;" />
+                    }
+                }
+            </td>
+            <td>
+                <strong>@Html.DisplayNameFor(model => model.Title)</strong><br />
+                @Html.DisplayFor(modelItem => item.Title)<br />
+                <br />
+                <strong>@Html.DisplayNameFor(model => model.Content)</strong><br />
+                @Html.DisplayFor(modelItem => item.Content)<br />
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light" style="margin: 2px; width: 100%;">Edit</a> <br/>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-light" style="margin: 2px; width: 100%;">Details</a> <br />
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-warning" style="margin: 2px; width: 100%;">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

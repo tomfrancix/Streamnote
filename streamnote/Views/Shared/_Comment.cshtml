@@ -1,0 +1,41 @@
+﻿@model streamnote.Models.Descriptors.CommentDescriptor
+
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <div class="comment">
+            <div class="commentImage">
+                <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
+                    @{
+                        if (Model.Image != null && Model.ImageContentType != null)
+                        {
+                            <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" />
+                        }
+                    }
+                </a>
+            </div>
+            <div class="commentText">
+                <span>
+                    @{
+                        if (Model.UserImage != null && Model.UserImageContentType != null)
+                        {
+                            <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)"
+                                 class="icon" />
+                        }
+                    }
+                    <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
+                    - at @Model.Created.ToShortDateString()
+                    @{
+                        if (Model.CreatedByLoggedInUser)
+                        {
+                            <span>- <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
+                        }
+                    }
+                    <br />
+                    @Html.DisplayFor(modelItem => Model.Content)
+                </span>
+            </div>
+
+        </div>
+    </div>
+</div>

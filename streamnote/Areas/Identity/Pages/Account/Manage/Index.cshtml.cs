@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.FileProviders;
 using streamnote.Models;
 
 namespace streamnote.Areas.Identity.Pages.Account.Manage
@@ -24,6 +28,9 @@ namespace streamnote.Areas.Identity.Pages.Account.Manage
         }
 
         public string Username { get; set; }
+        public string ImageContentType { get; set; }
+        public byte[] Image { get; set; }
+        public bool DarkMode { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -36,6 +43,8 @@ namespace streamnote.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+            public IFormFile Image { get; set; }
+            public bool DarkMode { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
@@ -44,6 +53,9 @@ namespace streamnote.Areas.Identity.Pages.Account.Manage
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
+            Image = user.Image;
+            ImageContentType = user.ImageContentType;
+            DarkMode = user.DarkMode;
 
             Input = new InputModel
             {
@@ -87,6 +99,22 @@ namespace streamnote.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
+
+            if (Input.Image != null)
+            {
+                user.ImageContentType = Input.Image.ContentType;
+                using (var fs = Input.Image.OpenReadStream())
+                {
+                    using (var br = new BinaryReader(fs))
+                    {
+                        user.Image = br.ReadBytes((int)fs.Length);
+                    }
+                }
+            }
+
+            user.DarkMode = Input.DarkMode;
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

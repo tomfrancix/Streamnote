@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using streamnote.Models;
 
 namespace streamnote.Data
@@ -13,5 +10,8 @@ namespace streamnote.Data
             : base(options)
         {
         }
+
+        public DbSet<Item> Items { get; set; }
+        public DbSet<Comment> Comments { get; set; }
     }
 }

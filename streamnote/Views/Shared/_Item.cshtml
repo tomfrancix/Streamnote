@@ -1,0 +1,82 @@
+﻿@model streamnote.Models.Descriptors.ItemDescriptor
+
+<div class="row">
+    <div class="card">
+        <div class="card-body">
+            <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
+                @{
+                    if (Model.Image != null && Model.ImageContentType != null)
+                    {
+                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" />
+                    }
+                }
+            </a>
+        </div>
+        <div class="itemStatistics">
+            <div class="row" style="text-align: center; padding: 5px;">
+                <div class="col-md-4">
+                    @Model.CommentCount Comments <i class="fa fa-comment"></i>
+                </div>
+                <div class="col-md-4">
+                    @Model.CommentCount Shares <i class="fa fa-share"></i>
+                </div>
+                <div class="col-md-4">
+                    @Model.CommentCount Upvotes <i class="fa fa-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <span>
+                @{
+                    if (Model.UserImage != null && Model.UserImageContentType != null)
+                    {
+                        <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)"
+                             class="icon" />
+                    }
+                }
+                <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
+                - at @Model.Created.ToShortDateString()
+                @{
+                    if (Model.CreatedByLoggedInUser)
+                    {
+                        <span>- <a asp-controller="Item" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
+                    }
+                }
+                <br />
+                <span style="font-size: 1.2em;">@Html.DisplayFor(modelItem => Model.Title)</span><br />
+                @Html.DisplayFor(modelItem => Model.Content)
+            </span>
+        </div>
+        @{
+            if (Model.Comments != null)
+            {
+                <div class="commentSection">
+                    <span><strong>Post Comment</strong></span><br />
+
+                    <span>
+                        <textarea type="text" id="commentInput" class="commentInput" rows="3"
+                                  style="overflow: hidden; margin-top: 10px; resize: none"
+                                  placeholder="Start typing..."></textarea>
+                    </span>
+                    <span>
+                        <button onClick="postComment(@Model.Id)" class="submitComment">
+                            <i class="fa fa-check"></i>
+                        </button>
+                    </span>
+                    <br />
+                    <br />
+
+                    <span><strong>Comments</strong></span>
+
+                    @{
+                        foreach (var comment in Model.Comments)
+                        {
+                            @Html.Partial("_Comment", comment)
+                        }
+                    }
+
+                </div>
+            }
+        }
+    </div>
+</div>
