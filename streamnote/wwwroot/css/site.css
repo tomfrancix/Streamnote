@@ -101,7 +101,7 @@ body {
     height: 100px;
 }
 
-.comment, .commentSection {
+.comment, .commentSection, .message {
     width: 100%;
     padding: 10px;
 }
@@ -110,7 +110,7 @@ hr {
     margin: 3px 0;
 }
 .submitComment {
-    transform: translateY(63px) translateX(-15px);
+    transform: translateY(78px) translateX(-20px);
     right: 0;
     position: absolute;
     background-color: skyblue;
@@ -124,4 +124,17 @@ hr {
 #imageuploader {
     display: none;
     margin: 5px;
+}
+
+.chatNavBar {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.02);
+    padding: 8px;
+}
+.userNameChat {
+    font-weight: bold;
+}
+.message {
+    padding: 8px;
+    margin: 8px 0;
 }

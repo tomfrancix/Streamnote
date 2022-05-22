@@ -1,83 +1,92 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using streamnote.Data;
-using streamnote.Mapper;
 using streamnote.Models;
-using streamnote.Models.Descriptors;
-using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
-using Controller = Microsoft.AspNetCore.Mvc.Controller;
-using System.Net.Mail;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace streamnote.Controllers
 {
-    public class CommentController : Controller
+    public class LikeController : Controller
     {
         private readonly ApplicationDbContext Context;
         private readonly UserManager<ApplicationUser> UserManager;
-        private readonly CommentMapper CommentMapper;
 
-        public CommentController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, CommentMapper commentMapper)
+        public LikeController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             UserManager = userManager;
             Context = context;
-            CommentMapper = commentMapper;
         }
 
-        // POST: CommentController/Create
-        [Microsoft.AspNetCore.Mvc.HttpPost]
-        public async Task<ActionResult> Create(string content, int itemId)
+        // POST: LikeController/Create
+        [HttpPost]
+        public async Task<JsonResult> Create(int itemId)
         {
             var user = await UserManager.GetUserAsync(User);
 
             var item = Context.Items
-                .Include(c => c.Comments).ThenInclude(c => c.User)
+                .Include(c => c.Likes).ThenInclude(l => l.User)
                 .FirstOrDefault(i => i.Id == itemId);
 
             if (item != null)
             {
-                var comment = new Comment
+                var like = new Like
                 {
-                    Created = DateTime.UtcNow,
-                    Modified = DateTime.UtcNow,
-                    Content = content,
-                    Image = null,
-                    ImageContentType = null,
                     User = user,
                     Item = item
                 };
 
-                var existingCommentsByUser = item.Comments.Where(u => u.User.Id == user.Id).ToList();
+                item.LikeCount = Context.Likes.Where(c => c.Item.Id == itemId).ToList().Count;
 
-                if (existingCommentsByUser.Any())
+                var exists = item.Likes.Any(l => l.User.Id == user.Id);
+                                                           
+                if (!exists)
                 {
-                    var recentCommentByUser = existingCommentsByUser.OrderByDescending(c => c.Created).FirstOrDefault();
-                    if (recentCommentByUser != null && recentCommentByUser.Created > DateTime.UtcNow.AddSeconds(-2))
-                    {
-                        throw new AccessViolationException("Subsequent comments posted to fast.");
-                    }
+                    Context.Add(like);
+                    item.LikeCount++;
                 }
 
-                Context.Add(comment);
-
-                item.CommentCount = Context.Comments.Where(c => c.Item.Id == itemId).ToList().Count + 1;
 
                 await Context.SaveChangesAsync();
 
-                var commentDescriptor = CommentMapper.MapDescriptor(comment, user.Id);
-
-                return PartialView("_Comment", commentDescriptor);
+                return new JsonResult(item.LikeCount);
             }
 
-            throw new AccessViolationException("This item does not exist.");
+            return new JsonResult(0);
+        }
+
+        // POST: LikeController/Create
+        [HttpPost]
+        public async Task<JsonResult> Delete(int itemId)
+        {
+            var user = await UserManager.GetUserAsync(User);
+
+            var item = Context.Items
+                .Include(c => c.Likes)
+                .FirstOrDefault(i => i.Id == itemId);
+
+            if (item != null)
+            {
+                var like = item.Likes.FirstOrDefault(c => c.Item.Id == itemId);
+
+                if (like != null)
+                {
+                    Context.Remove(like);
+
+                    item.LikeCount = Context.Likes.Where(c => c.Item.Id == itemId).ToList().Count - 1;
+
+                    await Context.SaveChangesAsync();
+                }
+                                               
+                return new JsonResult(item.LikeCount);
+            }
+                      
+            return new JsonResult(0);
         }
 
         /*

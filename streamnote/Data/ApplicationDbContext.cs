@@ -13,5 +13,7 @@ namespace streamnote.Data
 
         public DbSet<Item> Items { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Like> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
     }
 }

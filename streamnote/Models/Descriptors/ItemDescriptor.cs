@@ -14,7 +14,10 @@ namespace streamnote.Models.Descriptors
         public virtual string ImageContentType { get; set; }
         public virtual bool IsPublic { get; set; }
         public virtual bool CreatedByLoggedInUser { get; set; }
+        public virtual bool LoggedInUserLikesThis { get; set; }
         public virtual int CommentCount { get; set; }
+        public virtual int ShareCount { get; set; }
+        public virtual int LikeCount { get; set; }
 
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }

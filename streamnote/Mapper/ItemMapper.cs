@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using streamnote.Models;
 using streamnote.Models.Descriptors;
 
@@ -34,7 +35,9 @@ namespace streamnote.Mapper
                 UserImageContentType = item.User.ImageContentType,
                 UserImage = item.User.Image ,
                 CreatedByLoggedInUser = item.User.Id == userId,
-                CommentCount = item.CommentCount
+                CommentCount = item.CommentCount,
+                LikeCount = item.LikeCount,
+                LoggedInUserLikesThis = item.Likes.Any(l => l.User.Id == userId)
             };
         }
     }

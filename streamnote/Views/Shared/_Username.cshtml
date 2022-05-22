@@ -1,0 +1,12 @@
+﻿@model streamnote.Models.Descriptors.UserNameDescriptor
+
+<a href="/Profile/View?username=@Model.UserName">
+    @{
+        if (Model.UserImage != null && Model.UserImageContentType != null)
+        {
+        <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)"
+             class="icon" />
+        }
+    }
+    <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
+</a>

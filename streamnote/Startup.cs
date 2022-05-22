@@ -1,13 +1,18 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Owin;
 using streamnote.Data;
 using streamnote.Mapper;
+using streamnote.Messenger;
 using streamnote.Models;
 
+[assembly: OwinStartup(typeof(streamnote.Startup))]
 namespace streamnote
 {
     public class Startup
@@ -31,8 +36,15 @@ namespace streamnote
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
+            services.AddTransient<ProfileMapper>();
             services.AddTransient<ItemMapper>();
             services.AddTransient<CommentMapper>();
+
+            services.AddSignalR(hubOptions =>
+            {
+                hubOptions.EnableDetailedErrors = true;
+                hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +75,13 @@ namespace streamnote
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+
+                endpoints.MapHub<SignalRMessenger>("/SignalRMessenger", options =>
+                {
+                    options.Transports =
+                        HttpTransportType.WebSockets |
+                        HttpTransportType.LongPolling;
+                });
             });
         }
     }

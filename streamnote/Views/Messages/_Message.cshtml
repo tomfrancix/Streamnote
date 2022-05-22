@@ -1,0 +1,21 @@
+﻿@model streamnote.Models.Message
+
+<div class="row message">
+    <div class="col-sm-1">
+
+    </div>
+    <div class="col-sm-11">
+        <div class="row">
+            <span>
+                <strong>@Model.SentBy.FirstName @Model.SentBy.LastName</strong> - @Model.Modified
+                @if (@Model.Modified != @Model.Created)
+                {
+                    <span> - Edited</span>
+                }
+            </span>
+        </div>
+        <div class="row">
+            <span>@Model.Text</span>
+        </div>
+    </div>
+</div>

@@ -38,13 +38,18 @@ namespace streamnote.Controllers
             var model = Context.Items
                 .Where(i => i.IsPublic)
                 .Include(b => b.User)
+                .Include(b => b.Likes)
                 .Where(u => u.User != null)
                 .OrderByDescending(i => i.Id)
                 .ToList();
 
             var items = ItemMapper.MapDescriptors(model, user.Id);
 
-            return View(items);
+            var descriptor = new StreamDescriptor()
+            {
+                Items = items
+            };
+            return View(descriptor);
         }
 
         public IActionResult Privacy()

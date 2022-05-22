@@ -43,6 +43,7 @@ namespace streamnote.Controllers
             var model = Context.Items
                 .Where(i => i.User.Id == user.Id)
                 .Include(b => b.User)
+                .Include(b => b.Likes).ThenInclude(u => u.User)
                 .Where(u => u.User != null)
                 .OrderByDescending(i => i.Id)
                 .ToList();
@@ -68,6 +69,7 @@ namespace streamnote.Controllers
 
             var item = await Context.Items
                 .Include(u => u.User)
+                .Include(u => u.Likes)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var itemDescriptor = ItemMapper.MapDescriptor(item, user.Id);
@@ -140,35 +142,57 @@ namespace streamnote.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,IsPublic,Image")] Item item)
+        public async Task<IActionResult> Edit(int id, Item item, IFormFile image)
         {
             if (id != item.Id)
             {
                 return NotFound();
             }
 
-            item.Modified = DateTime.UtcNow;
+            var existing = Context.Items.FirstOrDefault(i => i.Id == id);
 
-            if (ModelState.IsValid)
+            if (existing != null)
             {
-                try
+                existing.Image = existing.Image;
+                existing.ImageContentType = existing.ImageContentType;
+                existing.Modified = DateTime.UtcNow;
+
+                if (image != null)
                 {
-                    Context.Update(item);
-                    await Context.SaveChangesAsync();
+                    existing.ImageContentType = image.ContentType;
+                    using (var fs = image.OpenReadStream())
+                    {
+                        using (var br = new BinaryReader(fs))
+                        {
+                            existing.Image = br.ReadBytes((int)fs.Length);
+                        }
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+
+                if (ModelState.IsValid)
                 {
-                    if (!ItemExists(item.Id))
+
+                    try
                     {
-                        return NotFound();
+                        Context.Update(existing);
+                        await Context.SaveChangesAsync();
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        throw;
+                        if (!ItemExists(existing.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
+
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
             }
+
             return View(item);
         }
 

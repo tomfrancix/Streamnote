@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using streamnote.Data;
 
 namespace streamnote.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220521225720_CreateLies")]
+    partial class CreateLies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,9 +169,6 @@ namespace streamnote.Data.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConnectionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Created")
@@ -352,49 +351,6 @@ namespace streamnote.Data.Migrations
                     b.ToTable("Likes");
                 });
 
-            modelBuilder.Entity("streamnote.Models.Message", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageContentType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPublic")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("Modified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SentById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("SentToId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SentById");
-
-                    b.HasIndex("SentToId");
-
-                    b.ToTable("Messages");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -483,21 +439,6 @@ namespace streamnote.Data.Migrations
                     b.Navigation("Item");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("streamnote.Models.Message", b =>
-                {
-                    b.HasOne("streamnote.Models.ApplicationUser", "SentBy")
-                        .WithMany()
-                        .HasForeignKey("SentById");
-
-                    b.HasOne("streamnote.Models.ApplicationUser", "SentTo")
-                        .WithMany()
-                        .HasForeignKey("SentToId");
-
-                    b.Navigation("SentBy");
-
-                    b.Navigation("SentTo");
                 });
 
             modelBuilder.Entity("streamnote.Models.ApplicationUser", b =>

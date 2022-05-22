@@ -1,0 +1,43 @@
+﻿@model IEnumerable<streamnote.Models.Message>
+
+@{
+    ViewData["Title"] = "Chat";
+}
+          
+<div class="chatNavBar">
+    <span class="userNameChat">
+        @ViewData["MessageToUserName"]
+    </span>
+</div>           
+
+
+<div style="position: absolute; bottom: 80px; width: 100vw; left: 0; right: 0;">   
+        
+    <div class="container" style="position: relative;">  
+    <div class="row" style="width: 100%;">
+        <div class="col-md-10 offset-1">
+            @foreach (var message in Model)
+            { 
+                @Html.Partial("_Message", message)
+            }
+            <span id="newMessages"></span>
+            <span>        
+                <textarea type="text" id="messageInput" class="commentInput" rows="3"
+                                  style="overflow: hidden; margin-top: 10px; resize: none"
+                                  placeholder="Start typing..."></textarea>
+            </span>
+            <span>
+                <button onclick="sendMessageTo('@ViewData["MessageToUserName"]')" class="submitComment" >
+                    <i class="fa fa-check"></i>
+                </button>
+            </span>
+        </div>
+    </div>
+
+    </div>
+    
+</div>      
+
+
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/chat.js"></script>

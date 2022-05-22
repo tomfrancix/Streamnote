@@ -1,4 +1,4 @@
-﻿@model IEnumerable<streamnote.Models.Descriptors.ItemDescriptor>
+﻿@model streamnote.Models.Descriptors.StreamDescriptor
 
 @{
     ViewData["Title"] = "Stream";
@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
     <div class="col-md-6 offset-3">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Items)
         {
             @Html.Partial("_Item", item)
         }

@@ -1,4 +1,5 @@
-﻿@model streamnote.Models.Descriptors.ItemDescriptor
+﻿@using streamnote.Models.Descriptors
+@model streamnote.Models.Descriptors.ItemDescriptor
 
 <div class="row">
     <div class="card">
@@ -15,26 +16,46 @@
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
                 <div class="col-md-4">
-                    @Model.CommentCount Comments <i class="fa fa-comment"></i>
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
+                        <i class="fa fa-comment"></i> @Model.CommentCount
+                    </a>
                 </div>
                 <div class="col-md-4">
-                    @Model.CommentCount Shares <i class="fa fa-share"></i>
+
+                    <i class="fa fa-share"></i> @Model.ShareCount
                 </div>
                 <div class="col-md-4">
-                    @Model.CommentCount Upvotes <i class="fa fa-arrow-up"></i>
+                    @{
+                        if (@Model.LoggedInUserLikesThis)
+                        {
+                            var id = "unLikePost" + @Model.Id;
+                            <a onclick="unLikePost(@Model.Id)" id="@id">
+                                <i class="fa fa-arrow-up" style="color: hotpink;"></i> @Model.LikeCount
+                            </a>
+                        }
+                        else
+                        {
+                            var id = "likePost" + @Model.Id;
+                            <a onclick="likePost(@Model.Id)" id="@id">
+                                <i class="fa fa-arrow-up"></i> @Model.LikeCount
+                            </a>
+                        }
+
+
+                    }
                 </div>
-            </div>
+                </div>
         </div>
         <div class="card-footer">
             <span>
-                @{
-                    if (Model.UserImage != null && Model.UserImageContentType != null)
-                    {
-                        <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)"
-                             class="icon" />
-                    }
-                }
-                <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
+                
+                @Html.Partial("_UserName", new UserNameDescriptor()
+                {
+                    UserImage = Model.UserImage,
+                    UserImageContentType = Model.UserImageContentType,
+                    UserName = Model.UserName
+                })
+
                 - at @Model.Created.ToShortDateString()
                 @{
                     if (Model.CreatedByLoggedInUser)
@@ -67,7 +88,7 @@
                     <br />
 
                     <span><strong>Comments</strong></span>
-
+                    <span id="newComments"></span>
                     @{
                         foreach (var comment in Model.Comments)
                         {
