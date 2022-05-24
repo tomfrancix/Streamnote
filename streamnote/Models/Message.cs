@@ -16,6 +16,7 @@ namespace streamnote.Models
         public virtual byte[] Image { get; set; }
         public virtual string ImageContentType { get; set; }
         public virtual bool IsPublic { get; set; }
+        public virtual bool MessageSeen { get; set; }
 
         public ApplicationUser SentBy { get; set; }
 

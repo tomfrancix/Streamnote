@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.IO;
 using System.Web;
@@ -23,13 +26,15 @@ namespace streamnote.Controllers
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly ItemMapper ItemMapper;
         private readonly CommentMapper CommentMapper;
+        private readonly ImageProcessingHelper ImageProcessingHelper;
 
-        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper)
+        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper)
         {
             Context = context;
             UserManager = userManager;
             ItemMapper = itemMapper;
             CommentMapper = commentMapper;
+            ImageProcessingHelper = imageProcessingHelper;
         }
 
         /// <summary>
@@ -69,7 +74,7 @@ namespace streamnote.Controllers
 
             var item = await Context.Items
                 .Include(u => u.User)
-                .Include(u => u.Likes)
+                .Include(u => u.Likes).ThenInclude(u => u.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var itemDescriptor = ItemMapper.MapDescriptor(item, user.Id);
@@ -107,7 +112,7 @@ namespace streamnote.Controllers
                 {
                     using (var br = new BinaryReader(fs))
                     {
-                        item.Image = br.ReadBytes((int) fs.Length);
+                        item.Image = ImageProcessingHelper.ResizeImageFile(br.ReadBytes((int) fs.Length), 1024);
                     }
                 }
             }

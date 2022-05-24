@@ -29,14 +29,14 @@
                         if (@Model.LoggedInUserLikesThis)
                         {
                             var id = "unLikePost" + @Model.Id;
-                            <a onclick="unLikePost(@Model.Id)" id="@id">
+                            <a onclick="unLikePost(@Model.Id, '@Model.UserName')" id="@id">
                                 <i class="fa fa-arrow-up" style="color: hotpink;"></i> @Model.LikeCount
                             </a>
                         }
                         else
                         {
                             var id = "likePost" + @Model.Id;
-                            <a onclick="likePost(@Model.Id)" id="@id">
+                            <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id">
                                 <i class="fa fa-arrow-up"></i> @Model.LikeCount
                             </a>
                         }
@@ -74,15 +74,11 @@
                 <div class="commentSection">
                     <span><strong>Post Comment</strong></span><br />
 
-                    <span>
+                    <span>          
+                        <input type="hidden" value="@Model.Id" id="itemIdentifier"/>
                         <textarea type="text" id="commentInput" class="commentInput" rows="3"
                                   style="overflow: hidden; margin-top: 10px; resize: none"
                                   placeholder="Start typing..."></textarea>
-                    </span>
-                    <span>
-                        <button onClick="postComment(@Model.Id)" class="submitComment">
-                            <i class="fa fa-check"></i>
-                        </button>
                     </span>
                     <br />
                     <br />

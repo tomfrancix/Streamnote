@@ -1,0 +1,6 @@
+
+
+
+Use package manager console: 
+$env:ASPNETCORE_ENVIRONMENT="Development" - to use dev settings
+$env:ASPNETCORE_ENVIRONMENT="Production" - to use prod settings

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -6,8 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using streamnote.Data;
-
+using streamnote.Mapper;
 using streamnote.Models;
+using streamnote.Models.Descriptors;
 
 namespace streamnote.Controllers
 {
@@ -15,26 +17,40 @@ namespace streamnote.Controllers
     {
         private readonly ApplicationDbContext Context;
         private readonly UserManager<ApplicationUser> UserManager;
+        private readonly UserMapper UserMapper;
 
-        public MessagesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public MessagesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, UserMapper userMapper)
         {
             Context = context;
             UserManager = userManager;
+            UserMapper = userMapper;
         }
 
         // GET: Messages
         public async Task<IActionResult> Index(string username)
         {
             var loggedInUser = await UserManager.GetUserAsync(User);
+            var messages = new List<Message>();
 
-            ViewBag.MessageToUserName = username;
+            if (username != null)
+            {
+                ViewBag.MessageToUserName = username;
+                messages = await Context.Messages
+                    .Include(m => m.SentBy)
+                    .Include(m => m.SentTo)
+                    .Where(m => (m.SentBy.UserName == username && m.SentTo.UserName == loggedInUser.UserName) ||
+                                (m.SentTo.UserName == username && m.SentBy.UserName == loggedInUser.UserName))
+                    .ToListAsync();
+            }
 
-            return View(await Context.Messages
-                .Include(m => m.SentBy)
-                .Include(m => m.SentTo)
-                .Where(m => (m.SentBy.UserName == username && m.SentTo.UserName == loggedInUser.UserName) ||
-                            (m.SentTo.UserName == username && m.SentBy.UserName == loggedInUser.UserName))
-                .ToListAsync());
+            var users = UserMapper.MapDescriptors(Context.Users.Where(u => u.Id != loggedInUser.Id).ToList());
+            var model = new MessagesDescriptor()
+            {
+                Messages = (username != null) ? messages : null,
+                Users = users
+            };
+
+            return View(model);
         }
 
         // GET: Messages/Create
@@ -54,6 +70,7 @@ namespace streamnote.Controllers
                 Text = text,
                 Created = DateTime.UtcNow,
                 Modified = DateTime.UtcNow,
+                MessageSeen = false,
                 SentBy = await UserManager.GetUserAsync(User),
                 SentTo = Context.Users.FirstOrDefault(u => u.UserName == username)
             };
@@ -152,6 +169,39 @@ namespace streamnote.Controllers
         private bool MessageExists(int id)
         {
             return Context.Messages.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        public async Task<bool> UserHasUnreadMessages()
+        {
+            var user = await UserManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                var unreadMessages = Context.Messages
+                    .Where(u => u.SentTo.Id == user.Id)
+                    .Where(m => !m.MessageSeen).ToList().Count;
+
+                if (unreadMessages > 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        [HttpPost]
+        public async Task ConfirmMessageHasBeenSeen(int messageId)
+        {
+            var message = await Context.Messages
+                .Include(m => m.SentTo)
+                .Include(m => m.SentBy)
+                .FirstOrDefaultAsync(m => m.Id == messageId);
+
+            message.MessageSeen = true;
+
+            Context.Update(message);
+            await Context.SaveChangesAsync();
         }
     }
 }

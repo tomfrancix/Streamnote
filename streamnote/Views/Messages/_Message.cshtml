@@ -1,6 +1,6 @@
 ﻿@model streamnote.Models.Message
 
-<div class="row message">
+<div class="row message" data-id="@Model.Id">
     <div class="col-sm-1">
 
     </div>
@@ -8,7 +8,7 @@
         <div class="row">
             <span>
                 <strong>@Model.SentBy.FirstName @Model.SentBy.LastName</strong> - @Model.Modified
-                @if (@Model.Modified != @Model.Created)
+                @if (Model.Modified.ToShortTimeString() != Model.Created.ToShortTimeString())
                 {
                     <span> - Edited</span>
                 }

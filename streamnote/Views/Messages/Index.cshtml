@@ -1,43 +1,119 @@
-﻿@model IEnumerable<streamnote.Models.Message>
+﻿@model streamnote.Models.Descriptors.MessagesDescriptor
 
 @{
     ViewData["Title"] = "Chat";
-}
-          
-<div class="chatNavBar">
-    <span class="userNameChat">
-        @ViewData["MessageToUserName"]
-    </span>
-</div>           
+}     
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="row">
+                <div class="col-sm-12">
+                                     
+                    <div class="chatNavBar" style="position: relative; z-index: 1;">
+                        <span class="userNameChat">
+                            Contacts
+                        </span>
+                    </div>
+                    <div class="row hideOnPhone">   
+                        @{
+                            foreach (var user in Model.Users)
+                            { 
+                                <div class="contactLink">      
+                                        <a href="/Messages/Index?username=@user.UserName" style="color: white;">
+                                    <div class="row">  
+                                        <div class="col-sm-1 ">       
+                                            @{
+                                                if (user.UserImage != null && user.UserImageContentType != null)
+                                                {
+                                                    <img src="data:@user.UserImageContentType;base64,@Convert.ToBase64String(user.UserImage)"
+                                                         class="icon" />
+                                                }
+                                                else
+                                                {    
+                                                    <i class="fa fa-user icon"></i>
+                                                }
+                                            }                             
+                                        </div>
+                                        <div class="col-sm-10 contactUserName">@user.FirstName @user.LastName</div>
+                                       
+                                    </div>
+                                         </a>
+                                </div>
+                            }
+                        }
+                    </div> 
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            @{
+                if (Model.Messages != null)
+                {    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="chatNavBar" style="position: relative; z-index: 1;">
+                                <span class="userNameChat">
+                                    <a href="/Profile/View?username=@ViewData["MessageToUserName"]" style="color: black;">
+                                        @ViewData["MessageToUserName"]
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
 
-<div style="position: absolute; bottom: 80px; width: 100vw; left: 0; right: 0;">   
-        
-    <div class="container" style="position: relative;">  
-    <div class="row" style="width: 100%;">
-        <div class="col-md-10 offset-1">
-            @foreach (var message in Model)
-            { 
-                @Html.Partial("_Message", message)
+                        <div class="col-md-12" style="height:70vh;overflow:auto; overflow-y: scroll; z-index: 0; bottom: 0;display: flex;flex-direction: column-reverse;">
+                            <div class="row" style="width: 100%;">
+                                <div class="col-md-12">
+                                    @foreach (var message in Model.Messages)
+                                    {
+                                        @Html.Partial("_Message", message)
+                                    }
+                                    <span id="newMessages"></span> 
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                    <br/>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
             }
-            <span id="newMessages"></span>
-            <span>        
-                <textarea type="text" id="messageInput" class="commentInput" rows="3"
-                                  style="overflow: hidden; margin-top: 10px; resize: none"
-                                  placeholder="Start typing..."></textarea>
-            </span>
-            <span>
-                <button onclick="sendMessageTo('@ViewData["MessageToUserName"]')" class="submitComment" >
-                    <i class="fa fa-check"></i>
-                </button>
-            </span>
         </div>
     </div>
+</div>
+
+<div style="position: fixed; bottom: 80px; width: 100vw; left: 0; right: 0;">   
+        
+    <div class="container" style="position: relative; ">  
+        <div class="row" style="width: 100%;">
+            <div class="col-md-9 offset-3">  
+                <div class="row">
+                    <div class="col-sm-12">
+                        @{
+                            if (Model.Messages != null)
+                            {
+                                <span>
+                                    <textarea type="text" id="messageInput" class="commentInput" rows="3"
+                                  style="overflow: hidden; margin-top: 10px; resize: none"
+                                  placeholder="Start typing..."></textarea>
+                                </span>
+                                <span>
+                                    <button onclick="sendMessageTo('@ViewData["MessageToUserName"]')" class="submitComment">
+                                        <i class="fa fa-check"></i>
+                                    </button>
+                                </span>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     
-</div>      
-
-
-    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
-    <script src="~/js/chat.js"></script>
+</div>

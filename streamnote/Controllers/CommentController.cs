@@ -1,21 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using streamnote.Data;
 using streamnote.Mapper;
 using streamnote.Models;
-using streamnote.Models.Descriptors;
 using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
-using System.Net.Mail;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace streamnote.Controllers
 {

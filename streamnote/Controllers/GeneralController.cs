@@ -22,5 +22,13 @@ namespace streamnote.Controllers
 
             return Json(usernames.Any());
         }
+
+        [HttpPost]
+        public JsonResult GetUsers(string query)
+        {
+            var usernames = Context.Users.Where(u => u.UserName.ToLower().Contains(query.ToLower())).ToList();
+
+            return Json(usernames);
+        }
     }
 }

@@ -3,56 +3,37 @@
 
 // Write your JavaScript code.
 
+$('#commentInput').bind('keyup',
+    function(e) {
 
-function postComment(itemId) {
-    var comment = $("#commentInput").val();
+        if (e.keyCode === 13) { // 13 is enter key
 
-    var data = {
-        content: comment,
-        itemId: itemId
-    }
+            // Execute code here.
 
-    $.post({
-            url: "/Comment/Create",
-            data: data,
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $("#newComments").prepend(result);
-        });
+            var itemId = $("#itemIdentifier").val();
 
-}
+            var comment = $("#commentInput").val();
 
-function likePost(itemId) {
+            var data = {
+                content: comment,
+                itemId: itemId
+            }
 
-    var data = {
-        itemId: itemId
-    }
+            $.post({
+                    url: "/Comment/Create",
+                    data: data,
+                    dataType: "html"
+                })
+                .done(function(result, status) {
+                    $("#newComments").prepend(result);
+                    $("#commentInput").val("");
+                });
 
-    $.post("/Like/Create", data,
-        function (result, status) {
-            $("#likePost" + itemId).html("<i class='fa fa-arrow-up' style='color:hotpink;'></i> " + result);
-            $("#likePost" + itemId).attr("onclick", "unLikePost(" + itemId + ")")
-                .attr("id", "unLikePost" + itemId);
-        });
+        }
 
-}
-function unLikePost(itemId) {
+    });
 
-    var data = {
-        itemId: itemId
-    }
-
-    $.post("/Like/Delete", data,
-        function (result, status) {
-            $("#unLikePost" + itemId).html("<i class='fa fa-arrow-up'></i> " + result);
-            $("#unLikePost" + itemId).attr("onclick", "likePost(" + itemId + ")")
-                .attr("id", "likePost" + itemId);
-        });
-
-}
-
-function showUploader() {
+    function showUploader() {
     document.getElementById('imageuploader').style.display = 'block';
     document.getElementById('imageuploaderbutton').style.display = 'none';
 }
@@ -90,5 +71,47 @@ function isUserNameAvailable() {
                 }
             });
     }
-
 }
+
+$(document).ready(function () {
+
+    $.post({
+        url: "/Messages/UserHasUnreadMessages"
+        })
+        .done(function (result, status) {
+            if (result) {
+                $("#messagesIcon").attr("style", "display:inline-block");
+            } else {
+                $("#messagesIcon").attr("style", "display:none");
+            }
+        });
+
+    var appendToNewMessages = $("#newMessages");
+
+    if (appendToNewMessages.length > 0) {
+        console.log($(".chatNavBar").first().position().bottom);
+    }
+});
+
+$('#searchInput').bind('keyup',
+    function (e) {
+
+        var query = $("#searchInput").val();
+
+        $("#suggestions").empty();
+        if (query.length > 2) {
+            console.log("Query entered into search input...");
+            $.post({
+                    url: "/General/GetUsers",
+                    data: {
+                        query
+                    }
+                })
+                .done(function(result, status) {  
+                    for (var i = 0; i < result.length; i++) {
+
+                        $("#suggestions").prepend(`<div class='notification'>${result[i].userName}</span>`);
+                    }
+                });
+        }
+    });
