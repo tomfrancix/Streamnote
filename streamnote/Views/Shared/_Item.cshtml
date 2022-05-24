@@ -15,16 +15,16 @@
         </div>
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
                         <i class="fa fa-comment"></i> @Model.CommentCount
                     </a>
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
 
                     <i class="fa fa-share"></i> @Model.ShareCount
                 </div>
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     @{
                         if (@Model.LoggedInUserLikesThis)
                         {

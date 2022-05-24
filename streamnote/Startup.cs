@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Owin;
 using streamnote.Data;
 using streamnote.Mapper;
 using streamnote.Messenger;
 using streamnote.Models;
-
-[assembly: OwinStartup(typeof(streamnote.Startup))]
+                                                  
 namespace streamnote
 {
     public class Startup
@@ -29,7 +27,7 @@ namespace streamnote
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("streamnote_db")));
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)

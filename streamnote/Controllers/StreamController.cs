@@ -38,7 +38,7 @@ namespace streamnote.Controllers
             var model = Context.Items
                 .Where(i => i.IsPublic)
                 .Include(b => b.User)
-                .Include(b => b.Likes)
+                .Include(b => b.Likes).ThenInclude(l => l.User)
                 .Where(u => u.User != null)
                 .OrderByDescending(i => i.Id)
                 .ToList();

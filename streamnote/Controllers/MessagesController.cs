@@ -30,10 +30,10 @@ namespace streamnote.Controllers
             ViewBag.MessageToUserName = username;
 
             return View(await Context.Messages
-                .Where(m => m.SentBy.UserName == username || 
-                            m.SentTo.UserName == loggedInUser.UserName || 
-                            m.SentBy.UserName == loggedInUser.UserName || 
-                            m.SentTo.UserName == username)
+                .Include(m => m.SentBy)
+                .Include(m => m.SentTo)
+                .Where(m => (m.SentBy.UserName == username && m.SentTo.UserName == loggedInUser.UserName) ||
+                            (m.SentTo.UserName == username && m.SentBy.UserName == loggedInUser.UserName))
                 .ToListAsync());
         }
 
