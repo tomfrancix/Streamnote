@@ -38,6 +38,7 @@ namespace streamnote
             services.AddTransient<ItemMapper>();
             services.AddTransient<CommentMapper>();
             services.AddTransient<UserMapper>();
+            services.AddTransient<TopicMapper>();
             services.AddTransient<ImageProcessingHelper>();
 
             services.AddSignalR(hubOptions =>

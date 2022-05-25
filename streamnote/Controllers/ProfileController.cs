@@ -22,6 +22,7 @@ namespace streamnote.Controllers
             private readonly ApplicationDbContext Context;
             private readonly ProfileMapper ProfileMapper;
             private readonly ItemMapper ItemMapper;
+            private readonly CommentMapper CommentMapper;
 
         /// <summary>
         /// Constructor.
@@ -30,12 +31,13 @@ namespace streamnote.Controllers
         /// <param name="context"></param>
         /// <param name="profileMapper"></param>
         /// <param name="itemMapper"></param>
-        public ProfileController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ProfileMapper profileMapper, ItemMapper itemMapper)
+        public ProfileController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ProfileMapper profileMapper, ItemMapper itemMapper, CommentMapper commentMapper)
         {
             UserManager = userManager;
             Context = context;
             ProfileMapper = profileMapper;
             ItemMapper = itemMapper;
+            CommentMapper = commentMapper;
         }
 
         /// <summary>
@@ -54,6 +56,7 @@ namespace streamnote.Controllers
             profile.Posts = ItemMapper.MapDescriptors(Context.Items
                 .Include(u => u.User)
                 .Include(l => l.Likes).ThenInclude(l => l.User)
+                .Include(i => i.Topics).ThenInclude(t => t.Users)
                 .Where(i => i.User.UserName == username)
                 .ToList(), user.Id);
 
@@ -70,6 +73,8 @@ namespace streamnote.Controllers
                     });
                 }
             }
+
+            profile.Comments = CommentMapper.MapDescriptors(Context.Comments.Where(u => u.User.UserName == username).Take(5).ToList(), user.Id);
 
             return View(profile);
         }

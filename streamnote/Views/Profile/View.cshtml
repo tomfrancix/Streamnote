@@ -6,42 +6,82 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-3" style="text-align: left;">
-            <div class="card">
-                <div class="card-header" style="padding: 0;">
-                    @{
-                        if (Model.UserImage == null || Model.UserImageContentType == null)
-                        {
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
-                                 style="width: 100%;" />
-                        }
-                        else
-                        {
-                            <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)" style="width: 100%;" />
-                        }
-                    }
+        <div class="col-md-4" style="text-align: left;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 offset-2">
+                        <div class="card">
+                            <div class="card-header" style="padding: 0;">
+                                @{
+                                    if (Model.UserImage == null || Model.UserImageContentType == null)
+                                    {
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"
+                                             style="width: 100%;"/>
+                                    }
+                                    else
+                                    {
+                                        <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)" style="width: 100%;"/>
+                                    }
+                                }
+                            </div>
+                            <div class="card-body" style="padding: 8px;">
+                                <h4>@Model.UserName</h4>
+                                <br/>
+                                @{
+                                    if (!Model.IsSignedInUser)
+                                    {
+                                        <a href="/Messages/Index?username=@Model.UserName" class="btn btn-dark">Message</a><br/>
+                                    }
+                                }
+                                <span><strong>Bio: </strong>
+                                    @Model.Bio
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body" style="padding: 8px;">
-                    <h4>@Model.UserName</h4>
-                    <br/> 
-                    @{
-                        if (!Model.IsSignedInUser)
-                        {
-                            <a href="/Messages/Index?username=@Model.UserName" class="btn btn-dark">Message</a><br/>
-                        }
-                    }
-                    <span><strong>Bio: </strong>
-                        @Model.Bio
-                    </span>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Images</h4> 
+                        <hr/>
+                        <div class="row">
+                            @{
+                                foreach (var image in Model.Images)
+                                {
+                                    <div class="col-sm-4" style="padding: 0;">
+                                        <img src="data:@image.UserImageContentType;base64,@Convert.ToBase64String(image.UserImage)" style="height: 100px; min-width: 100%; margin: 0 auto;"/>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
                 </div>
-            </div>
+                          
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Recent Comments</h4> 
+                        <hr/>
+                        <div class="row">
+                            @{
+                                foreach (var comment in Model.Comments)
+                                {
+                                    
+                                    @Html.Partial("_Comment", comment);
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div> 
         </div>
-        <div class="col-md-6">
-            <h2>@Model.UserName's Posts</h2>
+        <div class="col-md-7">
+            <h4>@@@Model.UserName's Posts</h4>
+            <hr/>
             @foreach (var item in Model.Posts)
             {
                 @Html.Partial("_Item", item)
             }
-        </div>
+        </div> 
     </div>
 </div>

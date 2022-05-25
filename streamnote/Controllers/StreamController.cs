@@ -25,6 +25,7 @@ namespace streamnote.Controllers
         private readonly ApplicationDbContext Context;
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly ItemMapper ItemMapper;
+        private readonly TopicMapper TopicMapper;
 
         /// <summary>
         /// Constructor.
@@ -33,11 +34,12 @@ namespace streamnote.Controllers
         /// <param name="context"></param>
         /// <param name="userManager"></param>
         /// <param name="itemMapper"></param>
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, TopicMapper topicMapper)
         {
             Context = context;
             UserManager = userManager;
             ItemMapper = itemMapper;
+            TopicMapper = topicMapper;
             Logger = logger;
         }
 
@@ -45,15 +47,24 @@ namespace streamnote.Controllers
         /// Get the main stream (homepage).
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? topic)
         {
             var user = await UserManager.GetUserAsync(User);
 
-            var model = Context.Items
+            var queryable = Context.Items
                 .Where(i => i.IsPublic)
                 .Include(b => b.User)
                 .Include(b => b.Likes).ThenInclude(l => l.User)
-                .Where(u => u.User != null)
+                .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
+                .Where(u => u.User != null);
+
+            if (topic != null && topic.Length > 0)
+            {
+                queryable = queryable
+                    .Where(i => i.Topics.Any(t => t.Name == topic));
+            }
+
+            var model = queryable
                 .OrderByDescending(i => i.Id)
                 .ToList();
 
@@ -63,6 +74,13 @@ namespace streamnote.Controllers
             {
                 Items = items
             };
+
+            descriptor.Topics = TopicMapper.MapDescriptors(Context.Topics
+                .Include(t => t.Users)
+                .Where(t => t.ItemCount > 0)
+                .OrderBy(t => t.Name)
+                .ToList(), user.Id);
+
             return View(descriptor);
         }
 

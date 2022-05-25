@@ -35,6 +35,19 @@
         <div class="form-group">
             <textarea asp-for="Content" class="form-control" placeholder="Compose your post..." style="border: none; outline: none; background-color: rgba(0, 0, 0, 0.02);"></textarea>
             <span asp-validation-for="Content" class="text-danger"></span>
+        </div> 
+        <div class="form-group">
+            <label class="control-label">Begin typing to select a topic.</label> 
+            <input type="text" class="form-control" id="queryTopics" style="display: inline-block;width: 20%; border:1px solid rgba(0,0,0,0.1); background-color: rgba(0, 0, 0, 0.02); padding:3px; margin: 3px;"/> 
+               
+            <div id="topicSelect">
+                <label>Now select a topic from this list:</label> <br/>
+                <div id="topicSuggestions"></div>
+                <br/> 
+                <label>Selected topics</label> <br/>
+                <input type="text" id="selectedTopics" name="selectedTopics"  style="display: inline-block;width: 70%; border: none; background-color: rgba(0, 0, 0, 0.02) padding:3px; margin: 3px;"//>
+            </div>
+           
         </div>
         <div class="form-group">
             <label class="control-label">This post should be public </label>

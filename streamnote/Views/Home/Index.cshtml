@@ -5,10 +5,31 @@
 }
 
 <div class="container-fluid">
-    <div class="col-md-6 offset-3">
-        @foreach (var item in Model.Items)
-        {
-            @Html.Partial("_Item", item)
-        }
+    <div class="row">    
+        <div class="col-md-4" style="text-align: left;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4>Topics you follow</h4>
+                        <hr/>
+                        <div class="row" id="topicsYouFollow">
+                            @Html.Partial("_TopicStream", Model.Topics.Where(t => t.UserFollowsTopic).ToList());
+                        </div> 
+                        <br/>
+                        <h4>Other Topics</h4>
+                        <input class="form-control commentInput" placeholder="Search topics..." id="searchTopics"/>
+                        <hr/>
+                        <div class="row" id="searchTopicSuggestions"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            @foreach (var item in Model.Items)
+            {
+                @Html.Partial("_Item", item)
+            }
+        </div>
+
     </div>
 </div>

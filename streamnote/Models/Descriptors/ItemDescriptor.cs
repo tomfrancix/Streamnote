@@ -18,6 +18,7 @@ namespace streamnote.Models.Descriptors
         public virtual int CommentCount { get; set; }
         public virtual int ShareCount { get; set; }
         public virtual int LikeCount { get; set; }
+        public virtual List<TopicDescriptor> Topics { get; set; }
 
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }

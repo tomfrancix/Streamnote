@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using streamnote.Data;
 using streamnote.Mapper;
@@ -60,6 +61,7 @@ namespace streamnote.Controllers
                 .Where(i => i.User.Id == user.Id)
                 .Include(b => b.User)
                 .Include(b => b.Likes).ThenInclude(u => u.User)
+                .Include(t => t.Topics).ThenInclude(t => t.Users)
                 .Where(u => u.User != null)
                 .OrderByDescending(i => i.Id)
                 .ToList();
@@ -86,6 +88,7 @@ namespace streamnote.Controllers
             var item = await Context.Items
                 .Include(u => u.User)
                 .Include(u => u.Likes).ThenInclude(u => u.User)
+                .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var itemDescriptor = ItemMapper.MapDescriptor(item, user.Id);
@@ -113,13 +116,48 @@ namespace streamnote.Controllers
         /// </summary>
         /// <param name="item"></param>
         /// <param name="image"></param>
+        /// <param name="selectedTopics"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,IsPublic,Image")] Item item, IFormFile image)
+        public async Task<IActionResult> Create([Bind("Id,Title,Content,IsPublic,Image")] Item item, IFormFile image, string selectedTopics)
         {
             item.Created = DateTime.UtcNow;
             item.Modified = DateTime.UtcNow;
             item.User = await UserManager.GetUserAsync(User);
+
+            if (selectedTopics != null)
+            {
+                var selectTopics = selectedTopics.Split(",");
+                foreach (var topic in selectTopics)
+                {
+                    var existing = Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower());
+                    if (existing != null && existing.Name != null)
+                    {
+                        item.Topics = new List<Topic>() {existing};
+                        existing.ItemCount++;
+                        Context.Update(existing);
+                        await Context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var newTopic = new Topic
+                        {
+                            Name = topic.ToLower(),
+                            ItemCount = 1
+                        };
+
+                        Context.Add(newTopic);
+                        await Context.SaveChangesAsync();
+
+                        if (item.Topics == null)
+                        {
+                            item.Topics = new List<Topic>();
+                        }
+
+                        item.Topics.Add(Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower()));
+                    }
+                }
+            }
 
             if (image != null)
             {
@@ -168,10 +206,11 @@ namespace streamnote.Controllers
         /// <param name="id"></param>
         /// <param name="item"></param>
         /// <param name="image"></param>
+        /// <param name="selectedTopics"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Item item, IFormFile image)
+        public async Task<IActionResult> Edit(int id, Item item, IFormFile image, string selectedTopics)
         {
             if (id != item.Id)
             {
@@ -185,6 +224,31 @@ namespace streamnote.Controllers
                 existing.Image = existing.Image;
                 existing.ImageContentType = existing.ImageContentType;
                 existing.Modified = DateTime.UtcNow;
+
+                if (selectedTopics != null)
+                {
+                    var selectTopics = selectedTopics.Split(",");
+                    foreach (var topic in selectTopics)
+                    {
+                        var existingTopic = Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower());
+                        if (existingTopic != null && existingTopic.Name != null)
+                        {
+                            item.Topics.Add(existingTopic);
+                        }
+                        else
+                        {
+                            var newTopic = new Topic
+                            {
+                                Name = topic.ToLower(),
+                                ItemCount = 0
+                            };
+
+                            Context.Add(newTopic);
+                            await Context.SaveChangesAsync();
+                            item.Topics.Add(Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower()));
+                        }
+                    }
+                }
 
                 if (image != null)
                 {

@@ -23,5 +23,6 @@ namespace streamnote.Models
         public ApplicationUser User { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; }
+        public virtual List<Topic> Topics { get; set; }
     }
 }

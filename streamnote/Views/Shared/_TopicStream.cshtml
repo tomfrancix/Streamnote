@@ -1,0 +1,25 @@
+﻿@model List<streamnote.Models.Descriptors.TopicDescriptor>
+
+@{
+    foreach (var topic in Model)
+    {
+        <span class='topic'>
+            <a class='btn' style="text-align: left;" href="/Home/Index?topic=@topic.Name">@topic.Name</a> 
+            
+            @{
+                if (topic.UserFollowsTopic)
+                {  
+                    <a class="@topic.TopicElementId" onclick="unFollowTopic('@topic.Name', '@topic.TopicElementId')">
+                        <i class="fa fa-check" style="color:chartreuse"></i>
+                    </a>
+                }
+                else
+                {  
+                    <a class="@topic.TopicElementId" onclick="followTopic('@topic.Name', '@topic.TopicElementId')">
+                        <i class="fa fa-arrow-right" style="color:deepskyblue"></i>
+                    </a>
+                }
+            }
+        </span>
+    }
+}

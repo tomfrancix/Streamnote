@@ -238,3 +238,39 @@ hr {
 .contactUserName {
     padding: 4px 20px; 
 }
+#topicSelect {
+    display: none;
+}
+
+.topic {
+    width: 100%;
+    padding: 1px;
+    background-color: rgba(0, 0, 0, 0.01);
+    margin: 3px 10px;
+}
+.itemTopic {
+    padding: 0px 6px 2px 6px;
+    background-color: rgba(0, 0, 0, 1);
+    border: 1px dotted rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    font-size: 0.8em;
+    color: chartreuse;
+    margin: 2px;
+}
+.itemTopics {
+    padding: 8px;
+}
+.hideOnWideScreen {
+    display: none;
+}
+.messagesPage {
+    position: absolute;
+    top: 60px;
+    bottom: 0;
+    width: 70%;
+}
+.messagesContacts {
+    padding: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    height: 100%;
+}

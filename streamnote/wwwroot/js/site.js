@@ -33,7 +33,16 @@ $('#commentInput').bind('keyup',
 
     });
 
-    function showUploader() {
+$('#messageInput').bind('keyup',
+    function(e) {
+
+        if (e.keyCode === 13) { // 13 is enter key
+            $(".submitButton").click();
+        }
+    });
+
+
+function showUploader() {
     document.getElementById('imageuploader').style.display = 'block';
     document.getElementById('imageuploaderbutton').style.display = 'none';
 }
@@ -110,6 +119,93 @@ $('#searchInput').bind('keyup',
                 })
                 .done(function(result, status) {
                     $("#suggestions").append(result);
+                });
+        }
+    });
+
+$('#queryTopics').bind('keyup',
+    function (e) {
+
+        var query = $("#queryTopics").val();
+
+        $("#topicSuggestions").empty();
+        if (query.length > 2) {
+            console.log("Query entered into topic search input...");
+            $.post({
+                    url: "/Topic/GetTopics",
+                    data: {
+                        query
+                },
+                    dataType: "html"
+                })
+                .done(function (result, status) {
+                    $("#topicSuggestions").append(result);
+                    $("#topicSelect").show();
+                });
+        }
+    });
+
+function selectTopic(topicName) {
+    var topics = $("#selectedTopics").val();
+
+    $("#queryTopics").val("");
+    $("#topicSuggestions").empty();
+    if (topics != "") {
+        topics += ", ";
+    }
+    $("#selectedTopics").val(topics + topicName);
+}
+
+function followTopic(topicName, elId) {
+                                    
+    $.post({
+            url: "/Topic/FollowTopic",
+        data: { topicName },
+            dataType: "html"
+        })
+        .done(function(result) {
+            if (result != null) {
+
+                $("#topicsYouFollow").html(result);
+                $("." + elId).html("<i class='fa fa-check' style='color:chartreuse;'/>")
+                    .attr("onclick", "unFollowTopic('" + topicName.toString() + "', '"+elId.toString()+"')");
+            }
+        });                     
+
+}
+function unFollowTopic(topicName, elId) {
+
+    $.post({
+            url: "/Topic/UnFollowTopic",
+        data: { topicName },
+            dataType: "html"
+        })
+        .done(function (result) {
+            if (result != null) {
+                $("#topicsYouFollow").html(result);
+                $("." + elId).html("<i class='fa fa-arrow-right' style='color:deepskyBlue;'/>")
+                    .attr("onclick", "followTopic('" + topicName.toString() + "', '" + elId.toString() + "')");
+            }
+        });
+}
+
+$('#searchTopics').bind('keyup',
+    function (e) {
+
+        var query = $("#searchTopics").val();
+
+        $("#searchTopicSuggestions").empty();
+        if (query.length > 2) {
+            console.log("Query entered into topic search input...");
+            $.post({
+                    url: "/Topic/SearchTopics",
+                    data: {
+                        query
+                    },
+                    dataType: "html"
+                })
+                .done(function (result, status) {
+                    $("#searchTopicSuggestions").append(result);
                 });
         }
     });

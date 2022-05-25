@@ -63,6 +63,7 @@ function sendMessageTo(username) {
         text: message,
         username: username
     }
+    $('#messageInput').val("");
 
     $.post({
             url: "/Messages/Create",

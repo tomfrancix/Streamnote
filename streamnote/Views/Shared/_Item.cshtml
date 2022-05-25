@@ -11,7 +11,7 @@
                         <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" />
                     }
                 }
-            </a>
+            </a> 
         </div>
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
@@ -39,9 +39,7 @@
                             <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id">
                                 <i class="fa fa-arrow-up"></i> @Model.LikeCount
                             </a>
-                        }
-
-
+                        } 
                     }
                 </div>
                 </div>
@@ -70,7 +68,18 @@
         </div>
         @{
             if (Model.Comments != null)
-            {
+            {          
+                <div class="itemTopics">
+                    @{
+                        if (Model.Topics != null && Model.Topics.Count > 0)
+                        {
+                            foreach (var topic in Model.Topics)
+                            {
+                                <span class="itemTopic">@topic.Name</span>
+                            }
+                        }
+                    }
+                </div>
                 <div class="commentSection">
                     <span><strong>Post Comment</strong></span><br />
 

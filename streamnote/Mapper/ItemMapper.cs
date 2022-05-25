@@ -10,6 +10,13 @@ namespace streamnote.Mapper
     /// </summary>
     public class ItemMapper
     {
+        private readonly TopicMapper TopicMapper;
+
+        public ItemMapper(TopicMapper topicMapper)
+        {
+            TopicMapper = topicMapper;
+        }
+
         /// <summary>
         /// Map a list of items.
         /// </summary>
@@ -52,7 +59,8 @@ namespace streamnote.Mapper
                 CreatedByLoggedInUser = item.User.Id == userId,
                 CommentCount = item.CommentCount,
                 LikeCount = item.LikeCount,
-                LoggedInUserLikesThis = item.Likes.Any(l => l.User.Id == userId)
+                LoggedInUserLikesThis = item.Likes.Any(l => l.User.Id == userId),
+                Topics = TopicMapper.MapDescriptors(item.Topics, userId)
             };
         }
     }

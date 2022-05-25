@@ -4,9 +4,9 @@
     ViewData["Title"] = "Chat";
 }     
 
-<div class="container-fluid" style="position: absolute; top: 60px; bottom: 0; width: 70%; ">
+<div class="container-fluid messagesPage">
     <div class="row" style="height: 100%;">
-        <div class="col-sm-3" style="padding: 0; border-right: 1px solid rgba(0, 0, 0, 0.1);height: 100%;">
+        <div class="col-sm-3 messagesContacts">
             <div class="row">   
                 <div class="col-sm-12">
                                      
@@ -15,7 +15,7 @@
                             Contacts
                         </span>
                     </div>
-                    <div class="hideOnPhone" style="padding: 0 5px;">   
+                    <div class="" style="padding: 0 5px;">   
                         @{
                             foreach (var user in Model.Users)
                             { 
@@ -70,7 +70,9 @@
                                     {
                                         @Html.Partial("_Message", message)
                                     }
-                                    <span id="newMessages"></span>
+                                    <span id="newMessages"></span> 
+                                    <br/>
+                                    <br/>
                                 </div>
                             </div>
 
@@ -81,7 +83,7 @@
             @{
                                 if (Model.Messages != null)
                                 {
-            <div class="row">
+            <div class="row" id="sendMessageContainer">
                 <div class="col-md-12">  
                     <div class="flex-container">       
                         <div style="flex-grow:1">            

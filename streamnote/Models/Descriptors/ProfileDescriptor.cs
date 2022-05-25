@@ -19,5 +19,6 @@ namespace streamnote.Models.Descriptors
 
         public List<ItemDescriptor> Posts { get; set; }
         public List<ImageDescriptor> Images { get; set; }
+        public List<CommentDescriptor> Comments { get; set; }
     }
 }

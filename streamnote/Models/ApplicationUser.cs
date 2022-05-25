@@ -23,5 +23,6 @@ namespace streamnote.Models
         public List<Item> Items { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; }
+        public List<Topic> Topics { get; set; }
     }
 }

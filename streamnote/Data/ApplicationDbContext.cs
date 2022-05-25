@@ -22,5 +22,6 @@ namespace streamnote.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Topic> Topics { get; set; }
     }
 }
