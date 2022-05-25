@@ -85,6 +85,25 @@ body {
 .card-body {
     padding: 0;
 }
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.01);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 
 .icon {
     width: 23px;
@@ -102,7 +121,6 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 5px 8px;
-    height: 100px;
 }
 
 .comment, .commentSection, .message {
@@ -113,9 +131,16 @@ body {
 hr {
     margin: 3px 0;
 }
-.submitComment {                                
-    right: 25px;
-    bottom: 15px;
+
+.submitButton {
+    background-color: skyblue;
+    border-radius: 50%;
+    color: white;
+    border: none;
+    margin-top: 12px;
+}
+.submitComment {
+    bottom: 11px;
     position: absolute;
     background-color: skyblue;
     border-radius: 50%;
@@ -174,15 +199,16 @@ hr {
     padding: 4px 15px;
     border-radius: 20px;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
+    background-color: rgba(0, 0, 0, 0.01);
+    color: black;
     margin-top: 8px;
 }
 
 .notification {
     width: 100%;
     padding: 10px;
-    background-color: rgba(255, 255, 10, 0.5);
+    background-color: rgba(0, 0, 0, 0.02);
+    margin-top: 8px;
 }
 .signInAsUser {
     padding: 1px 5px 2px 5px;
@@ -191,4 +217,24 @@ hr {
     color: chartreuse;
     font-size: 0.7em;
     margin-top: 3px;
+}
+
+.flex-container {
+    display: flex;
+    align-items: stretch;
+    background-color: #f1f1f1;
+    padding: 10px 10px 20px 10px;
+}
+
+.flex-container > div {          
+    color: white;     
+    text-align: center;
+}
+
+.camera-icon {
+    margin-top: 13px;
+    color: black;
+}
+.contactUserName {
+    padding: 4px 20px; 
 }

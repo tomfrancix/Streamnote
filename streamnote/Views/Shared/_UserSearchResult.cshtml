@@ -5,20 +5,25 @@
     foreach (var user in Model)
     {
         <div class='notification'> 
-            @{
-                if (user.UserImage != null && user.UserImageContentType != null)
-                {
-                    <img src="data:@user.UserImageContentType;base64,@Convert.ToBase64String(user.UserImage)"
-                         class="icon" />
-                }
-                else
-                {
-                    <i class="fa fa-user icon"></i>
-                }
-            } 
-            <a href="/Profile/View?username=@user.UserName">
-                @user.FirstName @user.LastName
-            </a>
+            <div class="row">  
+                <div class="col-sm-1" style="text-align: center;">       
+                    @{
+                        if (user.UserImage != null && user.UserImageContentType != null)
+                        {
+                            <img src="data:@user.UserImageContentType;base64,@Convert.ToBase64String(user.UserImage)"
+                                 class="icon" />
+                        }
+                        else
+                        {    
+                            <i class="fa fa-user" style="padding: 4px; margin-top: 4px;"></i>
+                        }
+                    }                             
+                </div>                                                                  
+                <a href="/Profile/View?username=@user.UserName" class="contactUserName">
+                    @user.FirstName @user.LastName
+                </a>
+                                       
+            </div> 
         </div>
     }
 }

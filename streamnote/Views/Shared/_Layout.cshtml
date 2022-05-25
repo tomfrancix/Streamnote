@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/css/site.css" />  
 
 </head>
-<body>
+<body style="width: 100vw; height: 100vh; overflow: hidden;">
 <header>
     <nav class="navbar fixed-top navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
@@ -46,16 +46,10 @@
     </nav>
 </header>
 <div class="container">
-    <main role="main" class="pb-3" style="padding-top:50px;">
+    <main role="main" class="pb-3" style="padding-top:70px; height: 100vh; overflow-y: scroll;">
         @RenderBody()
     </main>
-</div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2022 - streamnote - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
-</footer>  
+</div>   
 
 <!-- The Modal -->
 <div class="modal" id="myModal">
