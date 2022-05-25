@@ -13,6 +13,9 @@ using streamnote.Models.Descriptors;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for profile actions.
+    /// </summary>
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> UserManager;
@@ -20,6 +23,13 @@ namespace streamnote.Controllers
             private readonly ProfileMapper ProfileMapper;
             private readonly ItemMapper ItemMapper;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="context"></param>
+        /// <param name="profileMapper"></param>
+        /// <param name="itemMapper"></param>
         public ProfileController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, ProfileMapper profileMapper, ItemMapper itemMapper)
         {
             UserManager = userManager;
@@ -28,6 +38,11 @@ namespace streamnote.Controllers
             ItemMapper = itemMapper;
         }
 
+        /// <summary>
+        /// Get the users profile by username.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public async Task<IActionResult> View(string username)
         {
             var user = await UserManager.GetUserAsync(User);
@@ -59,6 +74,11 @@ namespace streamnote.Controllers
             return View(profile);
         }
 
+        /// <summary>
+        /// Update the connection id.
+        /// </summary>
+        /// <param name="connectionId"></param>
+        /// <returns></returns>
         public async Task UpdateConnectionId(string connectionId)
         {
             var user = await UserManager.GetUserAsync(User);

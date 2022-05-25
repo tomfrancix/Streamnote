@@ -1,7 +1,8 @@
-﻿using System;
-
-namespace streamnote.Models
+﻿namespace streamnote.Models
 {
+    /// <summary>
+    /// The like class.
+    /// </summary>
     public class Like
     {
         public virtual int Id { get; set; }

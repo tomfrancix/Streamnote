@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace streamnote.Models
 {
+    /// <summary>
+    /// The item class.
+    /// </summary>
     public class Item
     {
         public virtual int Id { get; set; }

@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
-using streamnote.Models;
+﻿using streamnote.Models;
 using streamnote.Models.Descriptors;
 
 namespace streamnote.Mapper
 {
+    /// <summary>
+    /// Mapper for the user profile.
+    /// </summary>
     public class ProfileMapper
     {
+        /// <summary>
+        /// Map a user profile from username.
+        /// </summary>
+        /// <param name="profile"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         public ProfileDescriptor MapDescriptor(ApplicationUser profile, string userName)
         {
             return new ProfileDescriptor

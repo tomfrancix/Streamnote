@@ -11,12 +11,21 @@ using Controller = Microsoft.AspNetCore.Mvc.Controller;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for comments.
+    /// </summary>
     public class CommentController : Controller
     {
         private readonly ApplicationDbContext Context;
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly CommentMapper CommentMapper;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="context"></param>
+        /// <param name="commentMapper"></param>
         public CommentController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, CommentMapper commentMapper)
         {
             UserManager = userManager;
@@ -24,7 +33,13 @@ namespace streamnote.Controllers
             CommentMapper = commentMapper;
         }
 
-        // POST: CommentController/Create
+        /// <summary>
+        /// Create action.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        /// <exception cref="AccessViolationException"></exception>
         [Microsoft.AspNetCore.Mvc.HttpPost]
         public async Task<ActionResult> Create(string content, int itemId)
         {

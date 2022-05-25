@@ -7,17 +7,30 @@ using streamnote.Mapper;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for user actions.
+    /// </summary>
     public class GeneralController : Controller
     {
         private readonly ApplicationDbContext Context;
         private readonly UserMapper UserMapper;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userMapper"></param>
         public GeneralController(ApplicationDbContext context, UserMapper userMapper)
         {
             Context = context;
             UserMapper = userMapper;
         }
 
+        /// <summary>
+        /// Check if the username is available.
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult IsUserNameAvailable(string userName)
         {
@@ -26,6 +39,11 @@ namespace streamnote.Controllers
             return Json(usernames.Any());
         }
 
+        /// <summary>
+        /// Get the users using the search function.
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult GetUsers(string query)
         {

@@ -2,6 +2,9 @@
 
 namespace streamnote.Models
 {
+    /// <summary>
+    /// The comment class.
+    /// </summary>
     public class Comment
     {
         public virtual int Id { get; set; }

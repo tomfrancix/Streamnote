@@ -4,8 +4,15 @@ using streamnote.Models;
 
 namespace streamnote.Data
 {
+    /// <summary>
+    /// The application database context.
+    /// </summary>
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        /// <summary>
+        /// The constructor.
+        /// </summary>
+        /// <param name="options"></param>
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

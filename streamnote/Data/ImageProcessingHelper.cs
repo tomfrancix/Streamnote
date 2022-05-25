@@ -1,22 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Web;                       
 
 namespace streamnote.Data
 {
+    /// <summary>
+    /// Helper for image processing.
+    /// </summary>
     public class ImageProcessingHelper
     {
+        /// <summary>
+        /// Resize an image.
+        /// </summary>
+        /// <param name="imageFile"></param>
+        /// <param name="targetSize"></param>
+        /// <returns></returns>
         public static byte[] ResizeImageFile(byte[] imageFile, int targetSize) // Set targetSize to 1024
         {
             Console.WriteLine("Resizing image");
             return imageFile;
         }
+
+        /// <summary>
+        /// Calculate the new dimensions for an image.
+        /// </summary>
+        /// <param name="oldSize"></param>
+        /// <param name="targetSize"></param>
+        /// <returns></returns>
         public static Size CalculateDimensions(Size oldSize, int targetSize)
         {
             Size newSize = new Size();

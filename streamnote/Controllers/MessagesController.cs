@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using streamnote.Data;
 using streamnote.Mapper;
@@ -13,6 +14,9 @@ using streamnote.Models.Descriptors;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for message actions.
+    /// </summary>
     public class MessagesController : Controller
     {
         private readonly ApplicationDbContext Context;
@@ -26,7 +30,11 @@ namespace streamnote.Controllers
             UserMapper = userMapper;
         }
 
-        // GET: Messages
+        /// <summary>
+        /// Get all the messages between the two users.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Index(string username)
         {
             var loggedInUser = await UserManager.GetUserAsync(User);
@@ -53,15 +61,22 @@ namespace streamnote.Controllers
             return View(model);
         }
 
-        // GET: Messages/Create
+        /// <summary>
+        /// Create a message view.
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Messages/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Create a message action.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         [HttpPost]
         public async Task<IActionResult> Create(string username, string text)
         {
@@ -86,7 +101,11 @@ namespace streamnote.Controllers
             throw new Exception("Model state was not valid!");
         }
 
-        // GET: Messages/Edit/5
+        /// <summary>
+        /// Edit a message view.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,9 +121,12 @@ namespace streamnote.Controllers
             return View(message);
         }
 
-        // POST: Messages/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit a message action.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Modified,Text,Content,Image,ImageContentType,IsPublic")] Message message)
@@ -137,7 +159,11 @@ namespace streamnote.Controllers
             return View(message);
         }
 
-        // GET: Messages/Delete/5
+        /// <summary>
+        /// Delete a message action.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -155,7 +181,11 @@ namespace streamnote.Controllers
             return View(message);
         }
 
-        // POST: Messages/Delete/5
+        /// <summary>
+        /// Confirm a message was deleted.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,11 +196,20 @@ namespace streamnote.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Check if a message exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool MessageExists(int id)
         {
             return Context.Messages.Any(e => e.Id == id);
         }
 
+        /// <summary>
+        /// Check if a user has unread messages.
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public async Task<bool> UserHasUnreadMessages()
         {
@@ -190,6 +229,12 @@ namespace streamnote.Controllers
 
             return false;
         }
+
+        /// <summary>
+        /// Confirm a message has been seen by receiver.
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task ConfirmMessageHasBeenSeen(int messageId)
         {

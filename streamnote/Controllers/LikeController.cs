@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using streamnote.Data;
 using streamnote.Models;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for like actions.
+    /// </summary>
     public class LikeController : Controller
     {
         private readonly ApplicationDbContext Context;
@@ -23,7 +22,11 @@ namespace streamnote.Controllers
             Context = context;
         }
 
-        // POST: LikeController/Create
+        /// <summary>
+        /// Create a like.
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> Create(int itemId)
         {
@@ -60,7 +63,11 @@ namespace streamnote.Controllers
             return new JsonResult(0);
         }
 
-        // POST: LikeController/Create
+        /// <summary>
+        /// Delete a like.
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<JsonResult> Delete(int itemId)
         {

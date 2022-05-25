@@ -5,8 +5,17 @@ using streamnote.Models.Descriptors;
 
 namespace streamnote.Mapper
 {
+    /// <summary>
+    /// Mapper for items.
+    /// </summary>
     public class ItemMapper
     {
+        /// <summary>
+        /// Map a list of items.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<ItemDescriptor> MapDescriptors(List<Item> items, string userId)
         {
             var itemDescriptors = new List<ItemDescriptor>();
@@ -19,6 +28,12 @@ namespace streamnote.Mapper
             return itemDescriptors;
         }
 
+        /// <summary>
+        /// Map a single item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public ItemDescriptor MapDescriptor(Item item, string userId)
         {
             return new ItemDescriptor

@@ -5,8 +5,17 @@ using streamnote.Models.Descriptors;
 
 namespace streamnote.Mapper
 {
+    /// <summary>
+    /// The mapper for comments.
+    /// </summary>
     public class CommentMapper
     {
+        /// <summary>
+        /// Map a list of comments.
+        /// </summary>
+        /// <param name="comments"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<CommentDescriptor> MapDescriptors(List<Comment> comments, string userId)
         {
             var commentDescriptors = new List<CommentDescriptor>();
@@ -18,7 +27,13 @@ namespace streamnote.Mapper
 
             return commentDescriptors;
         }
-
+        
+        /// <summary>
+        /// Map a single comment.
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public CommentDescriptor MapDescriptor(Comment comment, string userId)
         {
             return new CommentDescriptor

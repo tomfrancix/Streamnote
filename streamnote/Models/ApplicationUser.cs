@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace streamnote.Models
 {
+    /// <summary>
+    /// The application user class.
+    /// </summary>
     public class ApplicationUser : IdentityUser
     {
         public virtual byte[] Image { get; set; }

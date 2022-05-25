@@ -19,6 +19,9 @@ using streamnote.Models;
 
 namespace streamnote.Controllers
 {
+    /// <summary>
+    /// Controller for item actions.
+    /// </summary>
     [Authorize]
     public class ItemController : Controller
     {
@@ -28,6 +31,14 @@ namespace streamnote.Controllers
         private readonly CommentMapper CommentMapper;
         private readonly ImageProcessingHelper ImageProcessingHelper;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="userManager"></param>
+        /// <param name="itemMapper"></param>
+        /// <param name="commentMapper"></param>
+        /// <param name="imageProcessingHelper"></param>
         public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper)
         {
             Context = context;
@@ -59,7 +70,7 @@ namespace streamnote.Controllers
         }
 
         /// <summary>
-        /// Get the single item.
+        /// Get the details for an item.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -88,17 +99,22 @@ namespace streamnote.Controllers
             return View(itemDescriptor);
         }
 
-        // GET: Item/Create
+        /// <summary>
+        /// Create an item view.
+        /// </summary>
+        /// <returns></returns>
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Item/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Create an item action.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content,IsPublic,Image")] Item item, IFormFile image)
         {
             item.Created = DateTime.UtcNow;
@@ -126,7 +142,11 @@ namespace streamnote.Controllers
             return View(item);
         }
 
-        // GET: Item/Edit/5
+        /// <summary>
+        /// Edit an item.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -142,9 +162,13 @@ namespace streamnote.Controllers
             return View(item);
         }
 
-        // POST: Item/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Edit an item action.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="item"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Item item, IFormFile image)
@@ -201,7 +225,11 @@ namespace streamnote.Controllers
             return View(item);
         }
 
-        // GET: Item/Delete/5
+        /// <summary>
+        /// Delete an item.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -219,7 +247,11 @@ namespace streamnote.Controllers
             return View(item);
         }
 
-        // POST: Item/Delete/5
+        /// <summary>
+        /// Confirm that an item was deleted.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -230,6 +262,11 @@ namespace streamnote.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Check if an item exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         private bool ItemExists(int id)
         {
             return Context.Items.Any(e => e.Id == id);
