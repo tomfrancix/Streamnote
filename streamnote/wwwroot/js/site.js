@@ -18,6 +18,7 @@ $('#commentInput').bind('keyup',
                 content: comment,
                 itemId: itemId
             }
+            $("#commentInput").val("");
 
             $.post({
                     url: "/Comment/Create",
@@ -25,8 +26,7 @@ $('#commentInput').bind('keyup',
                     dataType: "html"
                 })
                 .done(function(result, status) {
-                    $("#newComments").prepend(result);
-                    $("#commentInput").val("");
+                    $("#newComments").prepend(result); 
                 });
 
         }
@@ -105,13 +105,11 @@ $('#searchInput').bind('keyup',
                     url: "/General/GetUsers",
                     data: {
                         query
-                    }
+                },
+                    dataType: "html"
                 })
-                .done(function(result, status) {  
-                    for (var i = 0; i < result.length; i++) {
-
-                        $("#suggestions").prepend(`<div class='notification'>${result[i].userName}</span>`);
-                    }
+                .done(function(result, status) {
+                    $("#suggestions").append(result);
                 });
         }
     });

@@ -3,16 +3,19 @@ using System.Threading.Tasks;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNetCore.Mvc;
 using streamnote.Data;
+using streamnote.Mapper;
 
 namespace streamnote.Controllers
 {
     public class GeneralController : Controller
     {
         private readonly ApplicationDbContext Context;
+        private readonly UserMapper UserMapper;
 
-        public GeneralController(ApplicationDbContext context)
+        public GeneralController(ApplicationDbContext context, UserMapper userMapper)
         {
             Context = context;
+            UserMapper = userMapper;
         }
 
         [HttpPost]
@@ -24,11 +27,11 @@ namespace streamnote.Controllers
         }
 
         [HttpPost]
-        public JsonResult GetUsers(string query)
+        public ActionResult GetUsers(string query)
         {
             var usernames = Context.Users.Where(u => u.UserName.ToLower().Contains(query.ToLower())).ToList();
 
-            return Json(usernames);
+            return PartialView("_UserSearchResult", UserMapper.MapDescriptors(usernames));
         }
     }
 }

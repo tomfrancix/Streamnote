@@ -1,0 +1,24 @@
+﻿@model List<streamnote.Models.Descriptors.UserNameDescriptor>
+       
+
+@{
+    foreach (var user in Model)
+    {
+        <div class='notification'> 
+            @{
+                if (user.UserImage != null && user.UserImageContentType != null)
+                {
+                    <img src="data:@user.UserImageContentType;base64,@Convert.ToBase64String(user.UserImage)"
+                         class="icon" />
+                }
+                else
+                {
+                    <i class="fa fa-user icon"></i>
+                }
+            } 
+            <a href="/Profile/View?username=@user.UserName">
+                @user.FirstName @user.LastName
+            </a>
+        </div>
+    }
+}

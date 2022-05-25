@@ -3,76 +3,24 @@
 @inject UserManager<ApplicationUser> UserManager
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{          
-    <li class="nav-item">
-        <a class="nav-link text-dark" data-toggle="modal" data-target="#mySearchModal" title="Search">
-            <i class="fa fa-search"></i>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="/Messages/Index" title="Messages">
-            <i class="fa fa-envelope"></i>  
-            <i class="fa fa-circle notifyCircle" id="messagesIcon"></i>
-        </a>
-    </li> 
-    <li class="nav-item">
-        <a class="nav-link text-dark" data-toggle="modal" data-target="#myModal" title="Notifications">
-            <i class="fa fa-bell"></i>  
-            <i class="fa fa-circle notifyCircle" id="notificationsIcon"></i>
-        </a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {          
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-toggle="modal" data-target="#mySearchModal" title="Search">
+                <i class="fa fa-search"></i>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Messages/Index" title="Messages">
+                <i class="fa fa-envelope"></i>  
+                <i class="fa fa-circle notifyCircle" id="messagesIcon"></i>
+            </a>
+        </li> 
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-toggle="modal" data-target="#myModal" title="Notifications">
+                <i class="fa fa-bell"></i>  
+                <i class="fa fa-circle notifyCircle" id="notificationsIcon"></i>
+            </a>
+        </li>
+    }
 </ul>
-                  
-
-<!-- The Modal -->
-<div class="modal" id="myModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Notifications</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-        
-            <!-- Modal body -->
-            <div class="modal-body" id="newNotifications">
-            </div>
-        </div>
-    </div>
-</div> 
-
-<!-- The Modal -->
-<div class="modal" id="mySearchModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Search</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-        
-            <!-- Modal body -->
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-12">
-                                        
-                        <div class="input-group">
-                            <div class="input-group rounded">
-                                <input type="search" id="searchInput" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-                                <span class="input-group-text border-0" id="search-addon">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                        
-                        <div id="suggestions"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
