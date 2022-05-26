@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using streamnote.Models;
 using System.Diagnostics;
 using System.Linq;
@@ -12,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using streamnote.Data;
 using streamnote.Mapper;
 using streamnote.Models.Descriptors;
+using streamnote.Repository.Interface;
 
 namespace streamnote.Controllers
 {
@@ -21,26 +19,27 @@ namespace streamnote.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> Logger;
         private readonly ApplicationDbContext Context;
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly ItemMapper ItemMapper;
         private readonly TopicMapper TopicMapper;
+        private readonly IItemRepository ItemRepository;
+        private readonly ITopicRepository TopicRepository;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="logger"></param>
         /// <param name="context"></param>
         /// <param name="userManager"></param>
         /// <param name="itemMapper"></param>
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, TopicMapper topicMapper)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, TopicMapper topicMapper, IItemRepository itemRepository, ITopicRepository topicRepository)
         {
             Context = context;
             UserManager = userManager;
             ItemMapper = itemMapper;
             TopicMapper = topicMapper;
-            Logger = logger;
+            ItemRepository = itemRepository;
+            TopicRepository = topicRepository;
         }
 
         /// <summary>
@@ -51,37 +50,28 @@ namespace streamnote.Controllers
         {
             var user = await UserManager.GetUserAsync(User);
 
-            var queryable = Context.Items
-                .Where(i => i.IsPublic)
-                .Include(b => b.User)
-                .Include(b => b.Likes).ThenInclude(l => l.User)
-                .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
-                .Where(u => u.User != null);
+            var items = ItemRepository.QueryAllItems().Where(i => i.IsPublic);
 
-            if (topic != null && topic.Length > 0)
+            if (topic is { Length: > 0 })
             {
-                queryable = queryable
-                    .Where(i => i.Topics.Any(t => t.Name == topic));
+                items = ItemRepository.FilterItemsByTopic(items, topic);
             }
 
-            var model = queryable
+            var model = items
                 .OrderByDescending(i => i.Id)
                 .ToList();
 
-            var items = ItemMapper.MapDescriptors(model, user.Id);
+            var topics = TopicRepository.QueryAllTopics()
+                .OrderBy(t => t.Name)
+                .ToList();
 
-            var descriptor = new StreamDescriptor()
+            var streamDescriptor = new StreamDescriptor
             {
-                Items = items
+                Items = ItemMapper.MapDescriptors(model, user.Id),
+                Topics = TopicMapper.MapDescriptors(topics, user.Id)
             };
 
-            descriptor.Topics = TopicMapper.MapDescriptors(Context.Topics
-                .Include(t => t.Users)
-                .Where(t => t.ItemCount > 0)
-                .OrderBy(t => t.Name)
-                .ToList(), user.Id);
-
-            return View(descriptor);
+            return View(streamDescriptor);
         }
 
         /// <summary>

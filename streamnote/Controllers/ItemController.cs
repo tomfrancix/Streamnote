@@ -17,6 +17,8 @@ using Microsoft.EntityFrameworkCore;
 using streamnote.Data;
 using streamnote.Mapper;
 using streamnote.Models;
+using streamnote.Repository;
+using streamnote.Repository.Interface;
 
 namespace streamnote.Controllers
 {
@@ -31,6 +33,8 @@ namespace streamnote.Controllers
         private readonly ItemMapper ItemMapper;
         private readonly CommentMapper CommentMapper;
         private readonly ImageProcessingHelper ImageProcessingHelper;
+        private readonly IItemRepository ItemRepository;
+        private readonly ITopicRepository TopicRepository;
 
         /// <summary>
         /// Constructor.
@@ -40,13 +44,15 @@ namespace streamnote.Controllers
         /// <param name="itemMapper"></param>
         /// <param name="commentMapper"></param>
         /// <param name="imageProcessingHelper"></param>
-        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper)
+        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper, IItemRepository itemRepository, ITopicRepository topicRepository)
         {
             Context = context;
             UserManager = userManager;
             ItemMapper = itemMapper;
             CommentMapper = commentMapper;
             ImageProcessingHelper = imageProcessingHelper;
+            ItemRepository = itemRepository;
+            TopicRepository = topicRepository;
         }
 
         /// <summary>
@@ -57,12 +63,7 @@ namespace streamnote.Controllers
         {              
             var user = await UserManager.GetUserAsync(User);
 
-            var model = Context.Items
-                .Where(i => i.User.Id == user.Id)
-                .Include(b => b.User)
-                .Include(b => b.Likes).ThenInclude(u => u.User)
-                .Include(t => t.Topics).ThenInclude(t => t.Users)
-                .Where(u => u.User != null)
+            var model = ItemRepository.QueryUsersItems(user)
                 .OrderByDescending(i => i.Id)
                 .ToList();
 
@@ -85,11 +86,7 @@ namespace streamnote.Controllers
                 return NotFound();
             }
 
-            var item = await Context.Items
-                .Include(u => u.User)
-                .Include(u => u.Likes).ThenInclude(u => u.User)
-                .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var item = await ItemRepository.QueryAllItems().FirstOrDefaultAsync(m => m.Id == id);
 
             var itemDescriptor = ItemMapper.MapDescriptor(item, user.Id);
 
@@ -125,58 +122,17 @@ namespace streamnote.Controllers
             item.Modified = DateTime.UtcNow;
             item.User = await UserManager.GetUserAsync(User);
 
-            if (selectedTopics != null)
-            {
-                var selectTopics = selectedTopics.Split(",");
-                foreach (var topic in selectTopics)
-                {
-                    var existing = Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower());
-                    if (existing != null && existing.Name != null)
-                    {
-                        item.Topics = new List<Topic>() {existing};
-                        existing.ItemCount++;
-                        Context.Update(existing);
-                        await Context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        var newTopic = new Topic
-                        {
-                            Name = topic.ToLower(),
-                            ItemCount = 1
-                        };
+            item = await AppendTopics(item, selectedTopics);
 
-                        Context.Add(newTopic);
-                        await Context.SaveChangesAsync();
-
-                        if (item.Topics == null)
-                        {
-                            item.Topics = new List<Topic>();
-                        }
-
-                        item.Topics.Add(Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower()));
-                    }
-                }
-            }
-
-            if (image != null)
-            {
-                item.ImageContentType = image.ContentType;
-                using (var fs = image.OpenReadStream())
-                {
-                    using (var br = new BinaryReader(fs))
-                    {
-                        item.Image = ImageProcessingHelper.ResizeImageFile(br.ReadBytes((int) fs.Length), 1024);
-                    }
-                }
-            }
+            item = AppendImage(item, image);
 
             if (ModelState.IsValid)
             {
-                Context.Add(item);
-                await Context.SaveChangesAsync();
+                ItemRepository.CreateItem(item);
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(item);
         }
 
@@ -217,7 +173,7 @@ namespace streamnote.Controllers
                 return NotFound();
             }
 
-            var existing = Context.Items.FirstOrDefault(i => i.Id == id);
+            var existing = ItemRepository.Read(id);
 
             if (existing != null)
             {
@@ -225,62 +181,13 @@ namespace streamnote.Controllers
                 existing.ImageContentType = existing.ImageContentType;
                 existing.Modified = DateTime.UtcNow;
 
-                if (selectedTopics != null)
-                {
-                    var selectTopics = selectedTopics.Split(",");
-                    foreach (var topic in selectTopics)
-                    {
-                        var existingTopic = Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower());
-                        if (existingTopic != null && existingTopic.Name != null)
-                        {
-                            item.Topics.Add(existingTopic);
-                        }
-                        else
-                        {
-                            var newTopic = new Topic
-                            {
-                                Name = topic.ToLower(),
-                                ItemCount = 0
-                            };
+                item = await AppendTopics(item, selectedTopics);
 
-                            Context.Add(newTopic);
-                            await Context.SaveChangesAsync();
-                            item.Topics.Add(Context.Topics.FirstOrDefault(t => t.Name.ToLower() == topic.ToLower()));
-                        }
-                    }
-                }
-
-                if (image != null)
-                {
-                    existing.ImageContentType = image.ContentType;
-                    using (var fs = image.OpenReadStream())
-                    {
-                        using (var br = new BinaryReader(fs))
-                        {
-                            existing.Image = br.ReadBytes((int)fs.Length);
-                        }
-                    }
-                }
+                item = AppendImage(item, image);
 
                 if (ModelState.IsValid)
                 {
-
-                    try
-                    {
-                        Context.Update(existing);
-                        await Context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!ItemExists(existing.Id))
-                        {
-                            return NotFound();
-                        }
-                        else
-                        {
-                            throw;
-                        }
-                    }
+                    ItemRepository.UpdateItem(item);
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -301,8 +208,7 @@ namespace streamnote.Controllers
                 return NotFound();
             }
 
-            var item = await Context.Items
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var item = ItemRepository.Read((int)id);
             if (item == null)
             {
                 return NotFound();
@@ -326,14 +232,60 @@ namespace streamnote.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        /// <summary>
-        /// Check if an item exists.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private bool ItemExists(int id)
+        public async Task<Item> AppendTopics(Item item, string selectedTopics)
         {
-            return Context.Items.Any(e => e.Id == id);
+            if (selectedTopics != null)
+            {
+                var listOfTopics = selectedTopics.Split(",");
+
+                foreach (var topic in listOfTopics)
+                {
+                    var existing = TopicRepository.QueryExistingTopic(topic);
+
+                    if (existing is { Name: { } })
+                    {
+                        await TopicRepository.IncrementItemCount(existing);
+
+                    }
+                    else
+                    {
+                        var newTopic = new Topic
+                        {
+                            Name = topic.ToLower(),
+                            ItemCount = 1
+                        };
+
+                        existing = await TopicRepository.CreateTopic(newTopic);
+                    }
+
+                    item.Topics.Add(existing);
+                }
+            }
+
+            return item;
+        }
+
+        /// <summary>
+        /// Append an image to the item.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public Item AppendImage(Item item, IFormFile image)
+        {
+            if (image != null)
+            {
+                item.ImageContentType = image.ContentType;
+                using (var fs = image.OpenReadStream())
+                {
+                    using (var br = new BinaryReader(fs))
+                    {
+                        item.Image = br.ReadBytes((int)fs.Length);
+                    }
+                }
+            }
+
+            return item;
         }
     }
 }

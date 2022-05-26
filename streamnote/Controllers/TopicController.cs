@@ -47,7 +47,8 @@ namespace streamnote.Controllers
                     new()
                     {
                         Name = query,
-                        ItemCount = 0
+                        ItemCount = 0,
+                        Users = new List<ApplicationUser>()
                     }
                 };
             }

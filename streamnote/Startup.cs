@@ -10,7 +10,9 @@ using streamnote.Data;
 using streamnote.Mapper;
 using streamnote.Messenger;
 using streamnote.Models;
-                                                  
+using streamnote.Repository;
+using streamnote.Repository.Interface;
+
 namespace streamnote
 {
     public class Startup
@@ -34,6 +36,7 @@ namespace streamnote
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
 
+            // Mappers and helpers.
             services.AddTransient<ProfileMapper>();
             services.AddTransient<ItemMapper>();
             services.AddTransient<CommentMapper>();
@@ -41,6 +44,11 @@ namespace streamnote
             services.AddTransient<TopicMapper>();
             services.AddTransient<ImageProcessingHelper>();
 
+            // Interfaces
+            services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<ITopicRepository, TopicRepository>();
+
+            // Connection services.
             services.AddSignalR(hubOptions =>
             {
                 hubOptions.EnableDetailedErrors = true;

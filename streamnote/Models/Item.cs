@@ -8,6 +8,13 @@ namespace streamnote.Models
     /// </summary>
     public class Item
     {
+        public Item()
+        {
+            Comments = new List<Comment>();
+            Likes = new List<Like>();
+            Topics = new List<Topic>();
+        }
+
         public virtual int Id { get; set; }
         public virtual DateTime Created { get; set; }
         public virtual DateTime Modified { get; set; }
@@ -23,6 +30,6 @@ namespace streamnote.Models
         public ApplicationUser User { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; }
-        public virtual List<Topic> Topics { get; set; }
+        public List<Topic> Topics { get; set; }
     }
 }
