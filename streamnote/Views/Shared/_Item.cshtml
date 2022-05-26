@@ -2,84 +2,106 @@
 @model streamnote.Models.Descriptors.ItemDescriptor
 
 <div class="row">
-    <div class="card">
+    <div class="card">  
+        <div class="card-body itemHeader">
+            <span>
+                
+                @Html.Partial("_UserName", new UserNameDescriptor()
+                {
+                    FullName = Model.FullName,
+                    UserImage = Model.UserImage,
+                    UserImageContentType = Model.UserImageContentType,
+                    UserName = Model.UserName
+                })
+
+                - <span style="font-size: 0.8em;">
+                    @Model.FriendlyDateTime
+                    @{
+                        if (Model.CreatedByLoggedInUser)
+                        {
+                            <span>- <a asp-controller="Item" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
+                        }
+                    }
+                </span>
+                <br />
+                <h5 class="text-content-title">@Html.DisplayFor(modelItem => Model.Title)</h5>
+                <span class="text-content">@Html.DisplayFor(modelItem => Model.Content)</span>
+            </span>
+        </div>
         <div class="card-body">
             <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
                 @{
                     if (Model.Image != null && Model.ImageContentType != null)
                     {
-                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" />
+                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%;"/>
                     }
                 }
             </a> 
+        </div> 
+        <div class="itemStatistics">
+            <div class="row" style="text-align: center; padding: 5px;">
+                <div class="col-sm-4">                                                                        
+                    @Model.CommentCount comment@{if (@Model.CommentCount != 1){<span>s</span>}} 
+                </div>
+                <div class="col-sm-4">
+                    @Model.ShareCount share@{if (@Model.ShareCount != 1){<span>s</span>}}
+                </div>
+                <div class="col-sm-4">
+                    @Model.LikeCount upvote@{if (@Model.LikeCount != 1){<span>s</span>}}
+                </div>
+            </div>
         </div>
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
                 <div class="col-sm-4">
-                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton">
                         <i class="fa fa-comment"></i> @Model.CommentCount
                     </a>
                 </div>
                 <div class="col-sm-4">
-
-                    <i class="fa fa-share"></i> @Model.ShareCount
+                                           
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton">
+                        <i class="fa fa-share"></i> @Model.ShareCount
+                    </a>
                 </div>
                 <div class="col-sm-4">
                     @{
                         if (@Model.LoggedInUserLikesThis)
                         {
                             var id = "unLikePost" + @Model.Id;
-                            <a onclick="unLikePost(@Model.Id, '@Model.UserName')" id="@id">
+                            <a onclick="unLikePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton">
                                 <i class="fa fa-arrow-up" style="color: hotpink;"></i> @Model.LikeCount
                             </a>
                         }
                         else
                         {
                             var id = "likePost" + @Model.Id;
-                            <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id">
+                            <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton">
                                 <i class="fa fa-arrow-up"></i> @Model.LikeCount
                             </a>
                         } 
                     }
                 </div>
                 </div>
-        </div>
-        <div class="card-footer">
-            <span>
-                
-                @Html.Partial("_UserName", new UserNameDescriptor()
-                {
-                    UserImage = Model.UserImage,
-                    UserImageContentType = Model.UserImageContentType,
-                    UserName = Model.UserName
-                })
-
-                - at @Model.Created.ToShortDateString()
-                @{
-                    if (Model.CreatedByLoggedInUser)
-                    {
-                        <span>- <a asp-controller="Item" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
-                    }
-                }
-                <br />
-                <span style="font-size: 1.2em;">@Html.DisplayFor(modelItem => Model.Title)</span><br />
-                @Html.DisplayFor(modelItem => Model.Content)
-            </span>
-        </div>
+        </div> 
+       
         @{
             if (Model.Comments != null)
-            {          
+            {         
+        <hr/> 
                 <div class="itemTopics">
                     @{
                         if (Model.Topics != null && Model.Topics.Count > 0)
                         {
+                            <span>topics: </span>
                             foreach (var topic in Model.Topics)
                             {
                                 <span class="itemTopic">@topic.Name</span>
                             }
                         }
                     }
-                </div>
+                </div> 
+                <hr/>
                 <div class="commentSection">
                     <span><strong>Post Comment</strong></span><br />
 

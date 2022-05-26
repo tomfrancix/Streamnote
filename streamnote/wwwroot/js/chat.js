@@ -26,7 +26,7 @@ connection.on("ReceiveMessage",
                     console.log(status);
                 });
         } else {
-            $("#messagesIcon").attr("style", "display:inline-block");
+            $("#messagesIcon").attr("style", "color:hotpink");
         }
 
 
@@ -139,5 +139,5 @@ function unLikePost(itemId, username) {
 connection.on("ReceiveLike",
     function (likeHtml, status) {
         $("#newNotifications").append(likeHtml);
-        $("#notificationsIcon").attr("style", "display:inline-block");
+        $("#notificationsIcon").attr("style", "color:hotpink");
     });

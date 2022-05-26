@@ -79,10 +79,11 @@ namespace streamnote.Repository
         /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void CreateItem(Item item)
+        public async Task CreateItem(Item item)
         {
             Context.Add(item);
-            Context.SaveChangesAsync();
+            await Context.SaveChangesAsync(); 
+            await Context.DisposeAsync();
         }
 
         /// <summary>
@@ -91,12 +92,13 @@ namespace streamnote.Repository
         /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public Item UpdateItem(Item item)
+        public async Task<Item> UpdateItemAsync(Item item)
         {
             try
             {
                 Context.Update(item);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
+                await Context.DisposeAsync();
             }
             catch (DbUpdateConcurrencyException)
             {

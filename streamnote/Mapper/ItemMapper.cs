@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using streamnote.Data;
 using streamnote.Models;
 using streamnote.Models.Descriptors;
 
@@ -11,10 +12,12 @@ namespace streamnote.Mapper
     public class ItemMapper
     {
         private readonly TopicMapper TopicMapper;
+        private readonly DateTimeHelper DateTimeHelper;
 
-        public ItemMapper(TopicMapper topicMapper)
+        public ItemMapper(TopicMapper topicMapper, DateTimeHelper dateTimeHelper)
         {
             TopicMapper = topicMapper;
+            DateTimeHelper = dateTimeHelper;
         }
 
         /// <summary>
@@ -43,16 +46,20 @@ namespace streamnote.Mapper
         /// <returns></returns>
         public ItemDescriptor MapDescriptor(Item item, string userId)
         {
+            var time = (item.Created > item.Modified) ? item.Created : item.Modified;
+
+            var timeString = DateTimeHelper.GetFriendlyDateTime(time);
+
             return new ItemDescriptor
             {
                 Id = item.Id,
-                Created = item.Created,
-                Modified = item.Modified,
+                FriendlyDateTime = timeString,
                 Title = item.Title,
                 Content = item.Content,
                 Image = item.Image,
                 ImageContentType = item.ImageContentType,
                 IsPublic = item.IsPublic,
+                FullName = item.User.FirstName + " " + item.User.LastName,
                 UserName = item.User.UserName,
                 UserImageContentType = item.User.ImageContentType,
                 UserImage = item.User.Image ,

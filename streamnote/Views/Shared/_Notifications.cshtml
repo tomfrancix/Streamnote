@@ -4,21 +4,19 @@
                        
 @if (SignInManager.IsSignedIn(User))
 {          
-    <li class="nav-item">
+    <li class="nav-item custom-nav-item">
         <a class="nav-link text-dark" data-toggle="modal" data-target="#mySearchModal" title="Search">
             <i class="fa fa-search"></i>
         </a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item custom-nav-item">
         <a class="nav-link text-dark" href="/Messages/Index" title="Messages">
-            <i class="fa fa-envelope"></i>  
-            <i class="fa fa-circle notifyCircle" id="messagesIcon"></i>
+            <i class="fa fa-envelope notifyCircle" id="messagesIcon"></i>
         </a>
     </li> 
-    <li class="nav-item">
+    <li class="nav-item custom-nav-item">
         <a class="nav-link text-dark" data-toggle="modal" data-target="#myModal" title="Notifications">
-            <i class="fa fa-bell"></i>  
-            <i class="fa fa-circle notifyCircle" id="notificationsIcon"></i>
+            <i class="fa fa-bell" id="notificationsIcon"></i>
         </a>
     </li>
 }

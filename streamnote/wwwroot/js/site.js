@@ -89,9 +89,9 @@ $(document).ready(function () {
         })
         .done(function (result, status) {
             if (result) {
-                $("#messagesIcon").attr("style", "display:inline-block");
+                $("#messagesIcon").attr("style", "color:hotpink;");
             } else {
-                $("#messagesIcon").attr("style", "display:none");
+                $("#messagesIcon").attr("style", "color:hotpink;");
             }
         });
 

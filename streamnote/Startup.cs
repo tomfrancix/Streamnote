@@ -43,6 +43,7 @@ namespace streamnote
             services.AddTransient<UserMapper>();
             services.AddTransient<TopicMapper>();
             services.AddTransient<ImageProcessingHelper>();
+            services.AddTransient<DateTimeHelper>();
 
             // Interfaces
             services.AddScoped<IItemRepository, ItemRepository>();

@@ -11,6 +11,7 @@ namespace streamnote.Models.Descriptors
         public virtual string Bio { get; set; }
         public virtual DateTime Dob { get; set; }
 
+        public string UserFullName { get; set; }
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }
         public byte[] UserImage { get; set; }

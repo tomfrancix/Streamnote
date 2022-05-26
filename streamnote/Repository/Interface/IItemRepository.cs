@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using streamnote.Models;
 
@@ -11,8 +10,8 @@ namespace streamnote.Repository.Interface
 
         IQueryable<Item> QueryUsersItems(ApplicationUser user);
 
-        void CreateItem(Item item);
-        Item UpdateItem(Item item);
+        Task CreateItem(Item item);
+        Task<Item> UpdateItemAsync(Item item);
         IQueryable<Item> QueryPublicItems(ApplicationUser user);
         IQueryable<Item> FilterItemsByTopic(IQueryable<Item> items, string topic);
 

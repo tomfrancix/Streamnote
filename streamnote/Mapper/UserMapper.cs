@@ -37,6 +37,7 @@ namespace streamnote.Mapper
             {
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
+                FullName = profile.FirstName + " " + profile.LastName,
                 UserImage = profile.Image,
                 UserImageContentType = profile.ImageContentType,
                 UserName = profile.UserName

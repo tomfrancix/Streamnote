@@ -1,6 +1,6 @@
 ﻿@model streamnote.Models.Descriptors.UserNameDescriptor
 
-<a href="/Profile/View?username=@Model.UserName">
+<a href="/Profile/View?username=@Model.UserName" style="text-underline:none;">
     @{
         if (Model.UserImage != null && Model.UserImageContentType != null)
         {
@@ -8,5 +8,8 @@
              class="icon" />
         }
     }
-    <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
-</a>
+</a>                                               
+<a href="/Profile/View?username=@Model.UserName" style="margin-left:5PX;text-underline:none">
+    
+    <strong>@Html.DisplayFor(modelItem => Model.FullName)</strong>
+</a>                                                       

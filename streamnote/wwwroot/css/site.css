@@ -9,13 +9,17 @@ a.navbar-brand {
 
 /* Provide sufficient contrast against white background */
 a {
-  color: #0366d6;
+    color: black;
 }
 
 .btn-primary {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+a:hover, button:hover, .actionButton:hover {
+    cursor: pointer;
+    text-decoration: none;
 }
 
 * {
@@ -65,6 +69,7 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+    background-color: rgba(0, 0, 0, 0.01);
 }
 .footer {
   position: absolute;
@@ -74,7 +79,7 @@ body {
   line-height: 60px; /* Vertically center the text there */
 }
 
-.card, .card-body img {
+.card {
     width: 100%;
 }
 
@@ -188,13 +193,6 @@ hr {
     }
 }
 
-.notifyCircle {
-    font-size: 0.6em;
-    transform: translateX(-10px) translateY(3px);
-    color: hotpink;
-    display: none;
-}
-
 .contactLink {
     padding: 4px 15px;
     border-radius: 20px;
@@ -212,9 +210,7 @@ hr {
 }
 .signInAsUser {
     padding: 1px 5px 2px 5px;
-    border-radius: 12px;
-    background-color: rgba(0, 0, 0, 0.9);
-    color: chartreuse;
+    border-radius: 12px;  
     font-size: 0.7em;
     margin-top: 3px;
 }
@@ -273,4 +269,54 @@ hr {
     padding: 0;
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     height: 100%;
+}
+
+.nav-item.custom-nav-item {
+    padding: 0px 8px 5px 6px;
+    font-size: 1.2em;
+    background-color: rgba(0, 0, 0, 0.05);
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    margin: 0 4px;
+}
+.itemHeader {
+    padding: 8px;
+}
+.actionButton {
+    width: 100%;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 5px;
+}
+.itemStatistics .row {
+        margin:0;
+    padding: 1px;
+}
+.itemStatistics .row .col-sm-4 {
+    padding: 1px;
+}
+p, .col-sm-4 {
+    font-size: 0.8em;
+}
+h4 {
+    font-size: 0.8em;
+}
+.text-content {
+    font-size: 0.9em;
+}
+.text-content-title {
+    font-size: 1.2em;
+    padding-top: 12px;
+}
+.profilePictureContainer {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+.profileActionButton {
+    width: 49%;
+    text-align: center;
+    display: inline-block;
+    margin-bottom: 8px;
 }

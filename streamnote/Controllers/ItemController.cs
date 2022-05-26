@@ -128,7 +128,7 @@ namespace streamnote.Controllers
 
             if (ModelState.IsValid)
             {
-                ItemRepository.CreateItem(item);
+                await ItemRepository.CreateItem(item);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -181,13 +181,13 @@ namespace streamnote.Controllers
                 existing.ImageContentType = existing.ImageContentType;
                 existing.Modified = DateTime.UtcNow;
 
-                item = await AppendTopics(item, selectedTopics);
+                existing = await AppendTopics(existing, selectedTopics);
 
-                item = AppendImage(item, image);
+                existing = AppendImage(existing, image);
 
                 if (ModelState.IsValid)
                 {
-                    ItemRepository.UpdateItem(item);
+                    await ItemRepository.UpdateItemAsync(existing);
 
                     return RedirectToAction(nameof(Index));
                 }
