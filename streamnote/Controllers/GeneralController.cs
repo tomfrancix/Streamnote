@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using streamnote.Data;
-using streamnote.Mapper;
+using Streamnote.Relational.Data;
+using Streamnote.Web.Mapper;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for user actions.

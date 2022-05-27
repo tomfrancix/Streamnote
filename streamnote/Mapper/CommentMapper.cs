@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
-using streamnote.Models;
-using streamnote.Models.Descriptors;
+using Streamnote.Relational.Models;
+using Streamnote.Relational.Models.Descriptors;
 
-namespace streamnote.Mapper
+namespace Streamnote.Web.Mapper
 {
     /// <summary>
     /// The mapper for comments.

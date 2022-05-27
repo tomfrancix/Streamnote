@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using streamnote.Data;
-using streamnote.Models;
-using streamnote.Models.Descriptors;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Helpers;
+using Streamnote.Relational.Models;
+using Streamnote.Relational.Models.Descriptors;
 
-namespace streamnote.Mapper
+namespace Streamnote.Web.Mapper
 {
     /// <summary>
     /// Mapper for items.

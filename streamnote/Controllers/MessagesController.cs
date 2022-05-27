@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
-using streamnote.Data;
-using streamnote.Mapper;
-using streamnote.Models;
-using streamnote.Models.Descriptors;
+using Streamnote.Relational.Data;
+using Streamnote.Web.Mapper;
+using Streamnote.Relational.Models;
+using Streamnote.Relational.Models.Descriptors;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for message actions.

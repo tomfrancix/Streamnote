@@ -15,10 +15,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using streamnote.Data;
-using streamnote.Models;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Models;
 
-namespace streamnote.Areas.Identity.Pages.Account
+namespace Streamnote.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel

@@ -14,13 +14,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
-using streamnote.Data;
-using streamnote.Mapper;
-using streamnote.Models;
-using streamnote.Repository;
-using streamnote.Repository.Interface;
+using Newtonsoft.Json;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Helpers;
+using Streamnote.Relational.Interfaces.Repositories;
+using Streamnote.Relational.Interfaces.Services;
+using Streamnote.Web.Mapper;
+using Streamnote.Relational.Models;
+using Streamnote.Relational.Service;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for item actions.
@@ -35,6 +38,7 @@ namespace streamnote.Controllers
         private readonly ImageProcessingHelper ImageProcessingHelper;
         private readonly IItemRepository ItemRepository;
         private readonly ITopicRepository TopicRepository;
+        private readonly IS3Service S3Service;
 
         /// <summary>
         /// Constructor.
@@ -44,7 +48,7 @@ namespace streamnote.Controllers
         /// <param name="itemMapper"></param>
         /// <param name="commentMapper"></param>
         /// <param name="imageProcessingHelper"></param>
-        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper, IItemRepository itemRepository, ITopicRepository topicRepository)
+        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper, IItemRepository itemRepository, ITopicRepository topicRepository, IS3Service s3Service)
         {
             Context = context;
             UserManager = userManager;
@@ -53,6 +57,7 @@ namespace streamnote.Controllers
             ImageProcessingHelper = imageProcessingHelper;
             ItemRepository = itemRepository;
             TopicRepository = topicRepository;
+            S3Service = s3Service;
         }
 
         /// <summary>
@@ -124,7 +129,7 @@ namespace streamnote.Controllers
 
             item = await AppendTopics(item, selectedTopics);
 
-            item = AppendImage(item, image);
+            item = await AppendImage(item, image);
 
             if (ModelState.IsValid)
             {
@@ -183,7 +188,7 @@ namespace streamnote.Controllers
 
                 existing = await AppendTopics(existing, selectedTopics);
 
-                existing = AppendImage(existing, image);
+                existing = await AppendImage(existing, image);
 
                 if (ModelState.IsValid)
                 {
@@ -268,20 +273,35 @@ namespace streamnote.Controllers
         /// <summary>
         /// Append an image to the item.
         /// </summary>
-        /// <param name="item"></param>
-        /// <param name="image"></param>
+        /// <param name="item">The item.</param>
+        /// <param name="file">The form file.</param>
         /// <returns></returns>
-        public Item AppendImage(Item item, IFormFile image)
+        public async Task<Item> AppendImage(Item item, IFormFile file)
         {
-            if (image != null)
+            if (file != null)
             {
-                item.ImageContentType = image.ContentType;
-                using (var fs = image.OpenReadStream())
+                item.ImageContentType = file.ContentType;
+
+                var fileName = "File_" + file.FileName;
+
+                byte[] bytes;
+
+                using (var ms = new MemoryStream())
                 {
-                    using (var br = new BinaryReader(fs))
-                    {
-                        item.Image = br.ReadBytes((int)fs.Length);
-                    }
+                    await file.CopyToAsync(ms);
+                    bytes = ms.ToArray();
+                }
+
+                var objectExists = await S3Service.ObjectExistsAsync("sn-content", fileName);
+
+                if (!objectExists)
+                {
+                    S3Service.PutObjectAsync("sn-content", fileName, file.ContentType, bytes, new Dictionary<string, string>()).Wait();
+                }
+
+                if (bytes.Length < 10000)
+                {
+                    item.Image = bytes;
                 }
             }
 

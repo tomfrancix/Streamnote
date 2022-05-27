@@ -3,13 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using streamnote.Data;
-using streamnote.Mapper;
-using streamnote.Models;
+using Streamnote.Relational.Data;
+using Streamnote.Web.Mapper;
+using Streamnote.Relational.Models;
 using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 using Controller = Microsoft.AspNetCore.Mvc.Controller;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for comments.

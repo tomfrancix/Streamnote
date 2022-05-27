@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using streamnote.Data;
+using Streamnote.Relational.Data;
 
-[assembly: HostingStartup(typeof(streamnote.Areas.Identity.IdentityHostingStartup))]
-namespace streamnote.Areas.Identity
+[assembly: HostingStartup(typeof(Streamnote.Web.Areas.Identity.IdentityHostingStartup))]
+namespace Streamnote.Web.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {

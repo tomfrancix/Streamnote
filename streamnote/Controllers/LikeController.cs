@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using streamnote.Data;
-using streamnote.Models;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Models;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for like actions.

@@ -1,4 +1,6 @@
-﻿@using streamnote.Models
+﻿@using Streamnote.Relational.Models
+@using Streamnote.Relational.Models
+@using Streamnote.Web.Areas.Identity.Pages.Account.Manage
 @inject SignInManager<ApplicationUser> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;using streamnote.Models;
+using Microsoft.Extensions.Logging;using Streamnote.Relational.Models;
 
-namespace streamnote.Areas.Identity.Pages.Account.Manage
+namespace Streamnote.Web.Areas.Identity.Pages.Account.Manage
 {
     public class EnableAuthenticatorModel : PageModel
     {

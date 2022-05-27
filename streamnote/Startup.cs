@@ -1,4 +1,6 @@
 using System;
+using Amazon.S3;
+using LightInject;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Connections;
@@ -6,14 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using streamnote.Data;
-using streamnote.Mapper;
-using streamnote.Messenger;
-using streamnote.Models;
-using streamnote.Repository;
-using streamnote.Repository.Interface;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Helpers;
+using Streamnote.Relational.Installers;
+using Streamnote.Relational.Interfaces.Repositories;
+using Streamnote.Relational.Interfaces.Services;
+using Streamnote.Web.Mapper;
+using Streamnote.Relational.Models;
+using Streamnote.Relational.Repositories;
+using Streamnote.Relational.Service;
+using Streamnote.Web.Messenger;
 
-namespace streamnote
+namespace Streamnote.Web
 {
     public class Startup
     {
@@ -44,10 +50,7 @@ namespace streamnote
             services.AddTransient<TopicMapper>();
             services.AddTransient<ImageProcessingHelper>();
             services.AddTransient<DateTimeHelper>();
-
-            // Interfaces
-            services.AddScoped<IItemRepository, ItemRepository>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
+            services.AddTransient<IAmazonS3>();
 
             // Connection services.
             services.AddSignalR(hubOptions =>
@@ -55,6 +58,14 @@ namespace streamnote
                 hubOptions.EnableDetailedErrors = true;
                 hubOptions.KeepAliveInterval = TimeSpan.FromMinutes(1);
             });
+        }
+
+        // Use this method to add services directly to LightInject
+        // Important: This method must exist in order to replace the default provider.
+        public void ConfigureContainer(IServiceContainer container)
+        {
+            container.RegisterFrom<RepositoryCompositionRoot>();
+            container.RegisterFrom<ServiceCompositionRoot>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

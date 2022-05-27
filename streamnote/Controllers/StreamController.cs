@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using streamnote.Models;
+using Streamnote.Relational.Models;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using streamnote.Data;
-using streamnote.Mapper;
-using streamnote.Models.Descriptors;
-using streamnote.Repository.Interface;
+using Streamnote.Relational.Data;
+using Streamnote.Relational.Interfaces;
+using Streamnote.Relational.Interfaces.Repositories;
+using Streamnote.Web.Mapper;
+using Streamnote.Relational.Models.Descriptors;
 
-namespace streamnote.Controllers
+namespace Streamnote.Web.Controllers
 {
     /// <summary>
     /// Controller for the homepage.

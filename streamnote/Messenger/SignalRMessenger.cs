@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using streamnote.Data;
+using Streamnote.Relational.Data;
 
-namespace streamnote.Messenger
+namespace Streamnote.Web.Messenger
 {
     /// <summary>
     /// The SignalR messenger hub class (invoked by javascript see:chat.js).
