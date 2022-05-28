@@ -22,12 +22,12 @@ namespace Streamnote.Relational.Service
         /// <param name="client"></param>
         public S3Service(IConfiguration configuration)
         {
-            Configuration = configuration;
+            /*Configuration = configuration;
             AWSConfigs options = Configuration["AWS"];
             options.Credentials = new EnvironmentVariablesAWSCredentials();
             services.AddDefaultAWSOptions(awsOptions);
             services.AddAWSService<IAmazonS3>();
-            IAmazonS3 Client = options.CreateServiceClient<IAmazonS3>();
+            IAmazonS3 Client = options.CreateServiceClient<IAmazonS3>();*/
         }
 
         /// <summary>

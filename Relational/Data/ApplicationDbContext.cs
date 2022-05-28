@@ -23,5 +23,8 @@ namespace Streamnote.Relational.Data
         public DbSet<Like> Likes { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Topic> Topics { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<TaskItem> Tasks { get; set; }
+        public DbSet<Step> Steps { get; set; }
     }
 }

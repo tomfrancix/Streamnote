@@ -34,8 +34,9 @@ namespace Streamnote.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("streamnote_db")));
+                options.UseSqlServer(Configuration.GetConnectionString("streamnote_db"), 
+                    b => b.MigrationsAssembly("Streamnote.Relational")));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
