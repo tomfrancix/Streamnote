@@ -1,27 +1,10 @@
-﻿@model Streamnote.Relational.Models.Project
+﻿@model Streamnote.Relational.Models.Descriptors.ProjectDescriptor
 
-@{
-    ViewData["Title"] = "Create";
-}
 
-<h1>Create</h1>
-
-<h4>Project</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+    <div class="col-md-12">
+        <form asp-action="Create" asp-controller="Projects">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Created" class="control-label"></label>
-                <input asp-for="Created" class="form-control" />
-                <span asp-validation-for="Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Modified" class="control-label"></label>
-                <input asp-for="Modified" class="form-control" />
-                <span asp-validation-for="Modified" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
                 <input asp-for="Title" class="form-control" />
@@ -34,7 +17,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control"></select>
+                <select asp-for="Status" class="form-control">
+                    @{
+                        foreach (var status in Model.StatusOptions)
+                        {
+                            <option value="@status" name="model.Status">@status.ToString()</option>
+                        }
+                    }
+                </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -43,18 +33,9 @@
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="OwnedByUsername" class="control-label"></label>
-                <input asp-for="OwnedByUsername" class="form-control" />
-                <span asp-validation-for="OwnedByUsername" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 

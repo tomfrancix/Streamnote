@@ -1,0 +1,102 @@
+﻿@using Streamnote.Relational
+@model Streamnote.Relational.Models.Descriptors.TaskDescriptor
+
+<div class="container-fluid" id="@Model.TaskBoxIdentifier"> 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="task ownTask">
+                    <div class="taskContainer">
+                        <div>
+                            <i class="fa fa-circle taskTab" style="color: deepskyblue"></i>
+                            <p class="taskTitle"   onclick="expandTask(@Model.Id)">@Model.Title</p>  
+                            
+                            @{
+                                if (Model.Status == TodoStatus.Unstarted)
+                                {
+                                    <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;"> 
+                                        
+                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
+                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-secondary"><i class="fa fa-chevron-right"></i></button>
+                                    </div> 
+                                } else if   (Model.Status == TodoStatus.Started)
+                                {
+                                     
+                                    <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;">   
+                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
+                                        <div class="btn btn-dark" onclick="changeTaskStatus(@Model.Id, 0)">
+                                            <i class="fa fa-chevron-left"></i>
+                                        </div>
+                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-secondary"><i class="fa fa-chevron-right"></i></button>
+                                    </div>
+                                } else if   (Model.Status == TodoStatus.Finished)
+                                {
+                                     
+                                    <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;">  
+                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
+                                        <div class="btn btn-dark" onclick="changeTaskStatus(@Model.Id, 1)">
+                                            <i class="fa fa-chevron-left"></i>
+                                        </div>
+                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-secondary"><i class="fa fa-chevron-right"></i></button>
+                                    </div>
+                                }  else if   (Model.Status == TodoStatus.Delivered)
+                                {
+                                     
+                                    <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;"> 
+                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
+                                        <div class="btn btn-dark" onclick="changeTaskStatus(@Model.Id, 2)">
+                                            <i class="fa fa-chevron-left"></i>
+                                        </div>
+                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-secondary"><i class="fa fa-chevron-right"></i></button>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                    </div> 
+                    <div class="taskContainer hideElement" id="@Model.TaskIdentifier">
+                        <br/>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-12 taskColumn">
+
+                                    <h4>description</h4>
+                                    <div class="card taskCard">
+                                        @Model.Description
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 taskColumn">  
+                                    <br/>
+                                    <h4>tasks <a onclick="createStepModal(@Model.Id, @Model.StepsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>  
+                                    @{
+                                        foreach (var step in Model.Steps)
+                                        {                                   
+                                                @Html.Partial("_Step", step)
+                                        }
+                                    }   
+                                    <span id="@Model.StepsIdentifier"></span>
+                                </div>
+                                <div class="col-sm-12 taskColumn"> 
+                                    <br/>
+
+                                    <h4>comments <a  onclick="createCommentModal(@Model.Id, @Model.CommentsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
+                                    @{
+                                        foreach (var comment in Model.Comments)
+                                        {  
+                                            @Html.Partial("_TaskComment", comment)
+                                        }
+                                    }  
+                                    <span id="@Model.CommentsIdentifier"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿@model Streamnote.Relational.Models.Descriptors.StepDescriptor
+
+<div class="container-fluid" id="@Model.StepIdentifier"> 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="step">
+                    <div class="taskContainer">
+                        <div>
+                            <i class="fa fa-circle taskTab" style="color: deepskyblue"></i>
+                            <p class="taskTitle">@Model.Content</p>   
+                            <div style="float:right" style="display: inline-block;margin-right: 40px;">           
+                                @{
+                                    if (Model.IsCompleted)
+                                    {                                                   
+                                        <button onclick="changeStepStatus(@Model.Id)" class="btn btn-light" style="margin-right: 5px;">
+                                            <i class="fa fa-check" style="color:chartreuse"></i>
+                                        </button>
+
+                                    }
+                                    else
+                                    {     
+                                        <button onclick="changeStepStatus(@Model.Id)" class="btn btn-light" style="margin-right: 5px;">
+                                            <i class="fa fa-square" style="color:black"></i>
+                                        </button>
+                                    }
+                                } 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

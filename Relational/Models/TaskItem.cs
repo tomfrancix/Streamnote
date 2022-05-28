@@ -11,7 +11,7 @@ namespace Streamnote.Relational.Models
     {
         public TaskItem()
         {
-            Comments = new List<Comment>();
+            Comments = new List<TaskComment>();
             Steps = new List<Step>();
         }
 
@@ -22,11 +22,12 @@ namespace Streamnote.Relational.Models
         public virtual string Description { get; set; }
         public virtual TodoStatus Status { get; set; }
         public virtual bool IsPublic { get; set; }
+        public virtual Project Project { get; set; }
 
         public ApplicationUser CreatedBy { get; set; }
 
         public string OwnedByUsername { get; set; } 
-        public List<Comment> Comments { get; set; }
+        public List<TaskComment> Comments { get; set; }
         public List<Step> Steps { get; set; }
     }
 }

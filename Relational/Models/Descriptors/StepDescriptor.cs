@@ -1,19 +1,15 @@
 ﻿using System;
-using Amazon.S3.Model;
 
-namespace Streamnote.Relational.Models
+namespace Streamnote.Relational.Models.Descriptors
 {
-    /// <summary>
-    /// The step class.
-    /// </summary>
-    public class Step
+    public class StepDescriptor
     {
         public virtual int Id { get; set; }
         public virtual DateTime Created { get; set; }
         public virtual DateTime Modified { get; set; }
         public virtual string Content { get; set; }
         public virtual bool IsCompleted { get; set; }
-
-        public virtual TaskItem Task { get; set; }
+        public virtual int TaskId { get; set; }
+        public string StepIdentifier { get; set; }
     }
 }

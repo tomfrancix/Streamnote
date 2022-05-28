@@ -49,6 +49,10 @@ namespace Streamnote.Web
             services.AddTransient<CommentMapper>();
             services.AddTransient<UserMapper>();
             services.AddTransient<TopicMapper>();
+            services.AddTransient<ProjectMapper>();
+            services.AddTransient<TaskMapper>();
+            services.AddTransient<StepMapper>();
+            services.AddTransient<TaskCommentMapper>();
             services.AddTransient<ImageProcessingHelper>();
             services.AddTransient<DateTimeHelper>();
             services.AddTransient<IAmazonS3>();

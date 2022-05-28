@@ -1,0 +1,47 @@
+﻿@model Streamnote.Relational.Models.Descriptors.TaskCommentDescriptor
+
+<div class="container-fluid"> 
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="step" onclick="expandTask(@Model.Id)">
+                    <div class="commentContainer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12" style="padding:8px">
+                                    <div class="commentUsername">
+                                        <span>
+                                            @{
+                                                if (Model.UserImage != null && Model.UserImageContentType != null)
+                                                {
+                                                    <img src="data:@Model.UserImageContentType;base64,@Convert.ToBase64String(Model.UserImage)"
+                                                         class="icon" />
+                                                }
+                                            }
+                                            <strong>@@@Html.DisplayFor(modelItem => Model.UserName)</strong>
+                                            - at @Model.Created.ToShortDateString()
+                                            @{
+                                                if (Model.CreatedByLoggedInUser)
+                                                {
+                                                    <span>- <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
+                                                }
+                                            }
+                                            <br />                                    
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                        <p class="taskTitle" style="font-size: 1.2em;">@Model.Content</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>                                                             
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

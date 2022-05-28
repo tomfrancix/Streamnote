@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace Streamnote.Relational.Models
@@ -24,5 +25,7 @@ namespace Streamnote.Relational.Models
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; }
         public List<Topic> Topics { get; set; }
+        public List<TaskComment> TaskComments { get; set; } 
+        public List<TaskItem> Task { get; set; }
     }
 }

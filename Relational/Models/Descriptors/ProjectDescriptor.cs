@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Streamnote.Relational.Models
+namespace Streamnote.Relational.Models.Descriptors
 {
-    /// <summary>
-    /// The task class.
-    /// </summary>
-    public class Project
+    public class ProjectDescriptor
     {
-        public Project()
-        {
-            Tasks = new List<TaskItem>(); 
-            Users = new List<ApplicationUser>(); 
-        }
-
         public virtual int Id { get; set; }
         public virtual DateTime Created { get; set; }
         public virtual DateTime Modified { get; set; }
@@ -21,11 +12,14 @@ namespace Streamnote.Relational.Models
         public virtual string Description { get; set; }
         public virtual TodoStatus Status { get; set; }
         public virtual bool IsPublic { get; set; }
+        public virtual bool IsCurrentProject { get; set; }
 
         public ApplicationUser CreatedBy { get; set; }
 
-        public string OwnedByUsername { get; set; } 
-        public List<TaskItem> Tasks { get; set; }
-        public List<ApplicationUser> Users { get; set; }
+        public string OwnedByUsername { get; set; }
+        public List<TaskDescriptor> Tasks { get; set; }
+        public List<UserNameDescriptor> Users { get; set; }
+
+        public List<TodoStatus> StatusOptions { get; set; }
     }
 }

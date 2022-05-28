@@ -209,3 +209,179 @@ $('#searchTopics').bind('keyup',
                 });
         }
     });
+
+$('#createProjectModal').on('shown.bs.modal', function (e) {
+    $.post({
+            url: "/Projects/New",
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $("#createProjectBody").html("");
+            $("#createProjectBody").append(result);
+        });
+});
+
+$('#createTaskModal').on('shown.bs.modal', function (e) {
+    var projectId = $("#projectId").val();
+    $.post({
+        url: "/Task/New",
+        data: {
+            projectId: projectId
+},
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $("#createTaskBody").html("");
+            $("#createTaskBody").append(result);
+        });
+});
+
+function saveTask(projectId) {
+    var taskTitle = $("#taskTitle").val();
+    var taskDescription = $("#taskDescription").val();
+    var taskIsPublic = $("#taskIsPublic").val();
+
+    $.post({
+            url: "/Task/Create",
+        data: {
+                projectId: projectId,
+                title: taskTitle,
+                description: taskDescription,
+                isPublic: taskIsPublic
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $('#createTaskModal').modal('hide');
+            $("#newTasks").append(result);
+        });
+}
+
+function createStepModal(taskId) {
+    $.post({
+            url: "/Step/New",
+            data: {
+                taskId: taskId
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $("#createStepBody").html("");
+            $("#createStepBody").append(result);
+            $('#createStepModal').modal('show')
+        });;
+}
+
+function createCommentModal(taskId) {
+    $.post({
+            url: "/TaskComment/New",
+            data: {
+                taskId: taskId
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $("#createTaskCommentBody").html("");
+            $("#createTaskCommentBody").append(result);
+            $('#createTaskCommentModal').modal('show')
+        });
+}
+
+function saveStep(taskId) {
+    var stepContent = $("#stepContent").val();
+    var stepDescription = $("#stepDescription").val();
+    var stepIsPublic = $("#stepIsPublic").val();
+    var stepsIdentifier = "#steps" + taskId;
+
+    $.post({
+            url: "/Step/Create",
+            data: {
+                taskId: taskId,
+                content: stepContent,
+                description: stepDescription,
+                isPublic: stepIsPublic
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $('#createStepModal').modal('hide');
+            $(stepsIdentifier).append(result);
+        });
+}
+
+function saveTaskComment(taskId) {
+    var taskCommentContent = $("#taskCommentContent").val(); 
+
+    var commentsIdentifier = "#comments" + taskId;
+    $.post({
+            url: "/TaskComment/Create",
+            data: {
+                taskId: taskId,
+                content: taskCommentContent
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $('#createTaskCommentModal').modal('hide');
+            $(commentsIdentifier).append(result);
+        });
+}
+
+function expandTask(taskId) {   
+    var id = "#task" + taskId;
+    if ($(id).css('display') == 'none') {
+        $(id).show();
+    } else {
+        $(id).hide();
+    }
+}
+
+function changeTaskStatus(taskId, taskStatus) {
+    var id = "#taskBox" + taskId;
+    var task = $(id);
+    $.post({
+            url: "/Task/ChangeStatus",
+            data: {
+                taskId: taskId,
+                status: taskStatus
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            task.remove();
+            if (taskStatus == 0) { 
+                $("#newTasks").append(result);
+            } else if (taskStatus == 1) {
+
+                $("#yourTasks").append(result);
+            } else if (taskStatus == 2) {
+
+                $("#yourTasks").append(result);
+            }else if (taskStatus == 3) {
+
+                $("#completedTasks").append(result);
+            }
+        });
+                              
+}
+
+function changeStepStatus(stepId) {
+    var id = "#stepIdentifier" + stepId;
+    var step = $(id);
+    $.post({
+            url: "/Step/ChangeStatus",
+            data: {
+                stepId: stepId
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+
+            step.replaceWith(result);   
+
+        });
+}
+
+function editTask(taskId) {
+    $('#editTaskModal').modal('show');
+}

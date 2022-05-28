@@ -1,0 +1,59 @@
+﻿@model Streamnote.Relational.Models.Descriptors.OrganizerDescriptor
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container-fluid">  
+    <div class="row">      
+        <div class="col-md-2">
+            <h4>projects <a data-toggle="modal" data-target="#createProjectModal"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
+            <hr/>  
+            @{
+                foreach (var project in Model.Projects)
+                {    
+                    @Html.Partial("_Project", project)
+                }
+            }
+        </div>   
+        @{
+            if (Model.IsViewingProject)
+            {
+                <input type="hidden" value="@Model.ProjectId" id="projectId"/>
+                <div class="col-sm-10">
+                    <h4>to do list <a data-toggle="modal" data-target="#createTaskModal"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
+                    <hr/>                               
+                    @{
+                        foreach (var task in Model.Tasks)
+                        {
+                            @Html.Partial("_Task", task)
+                        }
+                    }    
+                    <span id="newTasks"></span>
+                    <br/> 
+                    <h4>your tasks </h4>
+                    <hr/>                               
+                    @{
+                        foreach (var task in Model.YourTasks)
+                        {
+                            @Html.Partial("_Task", task)
+                        }
+                    }    
+                    <span id="yourTasks"></span>
+                    <br/>
+                    <h4>completed tasks</h4>
+                    <hr/>                               
+                    @{
+                        foreach (var task in Model.CompletedTasks)
+                        {
+                            @Html.Partial("_Task", task)
+                        }
+                    }    
+                    <span id="completedTasks"></span>
+                    <br/>
+                </div>
+            }
+        }
+        
+    </div>
+</div>

@@ -1,0 +1,19 @@
+﻿@model Streamnote.Relational.Models.Descriptors.TaskCommentDescriptor
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form id="createTaskCommentForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>  
+            <div class="form-group">
+                <label asp-for="Content" class="control-label"></label>
+                <input id="taskCommentContent" class="form-control" />
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>   
+            <div class="form-group">
+                <a class="btn btn-primary" onclick="saveTaskComment(@Model.TaskId)" >Submit</a>
+            </div>
+        </form>
+    </div>
+</div>
+

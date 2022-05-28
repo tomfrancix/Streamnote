@@ -19,10 +19,10 @@ namespace Streamnote.Web.Controllers
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> UserManager;
-            private readonly ApplicationDbContext Context;
-            private readonly ProfileMapper ProfileMapper;
-            private readonly ItemMapper ItemMapper;
-            private readonly CommentMapper CommentMapper;
+        private readonly ApplicationDbContext Context;
+        private readonly ProfileMapper ProfileMapper;
+        private readonly ItemMapper ItemMapper;
+        private readonly CommentMapper CommentMapper;
 
         /// <summary>
         /// Constructor.

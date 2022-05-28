@@ -1,0 +1,29 @@
+﻿@model Streamnote.Relational.Models.Descriptors.TaskDescriptor
+
+
+<div class="row">
+    <div class="col-md-12">
+        <form id="createTaskForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>  
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input id="taskTitle" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input id="taskDescription" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input id="taskIsPublic" class="form-check-input" asp-for="IsPublic" /> @Html.DisplayNameFor(model => model.IsPublic)
+                </label>
+            </div> 
+            <div class="form-group">
+                <a class="btn btn-primary" onclick="saveTask(@Model.ProjectId)" >Submit</a>
+            </div>
+        </form>
+    </div>
+</div>
+
