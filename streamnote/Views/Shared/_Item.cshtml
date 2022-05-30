@@ -24,8 +24,13 @@
                     }
                 </span>
                 <br />
-                <h5 class="text-content-title">@Html.DisplayFor(modelItem => Model.Title)</h5>
-                <span class="text-content">@Html.DisplayFor(modelItem => Model.Content)</span>
+                <h5 class="text-content-title">@Html.DisplayFor(modelItem => Model.Title)</h5> 
+                @{
+                    if (!Model.IsDetails)
+                    {      
+                        <span class="text-content">@Html.Raw(Model.Content)</span>
+                    }
+                }                                                                            
             </span>
         </div>
         <div class="card-body">
@@ -38,6 +43,26 @@
                 }
             </a> 
         </div> 
+        @if (Model.IsDetails)
+        {    
+            <div class="itemContent">
+                <p  style="white-space: pre-line">@Html.DisplayFor(modelItem => Model.Content)</p>
+            </div>   
+            <hr/>
+        }    
+        <div class="itemTopics">
+            @{
+                if (Model.Topics != null && Model.Topics.Count > 0)
+                {
+                    <span>topics: </span>
+                    foreach (var topic in Model.Topics)
+                    {
+                        <span class="itemTopic">@topic.Name</span>
+                    }
+                }
+            }
+        </div> 
+        <hr/> 
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
                 <div class="col-sm-4">                                                                        
@@ -82,27 +107,15 @@
                         } 
                     }
                 </div>
-                </div>
-        </div> 
+            </div>
+        </div>  
        
         @{
             if (Model.Comments != null)
-            {         
-        <hr/> 
-                <div class="itemTopics">
-                    @{
-                        if (Model.Topics != null && Model.Topics.Count > 0)
-                        {
-                            <span>topics: </span>
-                            foreach (var topic in Model.Topics)
-                            {
-                                <span class="itemTopic">@topic.Name</span>
-                            }
-                        }
-                    }
-                </div> 
+            {
                 <hr/>
-                <div class="commentSection">
+
+                <div class="commentSection"> 
                     <span><strong>Post Comment</strong></span><br />
 
                     <span>          
@@ -110,9 +123,10 @@
                         <textarea type="text" id="commentInput" class="commentInput" rows="3"
                                   style="overflow: hidden; margin-top: 10px; resize: none"
                                   placeholder="Start typing..."></textarea>
-                    </span>
-                    <br />
-                    <br />
+                    </span> 
+                </div>                     
+                    <hr style="margin-bottom:10px;"/> 
+                <div class="commentSection">        
 
                     <span><strong>Comments</strong></span>
                     <span id="newComments"></span>

@@ -43,7 +43,7 @@
                 @Html.DisplayFor(modelItem => item.Title)<br />
                 <br />
                 <strong>@Html.DisplayNameFor(model => model.Content)</strong><br />
-                @Html.DisplayFor(modelItem => item.Content)<br />
+                @Html.Raw(item.Content)<br />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-light" style="margin: 2px; width: 100%;">Edit</a> <br/>

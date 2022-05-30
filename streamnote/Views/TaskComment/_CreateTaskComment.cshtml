@@ -5,13 +5,12 @@
     <div class="col-md-12">
         <form id="createTaskCommentForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>  
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input id="taskCommentContent" class="form-control" />
+            <div class="form-group">                                  
+            <textarea id="taskCommentContent" class="form-control" placeholder="Write a comment..." rows="10"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>   
             <div class="form-group">
-                <a class="btn btn-primary" onclick="saveTaskComment(@Model.TaskId)" >Submit</a>
+                <a class="btn btn-light" onclick="saveTaskComment(@Model.TaskId)" >Submit</a>
             </div>
         </form>
     </div>

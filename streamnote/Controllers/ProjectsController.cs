@@ -47,6 +47,9 @@ namespace Streamnote.Web.Controllers
 
             var projects = await Context.Projects
                 .Include(t => t.Tasks)
+                .Include(p => p.Users)
+                .Include(p => p.CreatedBy)
+                .Where(p => p.Users.Select(u => u.Id).Contains(user.Id) || p.CreatedBy.Id == user.Id)
                 .ToListAsync();
 
             var allTasks = TaskMapper.MapDescriptors(tasks.ToList(), user.Id);
@@ -54,12 +57,20 @@ namespace Streamnote.Web.Controllers
             var organizer = new OrganizerDescriptor()
             {
                 Projects = ProjectMapper.MapDescriptors(projects, user.Id),
-                Tasks = allTasks.Where(t => t.Status == TodoStatus.Unstarted && t.OwnedByUsername != user.UserName).ToList(),
-                YourTasks = allTasks.Where(t => (t.Status == TodoStatus.Started || t.Status == TodoStatus.Finished) && t.OwnedByUsername == user.UserName).ToList(),
-                CompletedTasks = allTasks.Where(t => t.Status == TodoStatus.Delivered).ToList(),
+                Tasks = allTasks.Where(t => t.Status == TodoStatus.Unstarted && t.OwnedByUsername != user.UserName).OrderBy(t => t.Rank).ToList(),
+                YourTasks = allTasks.Where(t => (t.Status == TodoStatus.Started) && t.OwnedByUsername == user.UserName).OrderBy(t => t.Rank).ToList(),
+                CompletedTasks = allTasks.Where(t => t.Status == TodoStatus.Finished || t.Status == TodoStatus.Delivered).OrderBy(t => t.Rank).ToList(),
                 IsViewingProject = (id != null && id > 0),
                 ProjectId = id ?? 0
             };
+
+            foreach (var project in organizer.Projects)
+            {
+                if (project.Id == id)
+                {
+                    project.IsCurrentProject = true;
+                }
+            }
 
             return View(organizer);
         }

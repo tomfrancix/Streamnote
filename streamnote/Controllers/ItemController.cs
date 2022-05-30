@@ -101,6 +101,8 @@ namespace Streamnote.Web.Controllers
 
             itemDescriptor.Comments = CommentMapper.MapDescriptors(comments, user.Id);
 
+            itemDescriptor.IsDetails = true;
+
             return View(itemDescriptor);
         }
 
@@ -185,6 +187,7 @@ namespace Streamnote.Web.Controllers
                 existing.Image = existing.Image;
                 existing.ImageContentType = existing.ImageContentType;
                 existing.Modified = DateTime.UtcNow;
+                existing.Content = item.Content;
 
                 existing = await AppendTopics(existing, selectedTopics);
 
@@ -291,13 +294,15 @@ namespace Streamnote.Web.Controllers
                     await file.CopyToAsync(ms);
                     bytes = ms.ToArray();
                 }
-
+                
+                /*
                 var objectExists = await S3Service.ObjectExistsAsync("sn-content", fileName);
 
                 if (!objectExists)
                 {
                     S3Service.PutObjectAsync("sn-content", fileName, file.ContentType, bytes, new Dictionary<string, string>()).Wait();
                 }
+                */
 
                 if (bytes.Length < 10000)
                 {

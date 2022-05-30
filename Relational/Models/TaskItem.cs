@@ -22,6 +22,7 @@ namespace Streamnote.Relational.Models
         public virtual string Description { get; set; }
         public virtual TodoStatus Status { get; set; }
         public virtual bool IsPublic { get; set; }
+        public virtual int Rank { get; set; }
         public virtual Project Project { get; set; }
 
         public ApplicationUser CreatedBy { get; set; }

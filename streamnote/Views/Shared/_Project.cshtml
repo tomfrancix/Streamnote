@@ -1,8 +1,22 @@
 ﻿@model Streamnote.Relational.Models.Descriptors.ProjectDescriptor
 
-
-<div class="task">           
-    <a href="/Projects/View/@Model.Id">
-        <i class="fa fa-circle" style="color: grey;"></i> @Model.Title
-    </a>
-</div>
+            
+@{
+    if (Model.IsCurrentProject)
+    {
+        <div class="task" style="color: grey; background-color: #62ffd8">
+            <a href="/Projects/View/@Model.Id">
+                <i class="fa fa-circle"></i> @Model.Title
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="task">
+            <a href="/Projects/View/@Model.Id">
+                <i class="fa fa-circle" style="color: grey;"></i> @Model.Title
+            </a>
+        </div>
+    }
+}
+      

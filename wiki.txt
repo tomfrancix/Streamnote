@@ -2,5 +2,15 @@
 
 
 Use package manager console: 
+
+add-migration migrationName - to add a new migration
+update-database - to run the migrations
+
 $env:ASPNETCORE_ENVIRONMENT="Development" - to use dev settings
 $env:ASPNETCORE_ENVIRONMENT="Production" - to use prod settings
+
+
+Deploy to Elastic Beanstalk.
+
+Right click on the project and select deploy with elastic beanstalk.
+

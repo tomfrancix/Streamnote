@@ -32,6 +32,10 @@ a:hover, button:hover, .actionButton:hover {
   border-color: #1861ac;
 }
 
+.nav-link { 
+    font-size: 0.8em;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -126,6 +130,15 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.12);
     border-radius: 8px;
     padding: 5px 8px;
+}
+.comment {
+    background-color: rgba(0, 0, 0, 0.03);
+    margin-top: 5px;
+}
+.commentText {
+    margin-bottom: 0;
+    padding: 8px;
+    font-size: 1em;
 }
 
 .comment, .commentSection, .message {
@@ -275,8 +288,8 @@ hr {
     padding: 0px 8px 5px 6px;
     font-size: 1.2em;
     background-color: rgba(0, 0, 0, 0.05);
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     text-align: center;
     margin: 0 4px;
 }
@@ -330,8 +343,7 @@ h4 {
     margin-top: 3px;
 }
 .taskTab {
-    margin-top: 13px;
-    margin-right: 13px;
+    margin: 13px;
 }
 .taskTitle {
     margin-top: 2px;   
@@ -351,13 +363,14 @@ h4 {
     display: block;
 }
 .container-fluid, .row, .col-md {
-   // border: 1px solid red;
+   
 }
 .taskColumn {
     margin-bottom: 8px;
 }
 .taskCard {
     padding: 8px;
+    background-color: transparent;
 }
 .step {
     background-color: rgba(0, 0, 0, 0.03);
@@ -369,4 +382,45 @@ h4 {
 }
 .hideElement {
     display: none;
+}
+
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ol.example li.placeholder {
+    position: relative;
+    /** More li styles **/
+}
+
+ol.example li.placeholder:before {
+    position: absolute;
+    /** Define arrowhead **/
+}
+
+ol.todoSort {
+    list-style: none;
+    padding: 0;
+}
+
+.taskTitleText:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+.itemContent {
+    padding: 8px;
+    text-align: justify;
+}
+.editorInformation {
+    background-color: rgba(0,0,0,0.1);
+    color: black;
+}
+.ql-content {
+    font-size: 1.2em;
 }

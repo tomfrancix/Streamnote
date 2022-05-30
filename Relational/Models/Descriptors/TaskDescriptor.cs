@@ -24,6 +24,10 @@ namespace Streamnote.Relational.Models.Descriptors
         public string TaskBoxIdentifier { get; set; }
         public string StepsIdentifier { get; set; }
         public string CommentsIdentifier { get; set; }
+        public string EditDescriptionIdentifier { get; set; }
+        public string TaskTabIdentifier { get; set; }
+        public int Rank { get; set; }
+        public string Color { get; set; }
 
         public string OwnedByUsername { get; set; } 
         public List<StepDescriptor> Steps { get; set; }

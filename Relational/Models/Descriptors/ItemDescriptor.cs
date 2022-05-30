@@ -18,6 +18,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public virtual int ShareCount { get; set; }
         public virtual int LikeCount { get; set; }
         public virtual List<TopicDescriptor> Topics { get; set; }
+        public bool IsDetails { get; set; }
 
         public string FullName { get; set; }
         public string UserName { get; set; }

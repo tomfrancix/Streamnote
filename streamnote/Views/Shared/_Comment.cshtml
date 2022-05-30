@@ -1,6 +1,5 @@
 ﻿@model Streamnote.Relational.Models.Descriptors.CommentDescriptor
-
-<hr />
+      
 <div class="row">
     <div class="col-md-12">
         <div class="comment">
@@ -14,8 +13,8 @@
                     }
                 </a>
             </div>
-            <div class="commentText">
-                <span>
+            <div>
+                <span style="font-size: 0.8em;">
                     @{
                         if (Model.UserImage != null && Model.UserImageContentType != null)
                         {
@@ -31,8 +30,9 @@
                             <span>- <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
                         }
                     }
-                    <br />
-                    @Html.DisplayFor(modelItem => Model.Content)
+                    <br />                    
+                    <p  class="commentText">@Html.DisplayFor(modelItem => Model.Content)</p>
+                    
                 </span>
             </div>
 

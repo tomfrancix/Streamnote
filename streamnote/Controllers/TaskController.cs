@@ -132,6 +132,7 @@ namespace Streamnote.Web.Controllers
             var user = await UserManager.GetUserAsync(User);
             var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
             task.Status = (TodoStatus)status;
+            task.Modified = DateTime.UtcNow;
             if (status > 0)
             {
                 task.OwnedByUsername = user.UserName;
@@ -164,6 +165,60 @@ namespace Streamnote.Web.Controllers
                     .FirstOrDefault(i => i.Id == taskId);
 
             return PartialView("_Task", TaskMapper.MapDescriptor(newTask, user.Id)); ;
+
+        }
+
+
+        // POST: Task/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public async Task<IActionResult> ChangeDescription(int taskId, string description)
+        {
+            var user = await UserManager.GetUserAsync(User);
+            var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
+            task.Description = description;
+            task.Modified = DateTime.UtcNow;
+
+            try
+            {
+                Context.Update(task);
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TaskItemExists(task.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }                
+
+            return new AcceptedResult(); ;
+
+        }
+
+        // POST: Task/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public async Task<IActionResult> UpdateTaskOrder(string query)
+        {                                 
+
+            try
+            {                                    
+                await Context.Database.ExecuteSqlRawAsync(query);
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {   
+                throw;
+            }
+
+            return new AcceptedResult(); ;
 
         }
 

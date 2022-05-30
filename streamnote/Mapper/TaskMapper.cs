@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Ajax.Utilities;
+using SixLabors.ImageSharp.PixelFormats;
+using Streamnote.Relational;
 using Streamnote.Relational.Helpers;
 using Streamnote.Relational.Models;
 using Streamnote.Relational.Models.Descriptors;
@@ -53,6 +56,21 @@ namespace Streamnote.Web.Mapper
 
             var timeString = DateTimeHelper.GetFriendlyDateTime(time);
 
+            var color = "rgba(0,0,0,0.05)";
+
+            switch (task.Status)
+            {
+                case TodoStatus.Started:     
+                    color = "rgba(255,0,0,0.05)";
+                    break;
+                case TodoStatus.Finished:
+                    color = "rgba(0,0,255,0.05)";
+                    break;
+                case TodoStatus.Delivered:
+                    color = "rgba(0,255,0,0.05)";
+                    break;
+            }
+
             return new TaskDescriptor
             {
                 Id = task.Id,
@@ -71,6 +89,10 @@ namespace Streamnote.Web.Mapper
                 TaskBoxIdentifier = "taskBox" + task.Id,
                 StepsIdentifier = "steps" + task.Id,
                 CommentsIdentifier = "comments" + task.Id,
+                EditDescriptionIdentifier = "editDescription" + task.Id,
+                TaskTabIdentifier = "taskTab" + task.Id,
+                Rank = task.Rank,
+                Color = color
             };
         }
     }

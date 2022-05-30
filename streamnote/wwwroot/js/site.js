@@ -329,16 +329,20 @@ function saveTaskComment(taskId) {
 
 function expandTask(taskId) {   
     var id = "#task" + taskId;
+    var taskTab = "#taskTab" + taskId;
     if ($(id).css('display') == 'none') {
         $(id).show();
+        $(taskTab).attr("style", "color:#62ffd8");
     } else {
         $(id).hide();
+        $(taskTab).attr("style", "color:rgba(0,0,0,0.1)");
     }
 }
 
 function changeTaskStatus(taskId, taskStatus) {
     var id = "#taskBox" + taskId;
     var task = $(id);
+    var $element;
     $.post({
             url: "/Task/ChangeStatus",
             data: {
@@ -349,23 +353,42 @@ function changeTaskStatus(taskId, taskStatus) {
         })
         .done(function (result, status) {
             task.remove();
-            if (taskStatus == 0) { 
-                $("#newTasks").append(result);
+            if (taskStatus == 0) {
+                new Audio('/sounds/drop.wav').play();
+                $element = $("#newTasks");
+                $element.append(result);
+                
             } else if (taskStatus == 1) {
+                new Audio('/sounds/changeStatus.wav').play();
+                $element = $("#yourTasks");
+                $element.prepend(result);
 
-                $("#yourTasks").append(result);
             } else if (taskStatus == 2) {
+                new Audio('/sounds/changeStatus.wav').play();
+                $element = $("#completedTasks");
+                $element.prepend(result);
 
-                $("#yourTasks").append(result);
-            }else if (taskStatus == 3) {
+            } else if (taskStatus == 3) {
+                new Audio('/sounds/changeStatus.wav').play();
+                $element = $("#completedTasks");
+                $element.prepend(result);
 
-                $("#completedTasks").append(result);
+            } else if (taskStatus == 4) {
+                new Audio('/sounds/accepted.mp3').play();
             }
+
+            $element.first("li").animate({
+                    backgroundColor: "green"
+                }, 1000).delay(2000).queue(function () {
+                    $(this).animate({
+                        backgroundColor: "red"
+                    }, 1000).dequeue();
+                });
         });
                               
 }
 
-function changeStepStatus(stepId) {
+function changeStepStatus(stepId, isCompleted) {
     var id = "#stepIdentifier" + stepId;
     var step = $(id);
     $.post({
@@ -377,6 +400,10 @@ function changeStepStatus(stepId) {
         })
         .done(function (result, status) {
 
+            // This 'isCompleted' came before we updated it!
+            if (isCompleted == "False") {
+                new Audio('/sounds/ding.mp3').play();
+            }
             step.replaceWith(result);   
 
         });
@@ -384,4 +411,178 @@ function changeStepStatus(stepId) {
 
 function editTask(taskId) {
     $('#editTaskModal').modal('show');
+}
+
+function editTaskDescription(el, taskId, descriptionId) {
+    var newDescription = $(descriptionId).val();
+    
+    $.post({
+            url: "/Task/ChangeDescription",
+            data: {
+                taskId: taskId,
+                description: newDescription
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $(el).attr("style", "color:chartreuse;margin-top: -35px;").html("<i class='fa fa-check' />");
+            setTimeout(function() {
+                $(el).attr("style", "color:black;margin-top: -35px;").html("save");
+            }, 2000);
+        });
+}
+
+
+var adjustment;
+$(function () {
+    $("ol.todoSort").sortable({
+        group: 'simple_with_animation',
+        pullPlaceholder: false,
+        // animation on drop
+        onDrop: function ($item, container, _super) {
+            var $clonedItem = $('<li/>').css({ height: 0 });
+            $item.before($clonedItem);
+            $clonedItem.animate({ 'height': $item.height() });
+
+            $item.animate($clonedItem.position(), function () {
+                $clonedItem.detach();
+                _super($item, container);
+            });
+
+            var sql = ""
+            $("ol.todoSort").children('li').each(function(index, element) {
+                var taskId = $(this).attr('iden');
+                if (taskId != undefined) {
+                    sql += "UPDATE Tasks SET RANK = '" + (index + 1) + "' WHERE Id =" + $(this).attr('iden') + ";";
+                }
+            });
+
+            $.post({
+                    url: "/Task/UpdateTaskOrder",
+                    data: {
+                        query: sql
+                    },
+                    dataType: "html"
+                })
+                .done(function(result, status) {
+                    
+                });
+        },
+
+        // set $item relative to cursor position
+        onDragStart: function ($item, container, _super) {
+            var offset = $item.offset(),
+                pointer = container.rootGroup.pointer;
+
+            adjustment = {
+                left: pointer.left - offset.left,
+                top: pointer.top - offset.top
+            };
+
+            _super($item, container);
+        },
+        onDrag: function ($item, position) {
+            $item.css({
+                left: position.left - adjustment.left,
+                top: position.top - adjustment.top
+            });
+        },
+        update: function(event, ui) {
+            
+        }
+    });
+});
+
+
+/*$.post({
+        url: "/Analytics/GetTaskData",
+        data: {
+            query: sql
+        },
+        dataType: "html"
+    })
+    .done(function (result, status) {
+
+    });*/
+
+/*
+
+var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+var yValues = [55, 49, 44, 24, 15];
+var barColors = [
+    "#b91d47",
+    "#00aba9",
+    "#2b5797",
+    "#e8c3b9",
+    "#1e7145"
+];
+var taskPieChart = new Chart("taskPieChart", {
+    type: "pie",
+    data: {
+        labels: xValues,
+        datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Totals"
+        }
+    }
+});
+
+var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+var yValues = [55, 49, 44, 24, 15];
+var barColors = ["red", "green", "blue", "orange", "brown"];
+
+var taskBarChart = new Chart("taskBarChart", {
+    type: "bar",
+    data: {
+        labels: xValues,
+        datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+        }]
+    },
+    options: {
+        legend: { display: false },
+        title: {
+            display: true,
+            text: "World Wine Production 2018"
+        }
+    }
+});*/
+
+$('.ql-editor').bind('keyup',
+    function (e) {
+        
+        var html = $(".ql-editor").html();
+        console.log(html);
+
+        $("#editorOutput").val(html);
+
+        var text = stripHtml(html);
+
+        $("#letterCount").text(text.length);
+
+        var wordCount = text.trim().split(/\s+/).length;
+        $("#wordCount").text(wordCount);
+
+        if (wordCount > 2500) {
+            $(".ql-editor").attr("style", 'color:red');
+            $("#feedback").text("Posts can be a maximum of 2500 words!").attr("style", "color:orangered;");
+            $("#saveButton").attr("disabled", "true");
+        } else {
+            $(".ql-editor").attr("style", "");
+            $("#feedback").text(2500 - wordCount + " words left...").attr("style", "color:green;");
+            $("#saveButton").removeAttr("disabled");
+        }
+    });
+
+function stripHtml(html) {
+    let tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
 }
