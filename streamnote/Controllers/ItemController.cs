@@ -99,7 +99,7 @@ namespace Streamnote.Web.Controllers
                 .Where(c => c.Item.Id == item.Id)
                 .ToList();
 
-            itemDescriptor.Comments = CommentMapper.MapDescriptors(comments, user.Id);
+            itemDescriptor.Comments = CommentMapper.MapDescriptors(comments, user.Id).OrderByDescending(c => c.Id).ToList();
 
             itemDescriptor.IsDetails = true;
 
@@ -117,30 +117,78 @@ namespace Streamnote.Web.Controllers
 
         /// <summary>
         /// Create an item action.
-        /// </summary>
-        /// <param name="item"></param>
+        /// </summary>                 
+        /// <param name="id"></param>
+        /// <param name="title"></param>
+        /// <param name="content"></param>
+        /// <param name="isPublic"></param>
         /// <param name="image"></param>
-        /// <param name="selectedTopics"></param>
+        /// <param name="topics"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Id,Title,Content,IsPublic,Image")] Item item, IFormFile image, string selectedTopics)
-        {
-            item.Created = DateTime.UtcNow;
-            item.Modified = DateTime.UtcNow;
-            item.User = await UserManager.GetUserAsync(User);
-
-            item = await AppendTopics(item, selectedTopics);
-
-            item = await AppendImage(item, image);
-
-            if (ModelState.IsValid)
+        public async Task<IActionResult> CreateOrUpdate(int? id, string title, string content, string isPublic, IFormFile image, string selectedTopics)
+        {                                      
+            if (id is > 0)
             {
-                await ItemRepository.CreateItem(item);
+                var existing = ItemRepository.Read((int)id);
 
-                return RedirectToAction(nameof(Index));
+                if (existing != null)
+                {
+                    existing.Image = existing.Image;
+                    existing.ImageContentType = existing.ImageContentType;
+                    existing.Modified = DateTime.UtcNow;
+                    existing.Content = content;
+                    existing.Title = title;
+                    existing.IsPublic = isPublic == "true";
+
+                    existing = await AppendTopics(existing, selectedTopics);
+
+                    existing = await AppendImage(existing, image);
+
+                    if (ModelState.IsValid)
+                    {
+                        await ItemRepository.UpdateItemAsync(existing);
+
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+            }
+            else
+            {
+                var now = DateTime.UtcNow;
+                var item = new Item
+                {
+                    Created = now,
+                    Modified = now,
+                    Title = title,
+                    Content = content,
+                    Image = new byte[]
+                    {
+                    },
+                    ImageContentType = null,
+                    IsPublic = isPublic == "true",
+                    CommentCount = 0,
+                    ShareCount = 0,
+                    LikeCount = 0,
+                    User = await UserManager.GetUserAsync(User),
+                    Comments = null,
+                    Likes = null,
+                    Topics = new List<Topic>()
+                };
+
+                item = await AppendTopics(item, selectedTopics);
+
+                item = await AppendImage(item, image);
+
+                if (ModelState.IsValid)
+                {
+                    await ItemRepository.CreateItem(item);
+
+                    return RedirectToAction(nameof(Index));
+                }
             }
 
-            return View(item);
+            return Json(true);
         }
 
         /// <summary>
@@ -160,47 +208,6 @@ namespace Streamnote.Web.Controllers
             {
                 return NotFound();
             }
-            return View(item);
-        }
-
-        /// <summary>
-        /// Edit an item action.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="item"></param>
-        /// <param name="image"></param>
-        /// <param name="selectedTopics"></param>
-        /// <returns></returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Item item, IFormFile image, string selectedTopics)
-        {
-            if (id != item.Id)
-            {
-                return NotFound();
-            }
-
-            var existing = ItemRepository.Read(id);
-
-            if (existing != null)
-            {
-                existing.Image = existing.Image;
-                existing.ImageContentType = existing.ImageContentType;
-                existing.Modified = DateTime.UtcNow;
-                existing.Content = item.Content;
-
-                existing = await AppendTopics(existing, selectedTopics);
-
-                existing = await AppendImage(existing, image);
-
-                if (ModelState.IsValid)
-                {
-                    await ItemRepository.UpdateItemAsync(existing);
-
-                    return RedirectToAction(nameof(Index));
-                }
-            }
-
             return View(item);
         }
 
@@ -304,7 +311,7 @@ namespace Streamnote.Web.Controllers
                 }
                 */
 
-                if (bytes.Length < 10000)
+                if (bytes.Length < 13000000)
                 {
                     item.Image = bytes;
                 }

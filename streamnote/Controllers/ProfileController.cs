@@ -58,6 +58,7 @@ namespace Streamnote.Web.Controllers
                 .Include(l => l.Likes).ThenInclude(l => l.User)
                 .Include(i => i.Topics).ThenInclude(t => t.Users)
                 .Where(i => i.User.UserName == username)
+                .OrderByDescending(i => i.Id)
                 .ToList(), user.Id);
 
             profile.Images = new List<ImageDescriptor>();
@@ -74,7 +75,7 @@ namespace Streamnote.Web.Controllers
                 }
             }
 
-            profile.Comments = CommentMapper.MapDescriptors(Context.Comments.Where(u => u.User.UserName == username).Take(5).ToList(), user.Id);
+            profile.Comments = CommentMapper.MapDescriptors(Context.Comments.Where(u => u.User.UserName == username).OrderByDescending(c => c.Id).Take(5).ToList(), user.Id);
 
             return View(profile);
         }

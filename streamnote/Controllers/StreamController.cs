@@ -47,24 +47,47 @@ namespace Streamnote.Web.Controllers
         /// Get the main stream (homepage).
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index(string? topic)
+        public async Task<IActionResult> Index(string? topic, string? filter)
         {
             var user = await UserManager.GetUserAsync(User);
+                
+            var topics = TopicRepository.QueryAllTopics()
+                .OrderBy(t => t.Name)
+                .ToList();
 
-            var items = ItemRepository.QueryAllItems().Where(i => i.IsPublic);
+            var topicsUserFollows = topics.Where(t => t.Users.Select(u => u.Id).Contains(user.Id)).Select(t => t.Id).ToList();
 
+            var items = ItemRepository
+                .QueryAllItems()
+                .Where(i => i.IsPublic);
+
+            if (filter is { Length: > 0 })
+            {
+                switch (filter)
+                {
+                    case "topics":
+                        items = items.Where(i => i.Topics.Select(t => t.Id)
+                            .Any(t => topicsUserFollows.Contains(t)));
+                        break;
+                    case "recent":
+                        items = items.OrderByDescending(i => i.Id);
+                        break;
+                    case "popular":
+                        items = items.OrderByDescending(i => i.LikeCount).ThenByDescending(i => i.CommentCount);
+                        break;
+                    case "groups":
+                        break;
+                    case "following":
+                        break;
+                }
+            }
+             
             if (topic is { Length: > 0 })
             {
                 items = ItemRepository.FilterItemsByTopic(items, topic);
             }
 
-            var model = items
-                .OrderByDescending(i => i.Id)
-                .ToList();
-
-            var topics = TopicRepository.QueryAllTopics()
-                .OrderBy(t => t.Name)
-                .ToList();
+            var model = items.ToList();
 
             var streamDescriptor = new StreamDescriptor
             {

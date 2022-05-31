@@ -9,17 +9,62 @@
         <div class="col-md-3" style="text-align: left;">
             <div class="container">
                 <div class="row">
+                       
                     <div class="col-sm-12">
-                        <h4>Topics you follow</h4>
+                        <h4>filters</h4>
+                        <hr/>
+                        <div class="row" id=""> 
+                            <span class='topic'>
+                                
+                                <span style="padding: 6px 0 6px 10px;">
+                                    <i class="fa fa-clock-o" style="color: grey"></i>
+                                </span>
+                                <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?filter=recent">most recent</a>
+                            </span> 
+                            <span class='topic'>
+                                
+                                <span style="padding: 6px 0 6px 10px;">
+                                    <i class="fa fa-star-o" style="color: grey"></i>
+                                </span>
+                                <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?filter=popular">popular posts</a>
+                            </span> 
+                            <span class='topic'>
+                                
+                                <span style="padding: 6px 0 6px 7px;">
+                                    <i class="fa fa-users" style="color: grey"></i>
+                                </span>
+                                <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?filter=groups">groups you joined</a>
+                            </span>  
+                            <span class='topic'>
+                                
+                                <span style="padding: 6px 0 6px 8px;">
+                                    <i class="fa fa-bell-o" style="color: grey"></i>
+                                </span>
+                                <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?filter=following">people you follow</a>
+                            </span>  
+                            <span class='topic'>
+                                
+                                <span style="padding: 6px 0 6px 10px;">
+                                    <i class="fa fa-thumbs-o-up" style="color: grey"></i>
+                                </span>
+                                <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?filter=topics">topics you like</a>
+                            </span>
+                        </div>  
+                        <br/>  
+                        <br/>
+                        </div>
+                        <div class="col-sm-12">
+                        <h4>topics you like</h4>
                         <hr/>
                         <div class="row" id="topicsYouFollow">
-                            @Html.Partial("_TopicStream", Model.Topics.Where(t => t.UserFollowsTopic).ToList());
+                            @Html.Partial("_TopicStream", Model.Topics.Where(t => t.UserFollowsTopic).ToList())
                         </div> 
                         <br/>
-                        <h4>Other Topics</h4>
-                        <input class="form-control commentInput" placeholder="Search topics..." id="searchTopics"/>
-                        <hr/>
-                        <div class="row" id="searchTopicSuggestions"></div>
+                        <h4>search topics</h4>
+                        <input class="form-control commentInput" placeholder="Search topics..." id="searchTopics" style="font-size: 0.8em; background-color: white;"/>
+                        
+                        <div class="row" id="searchTopicSuggestions"></div>        
+                    <br/>  
                     </div>
                 </div>
             </div>

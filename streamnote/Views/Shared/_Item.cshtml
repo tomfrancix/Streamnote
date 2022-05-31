@@ -22,23 +22,42 @@
                             <span>- <a asp-controller="Item" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
                         }
                     }
-                </span>
-                <br />
-                <h5 class="text-content-title">@Html.DisplayFor(modelItem => Model.Title)</h5> 
+                </span>    
+
+                @if (Model.Title != null && Model.Title.Length > 0)
+                {
+                    <br/>
+                    <h5 class="text-content-title">
+                        <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id">@Html.DisplayFor(modelItem => Model.Title)</a>
+                    </h5>
+                }    
+
                 @{
-                    if (!Model.IsDetails)
+                    if (!Model.IsDetails && Model.Content != null && Model.Content.Length > 11)
                     {      
-                        <span class="text-content">@Html.Raw(Model.Content)</span>
+                        <span class="text-content">
+                            @{
+                                if (Model.Content.Length > 200)
+                                {                   
+                                    @Html.Raw(Model.Content.Substring(0,200))<br /> 
+                                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id">Read more....</a> <br />
+                                }
+                                else
+                                {
+                                    @Html.Raw(Model.Content)<br />
+                                }
+                            }
+                        </span>
                     }
                 }                                                                            
             </span>
         </div>
         <div class="card-body">
-            <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%;">
+            <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" style="width: 100%; ">
                 @{
                     if (Model.Image != null && Model.ImageContentType != null)
                     {
-                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%;"/>
+                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%;padding-top: 8px;"/>
                     }
                 }
             </a> 
@@ -46,23 +65,20 @@
         @if (Model.IsDetails)
         {    
             <div class="itemContent">
-                <p  style="white-space: pre-line">@Html.DisplayFor(modelItem => Model.Content)</p>
+                <p  style="white-space: pre-line">@Html.Raw(Model.Content)</p>
             </div>   
             <hr/>
         }    
-        <div class="itemTopics">
-            @{
-                if (Model.Topics != null && Model.Topics.Count > 0)
+        @if (Model.Topics != null && Model.Topics.Count > 0)
+        {
+            <div class="itemTopics"> 
+                @foreach (var topic in Model.Topics)
                 {
-                    <span>topics: </span>
-                    foreach (var topic in Model.Topics)
-                    {
-                        <span class="itemTopic">@topic.Name</span>
-                    }
+                    <span class="itemTopic">:@topic.Name</span>
                 }
-            }
-        </div> 
-        <hr/> 
+            </div>
+            <hr/>
+        }
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
                 <div class="col-sm-4">                                                                        
