@@ -8,51 +8,61 @@
             <div class="row">
                 <div class="task ownTask" style="background-color:@Model.Color">
                     <div class="taskContainer">
-                        <div>            
-                            
-                            <i class="fa fa-circle taskTab" style="color: rgba(0,0,0,0.1)" id="@Model.TaskTabIdentifier"></i>
-                            <p class="taskTitle" onclick="expandTask(@Model.Id)">
-                                <span class="taskTitleText">@Model.Title</span>
-                            </p>  
+                        <div>                                                     
+                                @if   (Model.OwnedByUsername != null && Model.OwnedByUsername.Length > 0) 
+                                {
+                                    <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);" id="@Model.TaskTabIdentifier"></i>
+                                    <p class="taskTitle" onclick="expandTask(@Model.Id)" style="transform: translateY(5px);padding-bottom:3px;">   
+                                        <span class="taskTitleText"><strong>@@@Model.OwnedByUsername</strong></span><br/> 
+                                        <span class="taskTitleText">@Model.Title</span>
+                                    </p> 
+                                }
+                                else
+                                {
+                                    <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
+                                    <p class="taskTitle" onclick="expandTask(@Model.Id)">   
+                                        <span class="taskTitleText">@Model.Title</span>
+                                    </p>  
+                                }
                                                                                                                                
                                     <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;"> 
                             @{
                                 if (Model.Status == TodoStatus.Unstarted)
                                 {
                                         
-                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
-                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
+                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                 } else if   (Model.Status == TodoStatus.Started)
                                 {
                                        
-                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                        <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 0)">
-                                            <i class="fa fa-chevron-left"></i>
-                                        </div>
-                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
+                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 0)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </div>
+                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                    
                                 } else if   (Model.Status == TodoStatus.Finished)
                                 {
                                       
-                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                        <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 1)">
-                                            <i class="fa fa-chevron-left"></i>
-                                        </div>
-                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
+                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 1)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </div>
+                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                 }  else if   (Model.Status == TodoStatus.Delivered)
                                 {
                                                                                                                                         
-                                        <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                        <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 2)">
-                                            <i class="fa fa-chevron-left"></i>
-                                        </div>
-                                        <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                        <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
+                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 2)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </div>
+                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                 }    
                             }          
                                     </div>                                                                                                                           
@@ -62,21 +72,59 @@
                     <div class="taskContainer hideElement" id="@Model.TaskIdentifier">
                         <br/>
                         <div class="container-fluid">
-                            <div class="row">
+                            <div class="row">      
+                                <div class="col-sm-4 taskColumn">
+                                     <h4>info</h4>
+                                    <table class="table table-light table-bordered table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td>created by</td>
+                                                <td>@Model.CreatedBy.FirstName @Model.CreatedBy.LastName</td>
+                                            </tr>  
+                                            <tr>
+                                                <td>owners username</td>
+                                                <td>@Model.OwnedByUsername</td>
+                                            </tr> 
+                                            <tr>
+                                                <td>created at</td>
+                                                <td>@Model.Created.ToShortDateString() @Model.Created.ToShortTimeString()</td>
+                                            </tr> 
+                                            <tr>
+                                                <td>last modified</td>
+                                                <td>@Model.Modified.ToShortDateString() @Model.Modified.ToShortTimeString()</td>
+                                            </tr> 
+                                        <tr>
+                                            <td>private task</td>
+                                            <td>
+                                                @if (Model.IsPublic)
+                                                {
+                                                    <i class="fa fa-close"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-check"></i>
+                                                }
+                                            </td>
+                                        </tr>  
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="col-sm-12 taskColumn">
 
+                                    
+
                                     <h4>description</h4>
-                                    <div class="card taskCard" style="padding: 0 13px 0 0;border:none;">  
-                                            <div class="row">
-                                                <div class="col-md-11">   
-                                                    <textarea type="text" class="form-control" id="@Model.EditDescriptionIdentifier" name="description" placeholder="Add a description...">@Model.Description</textarea>
-                                                </div>
-                                            </div> 
-                                            <div class="row"> 
-                                                <div class="col-md-1 offset-11">
-                                                    <button class="btn btn-light" onclick="editTaskDescription(this, @Model.Id, @Model.EditDescriptionIdentifier)" style="margin-top: -35px;">Save</button>
-                                                </div>
-                                            </div>                                                                                                                    
+                                    <div class="card taskCard" style="padding: 0 13px 0 0; border: none;">
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <textarea type="text" class="form-control" id="@Model.EditDescriptionIdentifier" name="description" placeholder="Add a description...">@Model.Description</textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-1 offset-11">
+                                                <button class="btn btn-light" onclick="editTaskDescription(this, @Model.Id, @Model.EditDescriptionIdentifier)" style="margin-top: -35px;">Save</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 taskColumn">  
@@ -87,7 +135,7 @@
                                     @{
                                         foreach (var step in Model.Steps)
                                         {                                   
-                                                @Html.Partial("_Step", step)
+                                                        @Html.Partial("_Step", step)
                                         }
                                     }   
                                     <span id="@Model.StepsIdentifier"></span>
@@ -99,7 +147,7 @@
                                     @{
                                         foreach (var comment in Model.Comments)
                                         {  
-                                            @Html.Partial("_TaskComment", comment)
+                                                    @Html.Partial("_TaskComment", comment)
                                         }
                                     }  
                                     <span id="@Model.CommentsIdentifier"></span>
