@@ -327,14 +327,21 @@ function saveTaskComment(taskId) {
         });
 }
 
-function expandTask(taskId) {   
+function expandTask(taskId, titleIdentifier, editTitleIdentifier) {   
     var id = "#task" + taskId;
     var taskTab = "#taskTab" + taskId;
+    titleIdentifier = "#" + titleIdentifier;
+    editTitleIdentifier = "#" + editTitleIdentifier;
+
     if ($(id).css('display') == 'none') {
         $(id).show();
+        $(titleIdentifier).hide();
+        $(editTitleIdentifier).show();
         $(taskTab).attr("style", "color:#62ffd8");
     } else {
         $(id).hide();
+        $(titleIdentifier).show();
+        $(editTitleIdentifier).hide();
         $(taskTab).attr("style", "color:rgba(0,0,0,0.1)");
     }
 }
@@ -492,68 +499,6 @@ $(function () {
         }
     });
 });
-
-
-/*$.post({
-        url: "/Analytics/GetTaskData",
-        data: {
-            query: sql
-        },
-        dataType: "html"
-    })
-    .done(function (result, status) {
-
-    });*/
-
-/*
-
-var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-var yValues = [55, 49, 44, 24, 15];
-var barColors = [
-    "#b91d47",
-    "#00aba9",
-    "#2b5797",
-    "#e8c3b9",
-    "#1e7145"
-];
-var taskPieChart = new Chart("taskPieChart", {
-    type: "pie",
-    data: {
-        labels: xValues,
-        datasets: [{
-            backgroundColor: barColors,
-            data: yValues
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: "Totals"
-        }
-    }
-});
-
-var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-var yValues = [55, 49, 44, 24, 15];
-var barColors = ["red", "green", "blue", "orange", "brown"];
-
-var taskBarChart = new Chart("taskBarChart", {
-    type: "bar",
-    data: {
-        labels: xValues,
-        datasets: [{
-            backgroundColor: barColors,
-            data: yValues
-        }]
-    },
-    options: {
-        legend: { display: false },
-        title: {
-            display: true,
-            text: "World Wine Production 2018"
-        }
-    }
-});*/
 
 $('.ql-editor').bind('keyup',
     function (e) {

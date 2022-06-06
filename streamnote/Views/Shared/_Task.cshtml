@@ -8,61 +8,64 @@
             <div class="row">
                 <div class="task ownTask" style="background-color:@Model.Color">
                     <div class="taskContainer">
-                        <div>                                                     
+                        <div>      
+                            <span id="@Model.TitleIdentifier">
                                 @if   (Model.OwnedByUsername != null && Model.OwnedByUsername.Length > 0) 
                                 {
-                                    <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);" id="@Model.TaskTabIdentifier"></i>
-                                    <p class="taskTitle" onclick="expandTask(@Model.Id)" style="transform: translateY(5px);padding-bottom:3px;">   
-                                        <span class="taskTitleText"><strong>@@@Model.OwnedByUsername</strong></span><br/> 
+                                    <a onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" style="font-size: 0.8em;">   
+                                        
+                                        <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(-7px);" id="@Model.TaskTabIdentifier"></i>
+                                        
+                                        <span class="taskTitle">
+                                              <span class="taskTitleText"><strong>@@@Model.OwnedByUsername</strong></span><br/> 
                                         <span class="taskTitleText">@Model.Title</span>
-                                    </p> 
+                                        </span>
+                                    </a> 
                                 }
                                 else
                                 {
                                     <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
-                                    <p class="taskTitle" onclick="expandTask(@Model.Id)">   
+                                    <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
                                         <span class="taskTitleText">@Model.Title</span>
                                     </p>  
                                 }
-                                                                                                                               
+                            </span>
+                            <span class="hideElement" id="@Model.EditTitleIdentifier"> 
+                                <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
+                                    <i class="fa fa-circle taskTab" style="color: chartreuse;transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
+                                </p>
+                                <input type="text" class="form-control" name="title" style="display: inline-block; width: 60%; font-size: 0.9em;"id="@Model.EditTitleInputIdentifier" placeholder="The task must have a title..." value="@Model.Title" />
+                            </span>
                                     <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;"> 
                             @{
                                 if (Model.Status == TodoStatus.Unstarted)
                                 {
-                                        
-                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)">edit</button>
-                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                    <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                    <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                 } else if   (Model.Status == TodoStatus.Started)
                                 {
-                                       
-                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 0)">
-                                                    <i class="fa fa-chevron-left"></i>
-                                                </div>
-                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                    <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 0)">
+                                                        <i class="fa fa-chevron-left"></i>
+                                                    </div>
+                                                    <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                    <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                    
                                 } else if   (Model.Status == TodoStatus.Finished)
                                 {
-                                      
-                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 1)">
-                                                    <i class="fa fa-chevron-left"></i>
-                                                </div>
-                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                                    <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 1)">
+                                                        <i class="fa fa-chevron-left"></i>
+                                                    </div>
+                                                    <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                    <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                 }  else if   (Model.Status == TodoStatus.Delivered)
                                 {
-                                                                                                                                        
-                                                <button  class="btn btn-light" onclick="editTask(@Model.Id)" style="margin-right: 5px;">edit</button>
-                                                <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 2)">
-                                                    <i class="fa fa-chevron-left"></i>
-                                                </div>
-                                                <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
-                                                <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                    <div class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 2)">
+                                                        <i class="fa fa-chevron-left"></i>
+                                                    </div>
+                                                    <div  class="btn" style="width: 100px;"> @Model.Status.ToString()</div>
+                                                    <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                 }    
                             }          
                                     </div>                                                                                                                           
@@ -73,28 +76,22 @@
                         <br/>
                         <div class="container-fluid">
                             <div class="row">      
-                                <div class="col-sm-4 taskColumn">
+                                <div class="col-sm-12 taskColumn">
                                      <h4>info</h4>
-                                    <table class="table table-light table-bordered table-sm">
+                                    <table class="table table-light table-bordered table-sm table-striped" style="text-align: center;">
+                                        <thead>
+                                            <td>created by</td>
+                                            <td>owners username</td>
+                                            <td>created at</td>
+                                            <td>last modified</td>
+                                            <td>private</td>
+                                        </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>created by</td>
-                                                <td>@Model.CreatedBy.FirstName @Model.CreatedBy.LastName</td>
-                                            </tr>  
-                                            <tr>
-                                                <td>owners username</td>
-                                                <td>@Model.OwnedByUsername</td>
-                                            </tr> 
-                                            <tr>
-                                                <td>created at</td>
-                                                <td>@Model.Created.ToShortDateString() @Model.Created.ToShortTimeString()</td>
-                                            </tr> 
-                                            <tr>
-                                                <td>last modified</td>
-                                                <td>@Model.Modified.ToShortDateString() @Model.Modified.ToShortTimeString()</td>
-                                            </tr> 
-                                        <tr>
-                                            <td>private task</td>
+                                        <tr>                   
+                                            <td>@Model.CreatedBy.FirstName @Model.CreatedBy.LastName</td>
+                                            <td>@Model.OwnedByUsername</td>                     
+                                            <td>@Model.Created.ToShortDateString() @Model.Created.ToShortTimeString()</td>
+                                            <td>@Model.Modified.ToShortDateString() @Model.Modified.ToShortTimeString()</td> 
                                             <td>
                                                 @if (Model.IsPublic)
                                                 {
@@ -105,7 +102,7 @@
                                                     <i class="fa fa-check"></i>
                                                 }
                                             </td>
-                                        </tr>  
+                                        </tr>        
                                         </tbody>
                                     </table>
                                 </div>
@@ -135,7 +132,7 @@
                                     @{
                                         foreach (var step in Model.Steps)
                                         {                                   
-                                                        @Html.Partial("_Step", step)
+                                                            @Html.Partial("_Step", step)
                                         }
                                     }   
                                     <span id="@Model.StepsIdentifier"></span>
@@ -147,7 +144,7 @@
                                     @{
                                         foreach (var comment in Model.Comments)
                                         {  
-                                                    @Html.Partial("_TaskComment", comment)
+                                                        @Html.Partial("_TaskComment", comment)
                                         }
                                     }  
                                     <span id="@Model.CommentsIdentifier"></span>

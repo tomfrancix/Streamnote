@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="container-fluid">  
+<div class="container-fluid" style="position: absolute; left: 0; right: 0;">  
     <div class="row">      
-        <div class="col-md-2">
+        <div class="col-md-1">
             <h4>projects <a data-toggle="modal" data-target="#createProjectModal"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
             <hr/>  
             @{
@@ -20,39 +20,41 @@
             if (Model.IsViewingProject)
             {
                 <input type="hidden" value="@Model.ProjectId" id="projectId"/>
-                <div class="col-sm-10">
+                <div class="col-sm-5" style="height: 90vh; overflow-y: scroll;">
                     <h4>to do list <a data-toggle="modal" data-target="#createTaskModal"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
                     <hr/> 
                     <ol class="todoSort" id="newTasks">
-                    @{
-                        foreach (var task in Model.Tasks)
-                        {
-                            @Html.Partial("_Task", task)
-                        }
-                    }   
+                        @{
+                            foreach (var task in Model.Tasks)
+                            {
+                                @Html.Partial("_Task", task)
+                            }
+                        }   
                     </ol>                     
-                    <br/> 
-                    <h4>your tasks </h4>
+                    <br/>  
+                </div>
+                <div class="col-sm-6" style="height: 90vh; overflow-y: scroll;">
+                       <h4>your tasks </h4>
                     <hr/> 
                     <ol class="todoSort" id="yourTasks">                               
-                    @{
-                        foreach (var task in Model.YourTasks)
-                        {
-                            @Html.Partial("_Task", task)
-                        }
-                    }    
+                        @{
+                            foreach (var task in Model.YourTasks)
+                            {
+                                @Html.Partial("_Task", task)
+                            }
+                        }    
                     </ol>                       
                     <br/>
                     <h4>completed tasks</h4>
                     <hr/> 
                     <ol class="todoSort" id="completedTasks">                               
-                    @{
-                        foreach (var task in Model.CompletedTasks)
-                        {
-                            @Html.Partial("_Task", task)
-                        }
-                    }  
-            </ol>                                    
+                        @{
+                            foreach (var task in Model.CompletedTasks)
+                            {
+                                @Html.Partial("_Task", task)
+                            }
+                        }  
+                    </ol>                                    
                     <br/>
                 </div>
             }

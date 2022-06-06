@@ -92,7 +92,10 @@ namespace Streamnote.Web.Mapper
                 EditDescriptionIdentifier = "editDescription" + task.Id,
                 TaskTabIdentifier = "taskTab" + task.Id,
                 Rank = task.Rank,
-                Color = color
+                Color = color,
+                TitleIdentifier = "titleIdentifier" + task.Id,
+                EditTitleIdentifier = "editTitleIdentifier" + task.Id,
+                EditTitleInputIdentifier = "editTitleInputIdentifier" + task.Id,
             };
         }
     }
