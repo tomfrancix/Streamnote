@@ -436,6 +436,11 @@ function editTaskDescription(el, taskId, descriptionId) {
             setTimeout(function() {
                 $(el).attr("style", "color:black;margin-top: -35px;").html("save");
             }, 2000);
+
+
+            if (status == "success") {
+                new Audio('/sounds/ding.mp3').play();
+            }
         });
 }
 
@@ -578,3 +583,42 @@ function createOrUpdateItem(isPublic) {
             });
     }
 }
+$('.taskInput').bind('keyup',
+    function (e) {
+
+        if (e.keyCode === 13) { // 13 is enter key
+
+            // Execute code here.
+            var taskId = $(this).data("identifier");
+            var newTitleValue = $(this).val();
+
+            var data = {
+                title: newTitleValue,
+                taskId: taskId,
+                dataType: "html"
+            }
+
+            $.post({
+                    url: "/Task/UpdateTitle",
+                    data: data
+                })
+                .done(function (result, status) {
+
+                    var titleIdentifier = "#titleIdentifier" + taskId;
+
+                    var $textDisplays = $(titleIdentifier).find(".taskTitleTextContainer");
+
+                    for (var i = 0; i < $textDisplays.length; i++) {
+                        var el = $textDisplays[i];
+
+                        $(el).text(newTitleValue);
+                    }
+
+                    if (status == "success") {
+                        new Audio('/sounds/ding.mp3').play();
+                    }
+                });
+
+        }
+
+    });

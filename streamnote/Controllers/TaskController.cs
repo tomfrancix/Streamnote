@@ -197,8 +197,37 @@ namespace Streamnote.Web.Controllers
                 }
             }                
 
-            return new AcceptedResult(); ;
+            return new AcceptedResult();
+        }
 
+        // POST: Task/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        public async Task<IActionResult> UpdateTitle(string title, int taskId)
+        {
+            var user = await UserManager.GetUserAsync(User);
+
+            var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
+            task.Title = title;
+            task.Modified = DateTime.UtcNow;
+
+            try
+            {
+                Context.Update(task);
+                await Context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TaskItemExists(task.Id))
+                {
+                    return NotFound();
+                }
+
+                throw;
+            }
+
+            return new AcceptedResult();
         }
 
         // POST: Task/Edit/5

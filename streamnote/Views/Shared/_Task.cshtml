@@ -18,7 +18,7 @@
                                         
                                         <span class="taskTitle">
                                               <span class="taskTitleText"><strong>@@@Model.OwnedByUsername</strong></span><br/> 
-                                        <span class="taskTitleText">@Model.Title</span>
+                                        <span class="taskTitleText taskTitleTextContainer">@Model.Title</span>
                                         </span>
                                     </a> 
                                 }
@@ -26,7 +26,7 @@
                                 {
                                     <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
                                     <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
-                                        <span class="taskTitleText">@Model.Title</span>
+                                        <span class="taskTitleText taskTitleTextContainer">@Model.Title</span>
                                     </p>  
                                 }
                             </span>
@@ -34,7 +34,7 @@
                                 <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
                                     <i class="fa fa-circle taskTab" style="color: chartreuse;transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
                                 </p>
-                                <input type="text" class="form-control" name="title" style="display: inline-block; width: 60%; font-size: 0.9em;"id="@Model.EditTitleInputIdentifier" placeholder="The task must have a title..." value="@Model.Title" />
+                                <input type="text" class="form-control taskInput" name="title" style="display: inline-block; width: 60%; font-size: 0.9em;" data-identifier="@Model.Id" id="@Model.EditTitleInputIdentifier" placeholder="The task must have a title..." value="@Model.Title" />
                             </span>
                                     <div class="btn-group" role="group" aria-label="Basic example" style="position: absolute; right: 20px;"> 
                             @{
