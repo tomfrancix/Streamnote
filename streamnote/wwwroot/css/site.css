@@ -439,3 +439,10 @@ pre.ql-syntax {
     padding: 8px 10px 5px 10px;
     border-radius: 3px;
 }
+.btn.btn-light {
+    z-index: 1;
+}
+
+.modal {
+    margin-top: 78px;
+}

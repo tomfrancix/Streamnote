@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Streamnote.Relational;
 using Streamnote.Relational.Data;
+using Streamnote.Relational.Interfaces.Repositories;
 using Streamnote.Relational.Models;
 using Streamnote.Relational.Models.Descriptors;
 using Streamnote.Web.Mapper;
@@ -19,36 +20,14 @@ namespace Streamnote.Web.Controllers
         private readonly ApplicationDbContext Context;
         private readonly TaskMapper TaskMapper;
         private readonly UserManager<ApplicationUser> UserManager;
+        private readonly ITaskRepository TaskRepository;
 
-        public TaskController(ApplicationDbContext context, TaskMapper taskMapper, UserManager<ApplicationUser> userManager)
+        public TaskController(ApplicationDbContext context, TaskMapper taskMapper, UserManager<ApplicationUser> userManager, ITaskRepository taskRepository)
         {
             Context = context;
             TaskMapper = taskMapper;
             UserManager = userManager;
-        }
-
-        // GET: Task
-        public async Task<IActionResult> Index()
-        {
-            return View(await Context.Tasks.ToListAsync());
-        }
-
-        // GET: Task/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var taskItem = await Context.Tasks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (taskItem == null)
-            {
-                return NotFound();
-            }
-
-            return View(taskItem);
+            TaskRepository = taskRepository;
         }
 
         // GET: Task/Create
@@ -104,7 +83,8 @@ namespace Streamnote.Web.Controllers
 
                 return PartialView("_Task", TaskMapper.MapDescriptor(newTask, user.Id)); ;
             }
-            return View(task);
+
+            throw new Exception();
         }
 
         // GET: Task/Edit/5
@@ -120,13 +100,10 @@ namespace Streamnote.Web.Controllers
             {
                 return NotFound();
             }
-            return View(taskItem);
+            throw new Exception();
         }
 
-        // POST: Task/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]              
+        [HttpPost]
         public async Task<IActionResult> ChangeStatus(int taskId, int status)
         {
             var user = await UserManager.GetUserAsync(User);
@@ -242,42 +219,13 @@ namespace Streamnote.Web.Controllers
                 await Context.Database.ExecuteSqlRawAsync(query);
                 await Context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
-            {   
-                throw;
+            catch
+            {
+                // ignored
             }
 
             return new AcceptedResult(); ;
 
-        }
-
-        // GET: Task/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var taskItem = await Context.Tasks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (taskItem == null)
-            {
-                return NotFound();
-            }
-
-            return View(taskItem);
-        }
-
-        // POST: Task/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var taskItem = await Context.Tasks.FindAsync(id);
-            Context.Tasks.Remove(taskItem);
-            await Context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool TaskItemExists(int id)

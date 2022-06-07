@@ -10,6 +10,10 @@ namespace Streamnote.Relational.Installers
         {
             registry.Register<IItemRepository, ItemRepository>();
             registry.Register<ITopicRepository, TopicRepository>();
+            registry.Register<IProjectRepository, ProjectRepository>();
+            registry.Register<ITaskRepository, TaskRepository>();
+            registry.Register<IStepRepository, StepRepository>();
+            registry.Register<ITaskCommentRepository, TaskCommentRepository>();
         }
     }
 }

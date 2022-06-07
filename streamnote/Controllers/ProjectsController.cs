@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Streamnote.Relational;
 using Streamnote.Relational.Data;
+using Streamnote.Relational.Interfaces.Repositories;
 using Streamnote.Relational.Models;
 using Streamnote.Relational.Models.Descriptors;
 using Streamnote.Web.Mapper;
@@ -19,13 +20,17 @@ namespace Streamnote.Web.Controllers
         private readonly ProjectMapper ProjectMapper;
         private readonly TaskMapper TaskMapper;
         private readonly UserManager<ApplicationUser> UserManager;
+        private readonly IProjectRepository ProjectRepository;
+        private readonly ITaskRepository TaskRepository;
 
-        public ProjectsController(ApplicationDbContext context, ProjectMapper projectMapper, UserManager<ApplicationUser> userManager, TaskMapper taskMapper)
+        public ProjectsController(ApplicationDbContext context, ProjectMapper projectMapper, UserManager<ApplicationUser> userManager, TaskMapper taskMapper, IProjectRepository projectRepository, ITaskRepository taskRepository)
         {
             Context = context;
             ProjectMapper = projectMapper;
             UserManager = userManager;
             TaskMapper = taskMapper;
+            ProjectRepository = projectRepository;
+            TaskRepository = taskRepository;
         }
 
         // GET: Projects
@@ -33,66 +38,44 @@ namespace Streamnote.Web.Controllers
         {
             var user = await UserManager.GetUserAsync(User);
 
-            var tasks = Context.Tasks
-                .Include(t => t.Project)
-                .Include(t => t.Steps) 
-                .Include(t => t.Comments).ThenInclude(c => c.User)
-                .Include(t => t.CreatedBy)
-                .Where(t => t.CreatedBy.Id == user.Id);
-
-            if (id != null && id > 0)
-            {
-                tasks = tasks.Where(i => i.Project.Id == id);
-            }
-
-            var projects = await Context.Projects
-                .Include(t => t.Tasks)
-                .Include(p => p.Users)
-                .Include(p => p.CreatedBy)
-                .Where(p => p.Users.Select(u => u.Id).Contains(user.Id) || p.CreatedBy.Id == user.Id)
-                .ToListAsync();
-
-            var allTasks = TaskMapper.MapDescriptors(tasks.ToList(), user.Id);
-
+            var projects = ProjectRepository.QueryAllProjects(user).ToList();
+            
             var organizer = new OrganizerDescriptor()
             {
                 Projects = ProjectMapper.MapDescriptors(projects, user.Id),
-                Tasks = allTasks.Where(t => t.Status == TodoStatus.Unstarted && t.OwnedByUsername != user.UserName).OrderBy(t => t.Rank).ToList(),
-                YourTasks = allTasks.Where(t => (t.Status == TodoStatus.Started) && t.OwnedByUsername == user.UserName).OrderBy(t => t.Rank).ToList(),
-                CompletedTasks = allTasks.Where(t => t.Status == TodoStatus.Finished || t.Status == TodoStatus.Delivered).OrderBy(t => t.Rank).ToList(),
-                IsViewingProject = (id != null && id > 0),
+                IsViewingProject = id is > 0,
                 ProjectId = id ?? 0
             };
 
-            foreach (var project in organizer.Projects)
-            {
-                if (project.Id == id)
+            if (organizer.IsViewingProject)
+            {     
+                foreach (var project in organizer.Projects)
                 {
-                    project.IsCurrentProject = true;
+                    if (project.Id == id)
+                    {
+                        project.IsCurrentProject = true;
+                    }
+                }
+
+                if (id != null)
+                {
+                    var allTasks = TaskMapper.MapDescriptors(TaskRepository.QueryAllTasks(user, (int)id).ToList(), user.Id);
+
+                    organizer.Tasks = allTasks
+                        .Where(t => t.Status == TodoStatus.Unstarted && t.OwnedByUsername != user.UserName)
+                        .OrderBy(t => t.Rank).ToList();
+                    organizer.YourTasks = allTasks
+                        .Where(t => (t.Status == TodoStatus.Started) && t.OwnedByUsername == user.UserName)
+                        .OrderBy(t => t.Rank).ToList();
+                    organizer.CompletedTasks = allTasks
+                        .Where(t => t.Status == TodoStatus.Finished || t.Status == TodoStatus.Delivered)
+                        .OrderBy(t => t.Rank).ToList();
                 }
             }
 
             return View(organizer);
         }
 
-        // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await Context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return View(project);
-        }
-                               
         [HttpPost]
         public IActionResult New()
         {
@@ -132,91 +115,6 @@ namespace Streamnote.Web.Controllers
                 return RedirectToAction(nameof(View));
             }
             return RedirectToAction(nameof(View));
-        }
-
-        // GET: Projects/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await Context.Projects.FindAsync(id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-            return View(project);
-        }
-
-        // POST: Projects/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Created,Modified,Title,Description,Status,IsPublic,OwnedByUsername")] Project project)
-        {
-            if (id != project.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    Context.Update(project);
-                    await Context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectExists(project.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(project);
-        }
-
-        // GET: Projects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var project = await Context.Projects
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
-            {
-                return NotFound();
-            }
-
-            return View(project);
-        }
-
-        // POST: Projects/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var project = await Context.Projects.FindAsync(id);
-            Context.Projects.Remove(project);
-            await Context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProjectExists(int id)
-        {
-            return Context.Projects.Any(e => e.Id == id);
         }
     }
 }

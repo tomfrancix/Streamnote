@@ -1,27 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.IO;
-using System.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using Streamnote.Relational.Data;
 using Streamnote.Relational.Helpers;
 using Streamnote.Relational.Interfaces.Repositories;
 using Streamnote.Relational.Interfaces.Services;
 using Streamnote.Web.Mapper;
 using Streamnote.Relational.Models;
-using Streamnote.Relational.Service;
 
 namespace Streamnote.Web.Controllers
 {

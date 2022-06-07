@@ -71,7 +71,7 @@ namespace Streamnote.Web.Controllers
 
                 return PartialView("_TaskComment", TaskCommentMapper.MapDescriptor(newComment, user.Id)); ;
             }
-            return View(comment);
+            throw new Exception();
         }
     }
 }
