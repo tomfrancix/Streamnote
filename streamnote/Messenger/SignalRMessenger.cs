@@ -51,7 +51,23 @@ namespace Streamnote.Web.Messenger
             var loggedInUser = await DbContext.Users.FindAsync(Context.UserIdentifier);
 
             if (user != null)
-                await Clients.User(user.Id).SendAsync("ReceiveLike", $"<div class='notification' >{loggedInUser.FirstName} liked your <a href='Item/Details/{itemId}'>post</a></span>");
+                await Clients.User(user.Id).SendAsync("ReceiveNotification", $"<div class='notification' >{loggedInUser.FirstName} liked your <a href='Item/Details/{itemId}'>post</a></span>");
+        }
+
+        /// <summary>
+        /// Send a comment notification to a user.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="itemId"></param>
+        /// <returns></returns>
+        public async Task SendCommentNotification(string username, int itemId)
+        {
+            var user = DbContext.Users.FirstOrDefault(u => u.UserName == username);
+
+            var loggedInUser = await DbContext.Users.FindAsync(Context.UserIdentifier);
+
+            if (user != null)
+                await Clients.User(user.Id).SendAsync("ReceiveNotification", $"<div class='notification' >{loggedInUser.FirstName} commented on your <a href='Item/Details/{itemId}'>post</a></span>");
         }
     }
 }

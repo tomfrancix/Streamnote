@@ -1,52 +1,19 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿/**
+ * General function that are critical to the website itself.
+ */
 
-// Write your JavaScript code.
-
-$('#commentInput').bind('keyup',
-    function(e) {
-
-        if (e.keyCode === 13) { // 13 is enter key
-
-            // Execute code here.
-
-            var itemId = $("#itemIdentifier").val();
-
-            var comment = $("#commentInput").val();
-
-            var data = {
-                content: comment,
-                itemId: itemId
-            }
-            $("#commentInput").val("");
-
-            $.post({
-                    url: "/Comment/Create",
-                    data: data,
-                    dataType: "html"
-                })
-                .done(function(result, status) {
-                    $("#newComments").prepend(result); 
-                });
-
-        }
-
-    });
-
-$('#messageInput').bind('keyup',
-    function(e) {
-
-        if (e.keyCode === 13) { // 13 is enter key
-            $(".submitButton").click();
-        }
-    });
-
-
+/**
+ * Display the upload button when a user clicks the camera icon.
+ */
 function showUploader() {
     document.getElementById('imageuploader').style.display = 'block';
     document.getElementById('imageuploaderbutton').style.display = 'none';
 }
 
+/**
+ * Display the image that was selected by the uploader.
+ * @param {any} event
+ */
 function loadFile(event) {
     var output = document.getElementById('backgroundoutput');
     output.src = URL.createObjectURL(event.target.files[0]);
@@ -58,6 +25,9 @@ function loadFile(event) {
     }
 };
 
+/**
+ * Check if a username is available when a user is initially registering.
+ */
 function isUserNameAvailable() {
     var username = $("#userNameInput").val().toLowerCase();
 
@@ -82,26 +52,9 @@ function isUserNameAvailable() {
     }
 }
 
-$(document).ready(function () {
-
-    $.post({
-        url: "/Messages/UserHasUnreadMessages"
-        })
-        .done(function (result, status) {
-            if (result) {
-                $("#messagesIcon").attr("style", "color:hotpink;");
-            } else {
-                $("#messagesIcon").attr("style", "color:hotpink;");
-            }
-        });
-
-    var appendToNewMessages = $("#newMessages");
-
-    if (appendToNewMessages.length > 0) {
-        console.log($(".chatNavBar").first().position().bottom);
-    }
-});
-
+/**
+ * As a query is entered into the search bar, this will populate the results.
+ */
 $('#searchInput').bind('keyup',
     function (e) {
 
@@ -123,6 +76,10 @@ $('#searchInput').bind('keyup',
         }
     });
 
+/**
+ * As a query is entered into the topics search bar, this will populate the results.
+ * TODO: Is this for creating a post or is this topic search the one in the stream?
+ */
 $('#queryTopics').bind('keyup',
     function (e) {
 
@@ -145,6 +102,10 @@ $('#queryTopics').bind('keyup',
         }
     });
 
+/**
+ * When a user selects a topic this will add it to the list.
+ * @param {string} topicName The name of the topic.
+ */
 function selectTopic(topicName) {
     var topics = $("#selectedTopics").val();
 
@@ -156,11 +117,16 @@ function selectTopic(topicName) {
     $("#selectedTopics").val(topics + topicName);
 }
 
+/**
+ * When the user selects 'follow topic' this will update the database and the view.
+ * @param {any} topicName
+ * @param {any} elId
+ */
 function followTopic(topicName, elId) {
-                                    
+
     $.post({
             url: "/Topic/FollowTopic",
-        data: { topicName },
+            data: { topicName },
             dataType: "html"
         })
         .done(function(result) {
@@ -168,11 +134,16 @@ function followTopic(topicName, elId) {
 
                 $("#topicsYouFollow").html(result);
                 $("." + elId).html("<i class='fa fa-check' style='color:chartreuse;'/>")
-                    .attr("onclick", "unFollowTopic('" + topicName.toString() + "', '"+elId.toString()+"')");
+                    .attr("onclick", "unFollowTopic('" + topicName.toString() + "', '" + elId.toString() + "')");
             }
-        });                     
-
+        });
 }
+
+/**
+ * When a user selects 'unfollow topic' this will update the db and the view.
+ * @param {any} topicName
+ * @param {any} elId
+ */
 function unFollowTopic(topicName, elId) {
 
     $.post({
@@ -189,6 +160,9 @@ function unFollowTopic(topicName, elId) {
         });
 }
 
+/**
+ * This is for the topic search bar on the stream view.
+ */
 $('#searchTopics').bind('keyup',
     function (e) {
 
@@ -210,301 +184,9 @@ $('#searchTopics').bind('keyup',
         }
     });
 
-$('#createProjectModal').on('shown.bs.modal', function (e) {
-    $.post({
-            url: "/Projects/New",
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $("#createProjectBody").html("");
-            $("#createProjectBody").append(result);
-        });
-});
-
-$('#createTaskModal').on('shown.bs.modal', function (e) {
-    var projectId = $("#projectId").val();
-    $.post({
-        url: "/Task/New",
-        data: {
-            projectId: projectId
-},
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $("#createTaskBody").html("");
-            $("#createTaskBody").append(result);
-        });
-});
-
-function saveTask(projectId) {
-    var taskTitle = $("#taskTitle").val();
-    var taskDescription = $("#taskDescription").val();
-    var taskIsPublic = $("#taskIsPublic").val();
-
-    $.post({
-            url: "/Task/Create",
-        data: {
-                projectId: projectId,
-                title: taskTitle,
-                description: taskDescription,
-                isPublic: taskIsPublic
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $('#createTaskModal').modal('hide');
-            $("#newTasks").append(result);
-        });
-}
-
-function createStepModal(taskId) {
-    $.post({
-            url: "/Step/New",
-            data: {
-                taskId: taskId
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $("#createStepBody").html("");
-            $("#createStepBody").append(result);
-            $('#createStepModal').modal('show')
-        });;
-}
-
-function createCommentModal(taskId) {
-    $.post({
-            url: "/TaskComment/New",
-            data: {
-                taskId: taskId
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $("#createTaskCommentBody").html("");
-            $("#createTaskCommentBody").append(result);
-            $('#createTaskCommentModal').modal('show')
-        });
-}
-
-function saveStep(taskId) {
-    var stepContent = $("#stepContent").val();
-    var stepDescription = $("#stepDescription").val();
-    var stepIsPublic = $("#stepIsPublic").val();
-    var stepsIdentifier = "#steps" + taskId;
-
-    $.post({
-            url: "/Step/Create",
-            data: {
-                taskId: taskId,
-                content: stepContent,
-                description: stepDescription,
-                isPublic: stepIsPublic
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $('#createStepModal').modal('hide');
-            $(stepsIdentifier).append(result);
-        });
-}
-
-function saveTaskComment(taskId) {
-    var taskCommentContent = $("#taskCommentContent").val(); 
-
-    var commentsIdentifier = "#comments" + taskId;
-    $.post({
-            url: "/TaskComment/Create",
-            data: {
-                taskId: taskId,
-                content: taskCommentContent
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $('#createTaskCommentModal').modal('hide');
-            $(commentsIdentifier).append(result);
-        });
-}
-
-function expandTask(taskId, titleIdentifier, editTitleIdentifier) {   
-    var id = "#task" + taskId;
-    var taskTab = "#taskTab" + taskId;
-    titleIdentifier = "#" + titleIdentifier;
-    editTitleIdentifier = "#" + editTitleIdentifier;
-
-    if ($(id).css('display') == 'none') {
-        $(id).show();
-        $(titleIdentifier).hide();
-        $(editTitleIdentifier).show();
-        $(taskTab).attr("style", "color:#62ffd8");
-    } else {
-        $(id).hide();
-        $(titleIdentifier).show();
-        $(editTitleIdentifier).hide();
-        $(taskTab).attr("style", "color:rgba(0,0,0,0.1)");
-    }
-}
-
-function changeTaskStatus(taskId, taskStatus) {
-    var id = "#taskBox" + taskId;
-    var task = $(id);
-    var $element;
-    $.post({
-            url: "/Task/ChangeStatus",
-            data: {
-                taskId: taskId,
-                status: taskStatus
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            task.remove();
-            if (taskStatus == 0) {
-                new Audio('/sounds/drop.wav').play();
-                $element = $("#newTasks");
-                $element.append(result);
-                
-            } else if (taskStatus == 1) {
-                new Audio('/sounds/changeStatus.wav').play();
-                $element = $("#yourTasks");
-                $element.prepend(result);
-
-            } else if (taskStatus == 2) {
-                new Audio('/sounds/changeStatus.wav').play();
-                $element = $("#completedTasks");
-                $element.prepend(result);
-
-            } else if (taskStatus == 3) {
-                new Audio('/sounds/changeStatus.wav').play();
-                $element = $("#completedTasks");
-                $element.prepend(result);
-
-            } else if (taskStatus == 4) {
-                new Audio('/sounds/accepted.mp3').play();
-            }
-
-            $element.first("li").animate({
-                    backgroundColor: "green"
-                }, 1000).delay(2000).queue(function () {
-                    $(this).animate({
-                        backgroundColor: "red"
-                    }, 1000).dequeue();
-                });
-        });
-                              
-}
-
-function changeStepStatus(stepId, isCompleted) {
-    var id = "#stepIdentifier" + stepId;
-    var step = $(id);
-    $.post({
-            url: "/Step/ChangeStatus",
-            data: {
-                stepId: stepId
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-
-            // This 'isCompleted' came before we updated it!
-            if (isCompleted == "False") {
-                new Audio('/sounds/ding.mp3').play();
-            }
-            step.replaceWith(result);   
-
-        });
-}
-
-function editTask(taskId) {
-    $('#editTaskModal').modal('show');
-}
-
-function editTaskDescription(el, taskId, descriptionId) {
-    var newDescription = $(descriptionId).val();
-    
-    $.post({
-            url: "/Task/ChangeDescription",
-            data: {
-                taskId: taskId,
-                description: newDescription
-            },
-            dataType: "html"
-        })
-        .done(function (result, status) {
-            $(el).attr("style", "color:chartreuse;margin-top: -35px;").html("<i class='fa fa-check' />");
-            setTimeout(function() {
-                $(el).attr("style", "color:black;margin-top: -35px;").html("save");
-            }, 2000);
-
-
-            if (status == "success") {
-                new Audio('/sounds/ding.mp3').play();
-            }
-        });
-}
-
-
-var adjustment;
-$(function () {
-    $("ol.todoSort").sortable({
-        group: 'simple_with_animation',
-        pullPlaceholder: false,
-        // animation on drop
-        onDrop: function ($item, container, _super) {
-            var $clonedItem = $('<li/>').css({ height: 0 });
-            $item.before($clonedItem);
-            $clonedItem.animate({ 'height': $item.height() });
-
-            $item.animate($clonedItem.position(), function () {
-                $clonedItem.detach();
-                _super($item, container);
-            });
-
-            var sql = ""
-            $("ol.todoSort").children('li').each(function(index, element) {
-                var taskId = $(this).attr('iden');
-                if (taskId != undefined) {
-                    sql += "UPDATE Tasks SET RANK = '" + (index + 1) + "' WHERE Id =" + $(this).attr('iden') + ";";
-                }
-            });
-
-            $.post({
-                    url: "/Task/UpdateTaskOrder",
-                    data: {
-                        query: sql
-                    },
-                    dataType: "html"
-                })
-                .done(function(result, status) {
-                    
-                });
-        },
-
-        // set $item relative to cursor position
-        onDragStart: function ($item, container, _super) {
-            var offset = $item.offset(),
-                pointer = container.rootGroup.pointer;
-
-            adjustment = {
-                left: pointer.left - offset.left,
-                top: pointer.top - offset.top
-            };
-
-            _super($item, container);
-        },
-        onDrag: function ($item, position) {
-            $item.css({
-                left: position.left - adjustment.left,
-                top: position.top - adjustment.top
-            });
-        },
-        update: function(event, ui) {
-            
-        }
-    });
-});
-
+/**
+ * This creates the Quill editor for the post creation text editor.
+ */
 $('.ql-editor').bind('keyup',
     function (e) {
         
@@ -531,17 +213,28 @@ $('.ql-editor').bind('keyup',
         }
     });
 
+/**
+ * This function strips HTML from an HTML formatted string.
+ * @param {any} html
+ */
 function stripHtml(html) {
     let tmp = document.createElement("DIV");
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || "";
 }
 
+/**
+ * This will create or update the post item, when the user clicks outside of the title.
+ * This is to ensure items are always saved privately.
+ */
 $("#itemTitleEditor").focusout(function () {
 
     createOrUpdateItem(false);
 });
 
+/**
+ * Every time the enter key is pressed while creating a post, the post will be saved privately.
+ */
 $('#editor').bind('keyup',
     function(e) {
 
@@ -551,12 +244,18 @@ $('#editor').bind('keyup',
     }
 );
 
+/**
+ * When a user clicks the publish button the post will be saved publicly.
+ */
 $("#publishButton").on("click", function () {
 
     createOrUpdateItem(true);
 });
 
-
+/**
+ * This is the function used by the listeners above, to create or update the post item.
+ * @param {bool} isPublic Whether the post should be public [true] or private [false]
+ */
 function createOrUpdateItem(isPublic) {
 
     var title = $("#itemTitleEditor").val();
@@ -583,42 +282,3 @@ function createOrUpdateItem(isPublic) {
             });
     }
 }
-$('.taskInput').bind('keyup',
-    function (e) {
-
-        if (e.keyCode === 13) { // 13 is enter key
-
-            // Execute code here.
-            var taskId = $(this).data("identifier");
-            var newTitleValue = $(this).val();
-
-            var data = {
-                title: newTitleValue,
-                taskId: taskId,
-                dataType: "html"
-            }
-
-            $.post({
-                    url: "/Task/UpdateTitle",
-                    data: data
-                })
-                .done(function (result, status) {
-
-                    var titleIdentifier = "#titleIdentifier" + taskId;
-
-                    var $textDisplays = $(titleIdentifier).find(".taskTitleTextContainer");
-
-                    for (var i = 0; i < $textDisplays.length; i++) {
-                        var el = $textDisplays[i];
-
-                        $(el).text(newTitleValue);
-                    }
-
-                    if (status == "success") {
-                        new Audio('/sounds/ding.mp3').play();
-                    }
-                });
-
-        }
-
-    });

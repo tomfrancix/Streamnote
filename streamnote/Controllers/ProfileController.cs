@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -78,21 +76,6 @@ namespace Streamnote.Web.Controllers
             profile.Comments = CommentMapper.MapDescriptors(Context.Comments.Where(u => u.User.UserName == username).OrderByDescending(c => c.Id).Take(5).ToList(), user.Id);
 
             return View(profile);
-        }
-
-        /// <summary>
-        /// Update the connection id.
-        /// </summary>
-        /// <param name="connectionId"></param>
-        /// <returns></returns>
-        public async Task UpdateConnectionId(string connectionId)
-        {
-            var user = await UserManager.GetUserAsync(User);
-
-            user.ConnectionId = connectionId;
-
-            Context.Update(user);
-            await Context.SaveChangesAsync();
         }
     }
 }

@@ -135,7 +135,8 @@
                     <span><strong>Post Comment</strong></span><br />
 
                     <span>          
-                        <input type="hidden" value="@Model.Id" id="itemIdentifier"/>
+                        <input type="hidden" value="@Model.Id" id="itemIdentifier"/> 
+                        <input type="hidden" value="@Model.UserName" id="usernameInput"/>
                         <textarea type="text" id="commentInput" class="commentInput" rows="3"
                                   style="overflow: hidden; margin-top: 10px; resize: none"
                                   placeholder="Start typing..."></textarea>
