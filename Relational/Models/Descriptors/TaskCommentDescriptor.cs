@@ -10,6 +10,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public virtual string Content { get; set; }
         public virtual int TaskId { get; set; }
         public virtual bool CreatedByLoggedInUser { get; set; }
+        public string TaskCommentIdentifier { get; set; }
 
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }

@@ -1,5 +1,4 @@
-﻿using Amazon.Runtime;
-using LightInject;
+﻿using LightInject;
 using Streamnote.Relational.Interfaces.Services;
 using Streamnote.Relational.Service;
 
@@ -10,6 +9,7 @@ namespace Streamnote.Relational.Installers
         public void Compose(IServiceRegistry registry)
         {
             registry.Register<IS3Service, S3Service>();
+            registry.Register<IDataCullingService, DataCullingService>();
         }
     }
 }

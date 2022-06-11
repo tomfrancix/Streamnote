@@ -294,10 +294,10 @@ var adjustment;
 $(function () {
     $("ol.todoSort").sortable({
         group: 'simple_with_animation',
-        pullPlaceholder: false,
+        pullPlaceholder: true,
         // animation on drop
         onDrop: function ($item, container, _super) {
-            var $clonedItem = $('<li/>').css({ height: 0 });
+            var $clonedItem = $('<li/>').css({ height: 50 });
             $item.before($clonedItem);
             $clonedItem.animate({ 'height': $item.height() });
 
@@ -322,8 +322,8 @@ $(function () {
                 dataType: "html"
             })
                 .done(function (result, status) {
-
-                });
+                    new Audio('/sounds/changeStatus2.wav').play();
+            });
         },
 
         // set $item relative to cursor position

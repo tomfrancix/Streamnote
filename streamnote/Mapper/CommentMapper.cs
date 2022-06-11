@@ -47,7 +47,8 @@ namespace Streamnote.Web.Mapper
                 UserName = comment.User.UserName,
                 UserImageContentType = comment.User.ImageContentType,
                 UserImage = comment.User.Image,
-                CreatedByLoggedInUser = comment.User.Id == userId
+                CreatedByLoggedInUser = comment.User.Id == userId,
+                CommentIdentifier = "commentIdentifier" + comment.Id
             };
         }
     }

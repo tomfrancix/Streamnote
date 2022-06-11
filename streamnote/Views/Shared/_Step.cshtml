@@ -19,10 +19,13 @@
 
                                     }
                                     else
-                                    {     
+                                    {         
                                         <button onclick="changeStepStatus(@Model.Id, '@Model.IsCompleted')" class="btn btn-light" style="margin-right: 5px;">
                                             <i class="fa fa-square" style="color:black"></i>
-                                        </button>
+                                        </button> 
+                                        <a class="btn btn-danger" style="margin-right: 5px;">
+                                            <i class="fa fa-close deleteStep" data-iden="@Model.Id" style="color:black"></i>
+                                        </a>
                                     }
                                 } 
                             </div>

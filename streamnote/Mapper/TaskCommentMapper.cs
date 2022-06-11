@@ -58,7 +58,8 @@ namespace Streamnote.Web.Mapper
                 UserName = taskComment.User.UserName,
                 UserImageContentType = taskComment.User.ImageContentType,
                 UserImage = taskComment.User.Image,
-                CreatedByLoggedInUser = taskComment.User.Id == userId
+                CreatedByLoggedInUser = taskComment.User.Id == userId,
+                TaskCommentIdentifier = "taskCommentIdentifier" + taskComment.Id
             };
         }
     }

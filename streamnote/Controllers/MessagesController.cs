@@ -248,5 +248,18 @@ namespace Streamnote.Web.Controllers
             Context.Update(message);
             await Context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public async Task SoftDelete(int id)
+        {
+            var obj = await Context.Messages.FindAsync(id);
+
+            Context.Messages.Remove(obj);
+            await Context.SaveChangesAsync();
+        }
     }
 }

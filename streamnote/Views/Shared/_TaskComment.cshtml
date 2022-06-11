@@ -1,6 +1,6 @@
 ﻿@model Streamnote.Relational.Models.Descriptors.TaskCommentDescriptor
 
-<div class="container-fluid"> 
+<div class="container-fluid" id="@Model.TaskCommentIdentifier" > 
     <div class="row">
         <div class="col-sm-12">
             <div class="row">
@@ -23,7 +23,12 @@
                                             @{
                                                 if (Model.CreatedByLoggedInUser)
                                                 {
-                                                    <span>- <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id">Edit</a></span>
+                                                    <span>
+                                                        - <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id">edit</a>
+                                                        - <a class="deleteTaskComment" data-iden="@Model.Id" >delete</a>
+
+                                                    </span> 
+
                                                 }
                                             }
                                             <br />                                    

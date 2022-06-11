@@ -5,16 +5,146 @@
 /**
  * Delete item (post).
  */
-$(document).on("click", ".deleteItem", function (el) {
-    bootbox.alert("Are you sure you want to delete this?", function () {
-        var itemId = $(el.target).data("iden");
-        $.post({
-            url: "/Item/SoftDelete",
-            data: {
-                itemId: itemId
-            }
-        })
-        .done(function (result, status) {
-            alert("Message deleted.");
+$(document).on("click", ".deleteItem", function(el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                    url: "/Delete/DeleteItem",
+                    data: {
+                        id: id
+                    }
+                })
+                .done(function (result, status) {
+                    window.location.href = '/Item';
+                })
+                .fail(function(status) {
+                    console.log(status);
+                });
+        });
+});
+
+/**
+ * Delete comment (on post item).
+ */
+$(document).on("click", ".deleteComment", function (el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                    url: "/Delete/DeleteComment",
+                    data: {
+                        id: id
+                    }
+                })
+                .done(function (result, status) {
+                    var elId = `#commentIdentifier${id}`;
+                    $(elId).hide();
+                })
+                .fail(function (status) {
+                    console.log(status);
+                });
+        });
+});
+
+/**
+ * Delete task.
+ */
+$(document).on("click", ".deleteTask", function (el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                    url: "/Delete/DeleteTask",
+                data: {
+                    id: id
+                    }
+                })
+                .done(function (result, status) {
+                    $("li[iden='"+id+"']").hide();
+                })
+                .fail(function (status) {
+                    console.log(status);
+                });
+        });
+});
+
+/**
+ * Delete step.
+ */
+$(document).on("click", ".deleteStep", function (el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                    url: "/Delete/DeleteStep",
+                data: {
+                    id: id
+                    }
+                })
+                .done(function (result, status) {
+                    var elId = `#stepIdentifier${id}`;
+                    $(elId).hide();
+                })
+                .fail(function (status) {
+                    console.log(status);
+                });
+        });
+});
+
+/**
+ * Delete task comment.
+ */
+$(document).on("click", ".deleteTaskComment", function (el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                url: "/Delete/DeleteTaskComment",
+                data: {
+                    id: id
+                    }
+                })
+                .done(function (result, status) {
+                    var elId = `#taskCommentIdentifier${id}`;
+                    $(elId).hide();
+                })
+                .fail(function (status) {
+                    console.log(status);
+                });
+        });
+});
+
+/**
+ * Delete message.
+ */
+$(document).on("click", ".deleteMessage", function (el) {
+
+    var element = el.target;
+    bootbox.alert("Are you sure you want to delete this?",
+        function () {
+            var id = $(element).data("iden");
+            $.post({
+                url: "/Delete/DeleteMessage",
+                data: {
+                    id: id
+                    }
+                })
+                .done(function (result, status) {
+                    $(element).hide();
+                })
+                .fail(function (status) {
+                    console.log(status);
+                });
         });
 });

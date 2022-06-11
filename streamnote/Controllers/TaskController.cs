@@ -212,10 +212,10 @@ namespace Streamnote.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> UpdateTaskOrder(string query)
-        {                                 
+        {
 
             try
-            {                                    
+            {
                 await Context.Database.ExecuteSqlRawAsync(query);
                 await Context.SaveChangesAsync();
             }

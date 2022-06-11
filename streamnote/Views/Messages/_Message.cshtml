@@ -10,8 +10,10 @@
                 <strong>@Model.SentBy.FirstName @Model.SentBy.LastName</strong> - @Model.Modified
                 @if (Model.Modified.ToShortTimeString() != Model.Created.ToShortTimeString())
                 {
-                    <span> - Edited</span>
-                }
+                    <span> - edited</span>
+                }   
+                
+                - <a class="deleteMessage">delete</a>
             </span>
         </div>
         <div class="row">

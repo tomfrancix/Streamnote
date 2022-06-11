@@ -12,6 +12,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public virtual byte[] Image { get; set; }
         public virtual string ImageContentType { get; set; }
         public virtual bool CreatedByLoggedInUser { get; set; }
+        public string CommentIdentifier { get; set; }
 
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }
