@@ -8,5 +8,6 @@
         public int FinishedCount { get; set; }
         public int StartedCount { get; set; }
         public int UnstartedCount { get; set; }
+        public string Date { get; set; }
     }
 }

@@ -4,7 +4,6 @@ namespace Streamnote.Relational.Models.Descriptors.Analytics
 {
     public class AnalyticsDescriptor
     {
-        public TaskAnalyticsDescriptor TotalTaskAnalytics { get; set; }
-        public List<TaskAnalyticsDescriptor> TaskAnalyticsOverTime { get; set; }
+        public List<ChartDescriptor> Charts { get; set; }
     }
 }

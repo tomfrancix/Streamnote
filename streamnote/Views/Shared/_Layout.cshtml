@@ -205,6 +205,14 @@
 <script src="~/js/delete.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/js/organiser.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+<script src="~/js/analytics.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)         
+
+
+<script>
+    if (window.location.href.includes("/Analytics/View")) {
+        loadTaskData();
+    }
+</script>
 </body>
 </html>
