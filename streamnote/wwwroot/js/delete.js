@@ -5,7 +5,7 @@
 /**
  * Delete item (post).
  */
-$(document).on("click", ".deleteItem", function(el) {
+$(document).on("click touchstart", ".deleteItem", function(el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",
@@ -29,7 +29,7 @@ $(document).on("click", ".deleteItem", function(el) {
 /**
  * Delete comment (on post item).
  */
-$(document).on("click", ".deleteComment", function (el) {
+$(document).on("click touchstart", ".deleteComment", function (el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",
@@ -54,7 +54,7 @@ $(document).on("click", ".deleteComment", function (el) {
 /**
  * Delete task.
  */
-$(document).on("click", ".deleteTask", function (el) {
+$(document).on("click touchstart", ".deleteTask", function (el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",
@@ -78,7 +78,7 @@ $(document).on("click", ".deleteTask", function (el) {
 /**
  * Delete step.
  */
-$(document).on("click", ".deleteStep", function (el) {
+$(document).on("click touchstart", ".deleteStep", function (el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",
@@ -103,7 +103,7 @@ $(document).on("click", ".deleteStep", function (el) {
 /**
  * Delete task comment.
  */
-$(document).on("click", ".deleteTaskComment", function (el) {
+$(document).on("click touchstart", ".deleteTaskComment", function (el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",
@@ -128,7 +128,7 @@ $(document).on("click", ".deleteTaskComment", function (el) {
 /**
  * Delete message.
  */
-$(document).on("click", ".deleteMessage", function (el) {
+$(document).on("click touchstart", ".deleteMessage", function (el) {
 
     var element = el.target;
     bootbox.alert("Are you sure you want to delete this?",

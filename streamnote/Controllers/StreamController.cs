@@ -59,6 +59,7 @@ namespace Streamnote.Web.Controllers
 
             var items = ItemRepository
                 .QueryAllItems()
+                .OrderByDescending(i => i.Id)
                 .Where(i => i.IsPublic);
 
             if (filter is { Length: > 0 })
@@ -70,7 +71,7 @@ namespace Streamnote.Web.Controllers
                             .Any(t => topicsUserFollows.Contains(t)));
                         break;
                     case "recent":
-                        items = items.OrderByDescending(i => i.Id);
+                        items = items.OrderByDescending(i => i.Created);
                         break;
                     case "popular":
                         items = items.OrderByDescending(i => i.LikeCount).ThenByDescending(i => i.CommentCount);

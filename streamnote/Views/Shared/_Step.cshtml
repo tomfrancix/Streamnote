@@ -13,14 +13,14 @@
                                 @{
                                     if (Model.IsCompleted)
                                     {                                                   
-                                        <button onclick="changeStepStatus(@Model.Id, '@Model.IsCompleted')" class="btn btn-light" style="margin-right: 5px;">
+                                        <button ontouchstart="changeStepStatus(@Model.Id, '@Model.IsCompleted')" onclick="changeStepStatus(@Model.Id, '@Model.IsCompleted')" class="btn btn-light" style="margin-right: 5px;">
                                             <i class="fa fa-check" style="color:chartreuse"></i>
                                         </button>
 
                                     }
                                     else
                                     {         
-                                        <button onclick="changeStepStatus(@Model.Id, '@Model.IsCompleted')" class="btn btn-light" style="margin-right: 5px;">
+                                        <button ontouchstart="changeStepStatus(@Model.Id, '@Model.IsCompleted')" onclick="changeStepStatus(@Model.Id, '@Model.IsCompleted')" class="btn btn-light" style="margin-right: 5px;">
                                             <i class="fa fa-square" style="color:black"></i>
                                         </button> 
                                         <a class="btn btn-danger" style="margin-right: 5px;">

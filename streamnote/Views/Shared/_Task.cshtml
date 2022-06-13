@@ -12,7 +12,7 @@
                                 <span id="@Model.TitleIdentifier">
                                     @if   (Model.OwnedByUsername != null && Model.OwnedByUsername.Length > 0) 
                                     {
-                                        <a onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" style="font-size: 0.8em;">   
+                                        <a ontouchstart="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" style="font-size: 0.8em;">   
                                         
                                             <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(-7px);" id="@Model.TaskTabIdentifier"></i>
                                         
@@ -25,13 +25,13 @@
                                     else
                                     {
                                         <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
-                                        <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
+                                        <p class="taskTitle" ontouchstart="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
                                             <span class="taskTitleText taskTitleTextContainer">@Model.Title</span>
                                         </p>  
                                     }
                                 </span>
                                 <span class="hideElement" id="@Model.EditTitleIdentifier"> 
-                                    <p class="taskTitle" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
+                                    <p class="taskTitle" ontouchstart="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')">   
                                         <i class="fa fa-circle taskTab" style="color: chartreuse;transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
                                     </p>
                                     <input type="text" class="form-control taskInput" name="title" style="display: inline-block; width: 60%; font-size: 0.9em;" data-identifier="@Model.Id" id="@Model.EditTitleInputIdentifier" placeholder="The task must have a title..." value="@Model.Title" />
@@ -41,31 +41,31 @@
                                         if (Model.Status == TodoStatus.Unstarted)
                                         {
                                             <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                         } else if   (Model.Status == TodoStatus.Started)
                                         {
-                                            <button type="button" class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 0)">
+                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 0)" onclick="changeTaskStatus(@Model.Id, 0)">
                                                 <i class="fa fa-chevron-left"></i>
                                             </button>
                                             <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                    
                                         } else if   (Model.Status == TodoStatus.Finished)
                                         {
-                                            <button type="button" class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 1)">
+                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)">
                                                 <i class="fa fa-chevron-left"></i>
                                             </button>
                                             <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 3)" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                     
                                         }  else if   (Model.Status == TodoStatus.Delivered)
                                         {
-                                            <button type="button" class="btn btn-light" onclick="changeTaskStatus(@Model.Id, 2)">
+                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)">
                                                 <i class="fa fa-chevron-left"></i>
                                             </button>
                                             <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 4)" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
                                         }
                                     }
                                 </div>
@@ -123,7 +123,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-1 offset-11" style="padding: 0; padding-right: 8px;">
-                                                    <button class="btn btn-light" onclick="editTaskDescription(this, @Model.Id, @Model.EditDescriptionIdentifier)" style="margin-top: -35px;width: 100%;">Save</button>
+                                                    <button class="btn btn-light" ontouchstart="editTaskDescription(this, @Model.Id, @Model.EditDescriptionIdentifier)" onclick="editTaskDescription(this, @Model.Id, @Model.EditDescriptionIdentifier)" style="margin-top: -35px;width: 100%;">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -131,7 +131,7 @@
                                     <div class="col-sm-12 taskColumn">
                                         <br/>
                                         <h4>tasks
-                                            <a onclick="createStepModal(@Model.Id, @Model.StepsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a>
+                                            <a ontouchstart="createStepModal(@Model.Id, @Model.StepsIdentifier)" onclick="createStepModal(@Model.Id, @Model.StepsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a>
                                         </h4>  
                                         @{
                                             foreach (var step in Model.Steps)
@@ -144,7 +144,7 @@
                                     <div class="col-sm-12 taskColumn"> 
                                         <br/>
 
-                                        <h4>comments <a  onclick="createCommentModal(@Model.Id, @Model.CommentsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
+                                        <h4>comments <a ontouchstart="createCommentModal(@Model.Id, @Model.CommentsIdentifier)" onclick="createCommentModal(@Model.Id, @Model.CommentsIdentifier)"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
                                         @{
                                             foreach (var comment in Model.Comments)
                                             {  
