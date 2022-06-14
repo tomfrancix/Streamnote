@@ -13,6 +13,16 @@ namespace Streamnote.Web.Controllers
         }
 
         /// <summary>
+        /// Delete a project.
+        /// </summary>
+        /// <param name="id">The id.</param>
+        /// <returns></returns>
+        public void DeleteProject(int id)
+        {
+            DataCullingService.DeleteProject(id);
+        }
+
+        /// <summary>
         /// Delete a task.
         /// </summary>
         /// <param name="id">The id.</param>

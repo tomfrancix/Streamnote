@@ -76,6 +76,56 @@ $(document).on("click touchstart", ".deleteTask", function (el) {
 });
 
 /**
+ * Delete a project. Careful with this one...
+ */
+$(document).on("click touchstart", ".deleteProject", function (el) {
+
+    var element = el.target;
+    var dialog = bootbox.dialog({
+        title: 'Delete projects cannot be recovered.',
+        message: '<p><i class="fa fa-spin fa-spinner"></i> Are you sure you want to entirely delete this project?</p>',
+        size: 'large',
+        init: function (){
+        setTimeout(function() {
+                dialog.find('.bootbox-body').html('I was loaded after the dialog was shown!');
+            },
+            3000);
+        },
+        buttons: {
+                cancel: {
+                    label: "Keep this project",
+                    className: 'btn-success',
+                    callback: function () {
+                        console.log('User did NOT delete a project. Phew!');
+                    }
+                },
+                ok: {
+                    label: "DELETE PROJECT!",
+                    className: 'btn-danger',
+                    callback: function () {
+                        console.log('User DELETED a project.');
+                        
+                            var id = $(element).data("iden");
+                            $.post({
+                                url: "/Delete/DeleteProject",
+                                data: {
+                                    id: id
+                                }
+                            })
+                            .done(function (result, status) {
+                                window.location.href = '/Projects/View';
+                            })
+                            .fail(function (status) {
+                                console.log(status);
+                            });
+                        
+                    }
+                }
+            }
+        });
+    });
+
+/**
  * Delete step.
  */
 $(document).on("click touchstart", ".deleteStep", function (el) {

@@ -32,6 +32,57 @@ namespace Streamnote.Relational.Service
         }
 
         /// <summary>
+        /// Delete a project and cascade delete inner entities.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool DeleteProject(int id)
+        {
+            var project = Context.Projects
+                .Include(p => p.Tasks).ThenInclude(t => t.Steps)
+                .Include(p => p.Tasks).ThenInclude(t => t.Comments)
+                .Include(p => p.Users)
+                .FirstOrDefault(p => p.Id == id);
+
+            if (project != null)
+            {
+                if (project.Tasks.Count > 0)
+                {
+                    DeleteTasks(project.Tasks);
+                    project.Tasks = null;
+                }
+
+                /*if (project.Users.Count > 0)
+                {
+                    project.Users.RemoveAll(u => true);
+                }*/
+
+                Context.Projects.Remove(project);
+                Context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Delete a collection of tasks.
+        /// </summary>
+        /// <param name="tasks">The tasks to remove.</param>
+        /// <returns></returns>
+        public bool DeleteTasks(List<TaskItem> tasks)
+        {
+            if (tasks.Count > 0)
+            {
+                Context.Tasks.RemoveRange(tasks);
+                Context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Delete a task and cascade delete inner entities.
         /// </summary>
         /// <param name="id"></param>
