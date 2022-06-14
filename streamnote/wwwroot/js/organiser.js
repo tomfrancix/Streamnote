@@ -55,7 +55,7 @@ function saveTask(projectId) {
     })
     .done(function (result, status) {
         $('#createTaskModal').modal('hide');
-        $("#newTasks").append(result);
+        $("#newTasks").prepend(result);
     });
 }
 
@@ -74,7 +74,7 @@ function createStepModal(taskId) {
     .done(function (result, status) {
         $("#createStepBody").html("");
         $("#createStepBody").append(result);
-        $('#createStepModal').modal('show')
+        $('#createStepModal').modal('show');
     });
 }
 
@@ -93,7 +93,7 @@ function createCommentModal(taskId) {
         .done(function (result, status) {
             $("#createTaskCommentBody").html("");
             $("#createTaskCommentBody").append(result);
-            $('#createTaskCommentModal').modal('show')
+            $('#createTaskCommentModal').modal('show');
         });
 }
 

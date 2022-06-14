@@ -20,6 +20,31 @@
         } 
     </div>
     <br/>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+        @{  
+            foreach (var project in Model.Projects.Where(p => p.Id == Model.ProjectId)) 
+            {             
+                <div class="card-header">
+                    <span><strong>@project.Title</strong></span>
+                    <span style="float: right">
+                        <button class="btn btn-sm btn-danger">delete</button>
+                    </span>
+                </div> 
+                    @if (project.Description != null && project.Description.Length > 0)
+                    {      
+                        <div class="card-body" style="padding: 8px 8px 0 8px;">
+                            <span>description</span>
+                            <p>@project.Description</p> 
+                        </div>
+                    }
+            }
+        }
+            </div>
+        </div>
+    </div> 
+    <br/>
     <div class="row"> 
         @{
             if (Model.IsViewingProject)
