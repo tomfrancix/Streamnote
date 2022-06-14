@@ -13,6 +13,8 @@ $('#createProjectModal').on('shown.bs.modal', function (e) {
         .done(function (result, status) {
             $("#createProjectBody").html("");
             $("#createProjectBody").append(result);
+            var input = $("#projectTitleInput");
+            input.focus();
         });
 });
 
@@ -31,6 +33,8 @@ $('#createTaskModal').on('shown.bs.modal', function (e) {
         .done(function (result, status) {
             $("#createTaskBody").html("");
             $("#createTaskBody").append(result);
+            var input = $("#taskTitle"); 
+            input.focus();
         });
 });
 
@@ -75,6 +79,8 @@ function createStepModal(taskId) {
         $("#createStepBody").html("");
         $("#createStepBody").append(result);
         $('#createStepModal').modal('show');
+        var input = $("#stepContent");
+        input.focus();
     });
 }
 
@@ -94,6 +100,8 @@ function createCommentModal(taskId) {
             $("#createTaskCommentBody").html("");
             $("#createTaskCommentBody").append(result);
             $('#createTaskCommentModal').modal('show');
+            var input = $("#taskCommentContent");
+            input.focus();
         });
 }
 
