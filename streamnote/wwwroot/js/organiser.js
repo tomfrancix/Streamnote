@@ -198,27 +198,27 @@ function changeTaskStatus(taskId, taskStatus) {
         .done(function (result, status) {
             task.remove();
             if (taskStatus == 0) {
-                new Audio('/sounds/drop.wav').play();
+                playSound('/sounds/drop.wav', 0.4);
                 $element = $("#newTasks");
                 $element.append(result);
 
             } else if (taskStatus == 1) {
-                new Audio('/sounds/changeStatus.wav').play();
+                playChangeStatusSound();
                 $element = $("#yourTasks");
                 $element.prepend(result);
 
             } else if (taskStatus == 2) {
-                new Audio('/sounds/changeStatus.wav').play();
+                playChangeStatusSound();
                 $element = $("#completedTasks");
                 $element.prepend(result);
 
-            } else if (taskStatus == 3) {
-                new Audio('/sounds/changeStatus.wav').play();
+            } else if (taskStatus == 3) { 
+                playSound('/sounds/accepted.mp3', 0.1);
                 $element = $("#completedTasks");
                 $element.prepend(result);
 
             } else if (taskStatus == 4) {
-                new Audio('/sounds/accepted.mp3').play();
+                playChangeStatusSound();
             }
 
             $element.first("li").animate({
@@ -330,7 +330,7 @@ $(function () {
                 dataType: "html"
             })
                 .done(function (result, status) {
-                    new Audio('/sounds/changeStatus2.wav').play();
+                    playSound('/sounds/clickSound.wav', 0.2);
             });
         },
 
@@ -398,3 +398,13 @@ $('.taskInput').bind('keyup',
                 });
         }
     });
+
+function playChangeStatusSound() {
+    playSound('/sounds/changeStatus.wav', 0.2);
+}
+
+function playSound(fileName, volume) {
+    var changeStatusAudio = new Audio(fileName);
+    changeStatusAudio.volume = volume;
+    changeStatusAudio.play();
+}

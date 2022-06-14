@@ -57,31 +57,35 @@ namespace Streamnote.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Create(string title, string description, bool isPublic, int projectId)
-        {                
-            var user = await UserManager.GetUserAsync(User);
-            var now = DateTime.UtcNow;  
-            var project = Context.Projects.Find(projectId);
-            var task = new TaskItem
+        {
+            if (title != null && title.Length > 0)
             {
-                Created = now,
-                Modified = now,
-                Title = title,
-                Description = description,
-                Status = TodoStatus.Unstarted,
-                IsPublic = isPublic,
-                Project = project,
-                CreatedBy = user
-            };
+                var user = await UserManager.GetUserAsync(User);
+                var now = DateTime.UtcNow;
+                var project = Context.Projects.Find(projectId);
+                var task = new TaskItem
+                {
+                    Created = now,
+                    Modified = now,
+                    Title = title,
+                    Description = description,
+                    Status = TodoStatus.Unstarted,
+                    IsPublic = isPublic,
+                    Project = project,
+                    CreatedBy = user
+                };
 
-            if (ModelState.IsValid)
-            {
-                Context.Add(task);
-                await Context.SaveChangesAsync();
-                var newTask = Context.Tasks
-                    .Include(t => t.CreatedBy)
-                    .FirstOrDefault(i => i.Created == now && i.CreatedBy.Id == user.Id);
+                if (ModelState.IsValid)
+                {
+                    Context.Add(task);
+                    await Context.SaveChangesAsync();
+                    var newTask = Context.Tasks
+                        .Include(t => t.CreatedBy)
+                        .FirstOrDefault(i => i.Created == now && i.CreatedBy.Id == user.Id);
 
-                return PartialView("_Task", TaskMapper.MapDescriptor(newTask, user.Id)); ;
+                    return PartialView("_Task", TaskMapper.MapDescriptor(newTask, user.Id));
+                    ;
+                }
             }
 
             throw new Exception();
@@ -183,25 +187,28 @@ namespace Streamnote.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateTitle(string title, int taskId)
         {
-            var user = await UserManager.GetUserAsync(User);
-
-            var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
-            task.Title = title;
-            task.Modified = DateTime.UtcNow;
-
-            try
+            if (title != null && title.Length > 0)
             {
-                Context.Update(task);
-                await Context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaskItemExists(task.Id))
+                var user = await UserManager.GetUserAsync(User);
+
+                var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
+                task.Title = title;
+                task.Modified = DateTime.UtcNow;
+
+                try
                 {
-                    return NotFound();
+                    Context.Update(task);
+                    await Context.SaveChangesAsync();
                 }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TaskItemExists(task.Id))
+                    {
+                        return NotFound();
+                    }
 
-                throw;
+                    throw;
+                }
             }
 
             return new AcceptedResult();

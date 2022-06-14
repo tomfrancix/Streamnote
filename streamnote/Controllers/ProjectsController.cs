@@ -100,18 +100,22 @@ namespace Streamnote.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Created,Modified,Title,Description,Status,IsPublic,OwnedByUsername")] Project project)
         {
-            var user = await UserManager.GetUserAsync(User);
-            project.CreatedBy = user;
-            project.Created = DateTime.UtcNow;
-            project.Modified = DateTime.UtcNow;
-            project.Status = TodoStatus.Unstarted;
-
-            if (ModelState.IsValid)
+            if (project is { Title: { Length: > 0 } })
             {
-                Context.Add(project);
-                await Context.SaveChangesAsync();
-                return RedirectToAction(nameof(View));
+                var user = await UserManager.GetUserAsync(User);
+                project.CreatedBy = user;
+                project.Created = DateTime.UtcNow;
+                project.Modified = DateTime.UtcNow;
+                project.Status = TodoStatus.Unstarted;
+
+                if (ModelState.IsValid)
+                {
+                    Context.Add(project);
+                    await Context.SaveChangesAsync();
+                    return RedirectToAction(nameof(View));
+                }
             }
+
             return RedirectToAction(nameof(View));
         }
     }

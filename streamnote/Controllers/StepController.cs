@@ -49,26 +49,29 @@ namespace Streamnote.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         public async Task<IActionResult> Create(string content, bool isPublic, int taskId)
-        {                
-            var user = await UserManager.GetUserAsync(User);
-            var now = DateTime.UtcNow;  
-            var task = Context.Tasks.Find(taskId);
-            var step = new Step
+        {
+            if (content != null && content.Length > 0)
             {
-                Created = now,
-                Modified = now,
-                Content = content,     
-                IsCompleted = false,
-                Task = task
-            };
+                var user = await UserManager.GetUserAsync(User);
+                var now = DateTime.UtcNow;
+                var task = Context.Tasks.Find(taskId);
+                var step = new Step
+                {
+                    Created = now,
+                    Modified = now,
+                    Content = content,
+                    IsCompleted = false,
+                    Task = task
+                };
 
-            if (ModelState.IsValid)
-            {
-                Context.Add(step);
-                await Context.SaveChangesAsync();
-                var newStep = Context.Steps.FirstOrDefault(s => s.Created == now);
+                if (ModelState.IsValid)
+                {
+                    Context.Add(step);
+                    await Context.SaveChangesAsync();
+                    var newStep = Context.Steps.FirstOrDefault(s => s.Created == now);
 
-                return PartialView("_Step", StepMapper.MapDescriptor(newStep, user.Id)); ;
+                    return PartialView("_Step", StepMapper.MapDescriptor(newStep, user.Id));
+                }
             }
 
             throw new Exception();
