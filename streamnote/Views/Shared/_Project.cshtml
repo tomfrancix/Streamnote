@@ -4,19 +4,21 @@
 @{
     if (Model.IsCurrentProject)
     {
-        <div class="task" style="color: grey; background-color: #62ffd8">
-            <a href="/Projects/View/@Model.Id">
-                <i class="fa fa-circle"></i> @Model.Title
-            </a>
-        </div>
+    <div class="task background-standard" style="color: black; background-color: #62ffd8;">
+                <a href="/Projects/View/@Model.Id" style="color: black;">
+                    <strong style="color: black;">
+                        <i class="fa fa-circle"></i> @Model.Title
+                    </strong>
+                </a>
+    </div>
     }
     else
     {
-        <div class="task">
-            <a href="/Projects/View/@Model.Id">
-                <i class="fa fa-circle" style="color: grey;"></i> @Model.Title
-            </a>
-        </div>
+    <div class="task background-element">
+                <a href="/Projects/View/@Model.Id">
+                    <i class="fa fa-circle" style="color: grey;"></i> @Model.Title
+                </a>
+    </div>
     }
 }
       

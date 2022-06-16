@@ -2,7 +2,7 @@
 @model Streamnote.Relational.Models.Descriptors.ItemDescriptor
 
 <div class="row">
-    <div class="card">  
+    <div class="card background-element postElementContainer">  
         <div class="card-body itemHeader">
             <span>
                 
@@ -95,13 +95,13 @@
         <div class="itemStatistics">
             <div class="row" style="text-align: center; padding: 5px;">
                 <div class="col-sm-4">
-                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton">
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton  background-standard">
                         <i class="fa fa-comment"></i> @Model.CommentCount
                     </a>
                 </div>
                 <div class="col-sm-4">
                                            
-                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton">
+                    <a asp-controller="Item" asp-action="Details" asp-route-id="@Model.Id" class="actionButton background-standard">
                         <i class="fa fa-share"></i> @Model.ShareCount
                     </a>
                 </div>
@@ -110,14 +110,14 @@
                         if (@Model.LoggedInUserLikesThis)
                         {
                             var id = "unLikePost" + @Model.Id;
-                            <a onclick="unLikePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton">
+                            <a onclick="unLikePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton background-standard">
                                 <i class="fa fa-arrow-up" style="color: hotpink;"></i> @Model.LikeCount
                             </a>
                         }
                         else
                         {
                             var id = "likePost" + @Model.Id;
-                            <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton">
+                            <a onclick="likePost(@Model.Id, '@Model.UserName')" id="@id" class="actionButton background-standard">
                                 <i class="fa fa-arrow-up"></i> @Model.LikeCount
                             </a>
                         } 

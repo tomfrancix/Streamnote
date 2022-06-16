@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="row">
-                    <div class="task ownTask" style="background-color:@Model.Color">
+                    <div class="task ownTask background-element" style="background-color:@Model.Color">
                         <div class="taskContainer">
                             <div>      
                                 <span id="@Model.TitleIdentifier">
@@ -14,11 +14,11 @@
                                     {
                                         <a ontouchstart="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" style="font-size: 0.8em;">   
                                         
-                                            <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(-9px);" id="@Model.TaskTabIdentifier"></i>
+                                            <i class="fa fa-circle taskTab" style="transform: translateY(-9px);" id="@Model.TaskTabIdentifier"></i>
                                         
                                             <span class="taskTitle">
                                                 <span class="taskTitleText"><strong>@@@Model.OwnedByUsername</strong></span><br/> 
-                                                <span class="taskTitleText taskTitleTextContainer">@Model.Title</span>
+                                                <span class="taskTitleText taskTitleTextContainer color-standard">@Model.Title</span>
                                             </span>
                                         </a> 
                                     }
@@ -26,8 +26,8 @@
                                     {
                                         <a ontouchstart="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" onclick="expandTask(@Model.Id, '@Model.TitleIdentifier', '@Model.EditTitleIdentifier')" style="font-size: 0.8em;">   
                                             
-                                            <i class="fa fa-circle taskTab" style="color: rgba(0, 0, 0, 0.1);transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
-                                            <span class="taskTitleText taskTitleTextContainer">@Model.Title</span>
+                                            <i class="fa fa-circle taskTab" style="transform: translateY(1px);" id="@Model.TaskTabIdentifier"></i>
+                                            <span class="taskTitleText taskTitleTextContainer color-standard">@Model.Title</span>
                                         </a>  
                                     }
                                 </span>
@@ -116,7 +116,7 @@
                                     <div class="col-sm-12 taskColumn">
 
                                         <h4>description</h4>
-                                        <div class="card taskCard" style="padding: 0 13px 0 0; border: none;">
+                                        <div class="card taskCard" style="background-color: transparent;padding: 0 13px 0 0; border: none;">
                                             <div class="row">
                                                 <div class="col-md-11" style="padding: 0 0 0 8px;">
                                                     <textarea type="text" class="form-control" id="@Model.EditDescriptionIdentifier" name="description" placeholder="Add a description...">@Model.Description</textarea>

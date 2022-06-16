@@ -130,7 +130,7 @@ $(document).ready(function () {
             if (result) {
                 $("#messagesIcon").attr("style", "color:hotpink;");
             } else {
-                $("#messagesIcon").attr("style", "color:black;");
+                $("#messagesIcon").attr("style", "color:auto;");
             }
         });
 

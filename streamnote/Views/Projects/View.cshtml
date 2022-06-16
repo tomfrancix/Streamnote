@@ -22,12 +22,12 @@
     <br/>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card background-element">
         @{  
             foreach (var project in Model.Projects.Where(p => p.Id == Model.ProjectId)) 
             {             
-                <div class="card-header">
-                    <span><strong>@project.Title</strong></span>
+                <div class="card-header ">
+                    <span><strong class=" color-standard">@project.Title</strong></span>
                     <span style="float: right">
                         <button class="btn btn-sm btn-danger deleteProject" data-iden="@project.Id">delete</button>
                     </span>

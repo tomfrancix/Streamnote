@@ -30,8 +30,8 @@
                                 @{
                                     if (!Model.IsSignedInUser)
                                     {
-                                        <a href="/Messages/Index?username=@Model.UserName" class="actionButton profileActionButton">Message</a>
-                                        <a href="/Messages/Index?username=@Model.UserName" class="actionButton profileActionButton">Connect</a>
+                                        <a href="/Messages/Index?username=@Model.UserName" class="actionButton profileActionButton background-standard">Message</a>
+                                        <a href="/Messages/Index?username=@Model.UserName" class="actionButton profileActionButton  background-standard">Connect</a>
                                     }
 
                                     if (Model.Bio is {Length: > 0 })
