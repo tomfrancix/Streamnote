@@ -2,13 +2,13 @@
 
 <div class="row">
     @{
-        if (Model == null || (Model.Image == null || Model.ImageContentType == null))
+        if (Model?.Images?[0]?.Bytes == null || Model?.Images?[0]?.ImageContentType == null)
         {
             <img src="" id="backgroundoutput" style="width: 100%; margin-bottom: -45px;"/>
         }
         else
         {
-            <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%; margin-bottom: -45px;margin-top: 90px;" />
+            <img src="data:@Model.Images[0].ImageContentType;base64,@Convert.ToBase64String(Model.Images[0].Bytes)" style="width: 100%; margin-bottom: -45px;margin-top: 90px;" />
         }
     }
     <div class="col-md-12">
@@ -25,7 +25,7 @@
 </div>
 <hr />
 <div class="row" >
-    <div class="col-md-8 offset-2" style="background-color: white;">
+    <div class="col-md-8 offset-2">
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         
@@ -70,35 +70,37 @@
             <input asp-for="Content" type="hidden" class="form-control" id="editorOutput"  placeholder="Compose your post..." rows="20" style="border: none; outline: none; background-color: rgba(0, 0, 0, 0.02);"/>
             <span asp-validation-for="Content" class="text-danger"></span>
         </div> 
-        <div class="form-group">
-            <label class="control-label">Begin typing to select a topic.</label> 
-            <input type="text" class="form-control" id="queryTopics" style="display: inline-block;width: 20%; border:1px solid rgba(0,0,0,0.1); background-color: rgba(0, 0, 0, 0.02); padding:3px; margin: 3px;"/> 
+        <div class="background-element" style="padding:1px 8px 45px 8px;">
+            <div class="form-group">
+                <label class="control-label">Begin typing to select a topic.</label> 
+                <input type="text" class="form-control background-standard" id="queryTopics" style="display: inline-block;width: 20%; border:1px solid rgba(0,0,0,0.1); background-color: rgba(0, 0, 0, 0.02); padding:3px; margin: 3px;"/> 
                
-            <div id="topicSelect">
-                <label>Now select a topic from this list:</label> <br/>
-                <div id="topicSuggestions"></div>
-                <br/> 
-                <label>Selected topics</label> <br/>
-                <input type="text" id="selectedTopics" name="selectedTopics"  style="display: inline-block;width: 70%; border: none; background-color: rgba(0, 0, 0, 0.02) padding:3px; margin: 3px;"//>
-            </div>
+                <div id="topicSelect">
+                    <label>Now select a topic from this list:</label> <br/>
+                    <div id="topicSuggestions"></div>
+                    <br/> 
+                    <label>Selected topics</label> <br/>
+                    <input type="text" id="selectedTopics" name="selectedTopics"  style="display: inline-block;width: 70%; border: none; background-color: rgba(0, 0, 0, 0.02) padding:3px; margin: 3px;"//>
+                </div>
            
-        </div>
-        <div class="form-group">
-            <label class="control-label">This post should be public </label>   
-            @{
-                if (Model != null)
-                {   
-                    <input type="checkbox" checked="@Model.IsPublic" id="isPublic" name="isPublic" value="true">
-                }
-                else
-                {   
-                    <input type="checkbox" id="isPublic" name="isPublic" value="true">
-                }
-            }                                                                                                                                 
-            <span} asp-validation-for="IsPublic" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+            <div class="form-group">
+                <label class="control-label">This post should be public </label>   
+                @{
+                    if (Model != null)
+                    {   
+                        <input type="checkbox" checked="@Model.IsPublic" id="isPublic" name="isPublic" value="true">
+                    }
+                    else
+                    {   
+                        <input type="checkbox" id="isPublic" name="isPublic" value="true">
+                    }
+                }                                                                                                                                 
+                <span} asp-validation-for="IsPublic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" style="float: right;" />
+            </div>
         </div>
     </div>
 </div>                  

@@ -33,6 +33,7 @@ namespace Streamnote.Relational.Repositories
             return Context.Items
                 .Include(b => b.User)
                 .Include(b => b.Likes).ThenInclude(u => u.User)
+                .Include(i => i.Images)
                 .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
                 .Where(u => u.User != null);
         }

@@ -126,8 +126,7 @@ namespace Streamnote.Web.Controllers
 
                 if (existing != null)
                 {
-                    existing.Image = existing.Image;
-                    existing.ImageContentType = existing.ImageContentType;
+                    existing.Images = existing.Images;
                     existing.Modified = DateTime.UtcNow;
                     existing.Content = content;
                     existing.Title = title;
@@ -154,10 +153,7 @@ namespace Streamnote.Web.Controllers
                     Modified = now,
                     Title = title,
                     Content = content,
-                    Image = new byte[]
-                    {
-                    },
-                    ImageContentType = null,
+                    Images = new List<ItemImage>(),
                     IsPublic = isPublic == "true",
                     CommentCount = 0,
                     ShareCount = 0,
@@ -282,9 +278,10 @@ namespace Streamnote.Web.Controllers
         {
             if (file != null)
             {
-                item.ImageContentType = file.ContentType;
-
-                var fileName = "File_" + file.FileName;
+                if (item.Images == null)
+                {
+                    item.Images = new List<ItemImage>();
+                }
 
                 byte[] bytes;
 
@@ -305,7 +302,16 @@ namespace Streamnote.Web.Controllers
 
                 if (bytes.Length < 13000000)
                 {
-                    item.Image = bytes;
+                    var image = new ItemImage()
+                    {
+                        Created = DateTime.UtcNow,
+                        Modified = DateTime.UtcNow,
+                        ImageContentType = file.ContentType,
+                        Name = "IMG_" + file.FileName,
+                        Bytes = bytes
+                    };
+
+                    item.Images.Add(image);
                 }
             }
 

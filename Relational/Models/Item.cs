@@ -31,5 +31,7 @@ namespace Streamnote.Relational.Models
         public List<Comment> Comments { get; set; }
         public List<Like> Likes { get; set; }
         public List<Topic> Topics { get; set; }
+
+        public List<ItemImage> Images { get; set; }
     }
 }

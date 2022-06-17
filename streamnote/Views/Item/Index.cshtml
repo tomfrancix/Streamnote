@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Streamnote.Relational.Models.Descriptors.ItemDescriptor>
 
 @{
-    ViewData["Title"] = "your posts";
+    ViewData["Title"] = "Your Posts";
 }
 
 <div class="container-fluid">
@@ -30,20 +30,7 @@
 
             <div class="tab-content">
                 <div id="published" class="tab-pane active">   
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th style="width: 40%;">
-                                @Html.DisplayNameFor(model => model.Image)
-                            </th>
-                            <th style="width:50%">
-                                Details
-                            </th>
-                            <th style="width: 15%;">
-                                Actions
-                            </th>
-                        </tr>
-                        </thead>
+                    <table class="table table-bordered"> 
                         <tbody>
                         @foreach (var item in Model.Where(i => i.IsPublic)) {
 
@@ -54,19 +41,6 @@
                 </div>
                 <div id="drafts" class="tab-pane fade">   
                     <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th style="width: 40%;">
-                                @Html.DisplayNameFor(model => model.Image)
-                            </th>
-                            <th style="width:50%">
-                                Details
-                            </th>
-                            <th style="width: 15%;">
-                                Actions
-                            </th>
-                        </tr>
-                        </thead>
                         <tbody>
                         @foreach (var item in Model.Where(i => !i.IsPublic)) {
 
