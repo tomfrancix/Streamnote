@@ -88,6 +88,7 @@ namespace Streamnote.Web.Controllers
             var itemDescriptor = ItemMapper.MapDescriptor(item, user.Id);
 
             var comments = Context.Comments
+                .Include(c => c.User)
                 .Where(c => c.Item.Id == item.Id)
                 .ToList();
 
