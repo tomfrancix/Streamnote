@@ -301,6 +301,7 @@ function editTaskDescription(el, taskId, descriptionId) {
 var adjustment;
 $(function () {
     $("ol.todoSort").sortable({
+        handle: '.sortTasksHandle',
         group: 'simple_with_animation',
         pullPlaceholder: true,
         // animation on drop
