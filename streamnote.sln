@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Streamnote.Relational", "Relational\Streamnote.Relational.csproj", "{81A7276F-868E-4E61-8DBC-5DB9B9BB8CB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Streamnote.Console", "Streamnote.Console\Streamnote.Console.csproj", "{AEAD6DC2-A9C0-4E3B-8274-CC063E022A58}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{81A7276F-868E-4E61-8DBC-5DB9B9BB8CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81A7276F-868E-4E61-8DBC-5DB9B9BB8CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81A7276F-868E-4E61-8DBC-5DB9B9BB8CB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEAD6DC2-A9C0-4E3B-8274-CC063E022A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEAD6DC2-A9C0-4E3B-8274-CC063E022A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEAD6DC2-A9C0-4E3B-8274-CC063E022A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEAD6DC2-A9C0-4E3B-8274-CC063E022A58}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+                       
+@if (SignInManager.IsSignedIn(User))
+{     
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" asp-area="" asp-controller="Home" asp-action="Index">
+            <i class="fa fa-home" title="Home"></i> <span style="margin-left: 8px;"> Home</span>
+        </a>
+    </li>
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" data-toggle="modal" data-target="#mySearchModal" title="Search">
+            <i class="fa fa-search"></i> <span style="margin-left: 8px;"> Search</span>
+        </a>  
+    </li>
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" href="/Messages/Index" title="Messages">
+            <i class="fa fa-envelope notifyCircle" id="messagesIcon"></i>  <span style="margin-left: 8px;"> Messages</span>
+        </a>
+    </li> 
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" data-toggle="modal" data-target="#myModal" title="Notifications">
+            <i class="fa fa-bell" id="notificationsIcon"></i>  <span style="margin-left: 8px;"> Notifications</span>
+        </a>
+    </li> 
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" asp-area="" asp-controller="Item" asp-action="Index">
+            <i class="fa fa-th-large" title="Organiser"></i>   <span style="margin-left: 8px;"> Post Scheduler</span>
+        </a>
+    </li>
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" asp-area="" asp-controller="Projects" asp-action="View">
+            <i class="fa fa-tasks" title="Tasks"></i>   <span style="margin-left: 8px;"> Task Manager</span>
+        </a>
+    </li>   
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard" asp-area="" asp-controller="Analytics" asp-action="View">
+            <i class="fa fa-bar-chart" title="Analytics"></i>  <span style="margin-left: 8px;"> Stats & Analytics</span>
+        </a>
+    </li>
+    <li class="nav-item" style="width: 100%; padding: 5px; margin: 8px 0; text-align: left;">
+        <a class="nav-link color-standard dark-mode-toggle" title="Dark mode"  id="toggleBtn">
+            <i class="fa fa-adjust"></i> <span style="margin-left: 8px;"> Dark Mode</span>
+        </a>
+    </li> 
+}

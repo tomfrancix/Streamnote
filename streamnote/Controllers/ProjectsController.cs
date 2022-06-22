@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -20,8 +22,9 @@ namespace Streamnote.Web.Controllers
         private readonly UserManager<ApplicationUser> UserManager;
         private readonly IProjectRepository ProjectRepository;
         private readonly ITaskRepository TaskRepository;
+        private readonly UserMapper UserMapper;
 
-        public ProjectsController(ApplicationDbContext context, ProjectMapper projectMapper, UserManager<ApplicationUser> userManager, TaskMapper taskMapper, IProjectRepository projectRepository, ITaskRepository taskRepository)
+        public ProjectsController(ApplicationDbContext context, ProjectMapper projectMapper, UserManager<ApplicationUser> userManager, TaskMapper taskMapper, IProjectRepository projectRepository, ITaskRepository taskRepository, UserMapper userMapper)
         {
             Context = context;
             ProjectMapper = projectMapper;
@@ -29,6 +32,7 @@ namespace Streamnote.Web.Controllers
             TaskMapper = taskMapper;
             ProjectRepository = projectRepository;
             TaskRepository = taskRepository;
+            UserMapper = userMapper;
         }
 
         // GET: Projects
@@ -47,20 +51,19 @@ namespace Streamnote.Web.Controllers
 
             if (organizer.IsViewingProject)
             {     
-                foreach (var project in organizer.Projects)
-                {
-                    if (project.Id == id)
-                    {
-                        project.IsCurrentProject = true;
-                    }
-                }
+                
 
                 if (id != null)
                 {
                     var allTasks = TaskMapper.MapDescriptors(TaskRepository.QueryAllTasks(user, (int)id).ToList(), user.Id);
 
+                    foreach (var task in allTasks)
+                    {
+                        task.OwnedByLoggedInUser = task.OwnedByUsername == user.UserName;
+                    }
+
                     organizer.Tasks = allTasks
-                        .Where(t => t.Status == TodoStatus.Unstarted && t.OwnedByUsername != user.UserName)
+                        .Where(t => t.Status == TodoStatus.Unstarted || (t.Status == TodoStatus.Started && t.OwnedByUsername != user.UserName))
                         .OrderBy(t => t.Rank).ToList();
                     organizer.YourTasks = allTasks
                         .Where(t => (t.Status == TodoStatus.Started) && t.OwnedByUsername == user.UserName)
@@ -117,6 +120,109 @@ namespace Streamnote.Web.Controllers
             }
 
             return RedirectToAction(nameof(View));
+        }
+
+        /// <summary>
+        /// Get participants for a project.
+        /// </summary>
+        /// <param name="projectId"></param> 
+        /// <returns></returns>
+        public async Task<IActionResult> GetParticipants(int projectId)
+        {
+            if (projectId > 0)
+            {
+                var user = await UserManager.GetUserAsync(User);
+
+                var project = ProjectRepository
+                    .QueryAllProjects(user)
+                    .First(p => p.Id == projectId);
+
+                var userIdsInProject = new List<string>();
+
+                if (project.Users is { Count: > 0 })
+                {
+                    userIdsInProject.AddRange(project.Users.Select(u => u.Id));
+                }
+
+                var participants = Context.Users.Where(u => userIdsInProject.Contains(u.Id)).ToList();
+
+                return PartialView("_ParticipantsModalBody", UserMapper.MapDescriptors(participants));
+            }
+
+            throw new InvalidDataException("Parameters were not correct.");
+        }
+
+        /// <summary>
+        /// Get potential participant for a project.
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> GetPotentialParticipants(int projectId, string query)
+        {
+            if (projectId > 0 && query.Length > 3)
+            {
+                var user = await UserManager.GetUserAsync(User);
+
+                var project = ProjectRepository
+                    .QueryAllProjects(user)
+                    .First(p => p.Id == projectId);
+
+                var userIdsInProject = new List<string>
+                {
+                    project.CreatedBy.Id
+                };
+
+                if (project.Users is { Count: > 0 })
+                {
+                    userIdsInProject.AddRange(project.Users.Select(u => u.Id));
+                }
+
+                var potentialParticipants = Context.Users.Where(u => 
+                       (u.UserName.StartsWith(query) || u.FirstName.StartsWith(query)) 
+                    && !userIdsInProject.Contains(u.Id)).ToList();
+
+                return PartialView("_ParticipantSelectOptions", UserMapper.MapDescriptors(potentialParticipants));
+            }
+
+            throw new InvalidDataException("Parameters were not correct.");
+        }
+
+        /// <summary>
+        /// Add participant to a project by username.
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> AddOrRemoveParticipant(string username, int projectId)
+        {
+            if (username is { Length: > 0 } && projectId > 0)
+            {
+                var user = await UserManager.GetUserAsync(User);
+                
+                var project = ProjectRepository
+                    .QueryAllProjects(user)
+                    .First(p => p.Id == projectId);
+
+                if (project.Users is { Count: > 0 } && project.Users.Any(u => u.UserName == username))
+                {
+                    var userToRemove = Context.Users.First(u => u.UserName == username);
+
+                    project.Users.Remove(userToRemove);
+                }
+                else
+                {
+                    var participant = await UserManager.FindByNameAsync(username);
+
+                    project.Users.Add(participant);
+                }
+
+                await Context.SaveChangesAsync();
+
+                return PartialView("_ParticipantSelectOptions", UserMapper.MapDescriptors(project.Users));
+            }
+
+            throw new InvalidDataException("Parameters were not correct.");
         }
     }
 }

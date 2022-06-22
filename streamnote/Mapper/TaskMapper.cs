@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNetCore.Identity;
 using SixLabors.ImageSharp.PixelFormats;
 using Streamnote.Relational;
 using Streamnote.Relational.Helpers;

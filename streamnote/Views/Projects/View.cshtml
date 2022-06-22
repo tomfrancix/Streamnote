@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<div class="container-fluid" style="position: absolute; left: 0; right: 0;">  
+<div class="container-fluid absoluteOnWideScreen">  
     <div class="row">      
         <div class="col-md-12">
             <h4>projects <a data-toggle="modal" data-target="#createProjectModal" style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
@@ -27,18 +27,44 @@
             foreach (var project in Model.Projects.Where(p => p.Id == Model.ProjectId)) 
             {             
                 <div class="card-header ">
-                    <span><strong class=" color-standard">@project.Title</strong></span>
+                    <span><strong class=" color-standard">@project.Title</strong></span> 
                     <span style="float: right">
                         <button class="btn btn-sm btn-danger deleteProject" data-iden="@project.Id">delete</button>
                     </span>
+                    <span style="float: right">
+                        <button class="btn btn-sm btn-primary"  onclick="addParticipantModal(@project.Id)"><i class="fa fa-plus-circle"></i> add participants</button>
+                    </span>
                 </div> 
-                    @if (project.Description != null && project.Description.Length > 0)
-                    {      
-                        <div class="card-body" style="padding: 8px 8px 0 8px;">
-                            <span>description</span>
-                            <p>@project.Description</p> 
-                        </div>
-                    }
+
+                @if (project.Users != null && project.Users.Count > 0)
+                {   
+                    <div class="card-body background-medium" style="margin: 8px 0 8px 18px; font-size: 0.8em; padding: 5px;">
+                        <span>participants</span> <br/>
+                    @foreach (var participant in project.Users)
+                    {
+                        <span class="background-standard color-standard" style="padding: 2px 5px; margin-right: 5px; border-radius: 7px;">
+                            @if (participant.UserImage != null && participant.UserImageContentType != null)
+                            {
+                                <img src="data:@participant.UserImageContentType;base64,@Convert.ToBase64String(participant.UserImage)" class="icon" title="@participant.UserName"/>
+                                @participant.UserName
+                            }
+                            else
+                            {
+                                <i class="fa fa-user" style="padding: 4px; margin-top: 4px;" title="@participant.UserName"></i>
+                                @participant.UserName
+                            }
+                        </span>
+                    }    
+                    </div>
+                }
+
+                @if (project.Description != null && project.Description.Length > 0)
+                {      
+                    <div class="card-body" style="padding: 8px 8px 0 8px;">
+                        <span>description</span>
+                        <p>@project.Description</p> 
+                    </div>
+                }
             }
         }
             </div>
@@ -50,7 +76,7 @@
             if (Model.IsViewingProject)
             {
                 <input type="hidden" value="@Model.ProjectId" id="projectId"/>
-                <div class="col-sm-6" style="height: 90vh; overflow-y: scroll;">
+                <div class="col-sm-6 height-90 scrollableOnWideScreen">
                     <h4>to do list <a data-toggle="modal" data-target="#createTaskModal"  style="float: right;"><i class="fa fa-plus-circle"></i> New</a></h4>
                     <hr/> 
                     <ol class="todoSort" id="newTasks">
@@ -61,11 +87,10 @@
                             }
                         }   
                     </ol>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <br/>
+                    <br/> 
+                    <br class="hideOnPhone"/>
+                    <br class="hideOnPhone"/>
+                    <br class="hideOnPhone"/>
                     <br class="hideOnPhone"/>
                     <br class="hideOnPhone"/>
                     <br class="hideOnPhone"/>
@@ -74,7 +99,7 @@
                     <br class="hideOnPhone"/>
                     <br class="hideOnPhone"/>
                 </div>
-                <div class="col-sm-6" style="height: 90vh; overflow-y: scroll;">
+                <div class="col-sm-6 height-90 scrollableOnWideScreen">
                        <h4>your tasks </h4>
                     <hr/> 
                     <ol class="todoSort" id="yourTasks">                               

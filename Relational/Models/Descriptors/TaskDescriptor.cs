@@ -32,7 +32,8 @@ namespace Streamnote.Relational.Models.Descriptors
         public string EditTitleIdentifier { get; set; }
         public string EditTitleInputIdentifier { get; set; }
 
-        public string OwnedByUsername { get; set; } 
+        public string OwnedByUsername { get; set; }
+        public bool OwnedByLoggedInUser { get; set; }
         public List<StepDescriptor> Steps { get; set; }
         public List<TaskCommentDescriptor> Comments { get; set; }
         public int ProjectId { get; set; }

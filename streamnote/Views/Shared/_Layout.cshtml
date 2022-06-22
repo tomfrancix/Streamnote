@@ -30,11 +30,14 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1 hideOnPhone ">
+                <ul class="navbar-nav flex-grow-1 hideOnPhone">
                     <partial name="_MenuLinks"/>
                 </ul>
                 <ul class="navbar-nav hideOnPhone">
                     <partial name="_Notifications"/>
+                </ul> 
+                <ul class="navbar-nav hideOnWideScreen">
+                    <partial name="_PhoneMenu"/>
                 </ul>
                 <partial name="_LoginPartial"/>
             </div>
@@ -47,7 +50,7 @@
     </main>
 </div>
 
-<div class="fixed-bottom hideOnWideScreen">
+<!--div class="fixed-bottom  hide">
     <nav class="navbar navbar-light bg-light">
         <div style="width: 100%;">
             <ul class="navbar-nav">
@@ -56,7 +59,7 @@
             </ul>
         </div>
     </nav>
-</div>
+</div-->
 
 <!-- The Modal -->
 <div class="modal background-medium color-standard" id="myModal">
@@ -195,6 +198,26 @@
                     <div class="col-sm-12" id="createTaskCommentBody">
 
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  
+
+<!-- The Tasks -->
+<div class="modal" id="addParticipantModal">
+    <div class="modal-dialog">
+        <div class="modal-content background-medium color-standard">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add Participants</h4>
+                <button type="button" class="close color-standard" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="row" id="addParticipantBody">
                 </div>
             </div>
         </div>

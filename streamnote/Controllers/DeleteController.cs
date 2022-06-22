@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Streamnote.Relational.Interfaces.Services;
 
 namespace Streamnote.Web.Controllers
@@ -57,9 +58,9 @@ namespace Streamnote.Web.Controllers
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns></returns>
-        public void DeleteItem(int id)
+        public async Task DeleteItem(int id)
         {
-            DataCullingService.DeleteItem(id);
+            await DataCullingService.DeleteItem(id);
         }
 
         /// <summary>

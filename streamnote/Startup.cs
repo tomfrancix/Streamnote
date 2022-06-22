@@ -11,12 +11,8 @@ using Microsoft.Extensions.Hosting;
 using Streamnote.Relational.Data;
 using Streamnote.Relational.Helpers;
 using Streamnote.Relational.Installers;
-using Streamnote.Relational.Interfaces.Repositories;
-using Streamnote.Relational.Interfaces.Services;
 using Streamnote.Web.Mapper;
 using Streamnote.Relational.Models;
-using Streamnote.Relational.Repositories;
-using Streamnote.Relational.Service;
 using Streamnote.Web.Messenger;
 
 namespace Streamnote.Web

@@ -1,0 +1,11 @@
+﻿@model List<Streamnote.Relational.Models.Descriptors.UserNameDescriptor>
+
+@{
+    foreach (var user in Model)
+    {
+       @Html.Partial("_ParticipantSelectOption", user)
+    }
+}
+
+
+

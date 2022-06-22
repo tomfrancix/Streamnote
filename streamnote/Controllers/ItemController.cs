@@ -292,27 +292,34 @@ namespace Streamnote.Web.Controllers
                     bytes = ms.ToArray();
                 }
                 
-                /*
-                var objectExists = await S3Service.ObjectExistsAsync("sn-content", fileName);
+                var imageName = "IMG_" + file.FileName;
 
-                if (!objectExists)
-                {
-                    S3Service.PutObjectAsync("sn-content", fileName, file.ContentType, bytes, new Dictionary<string, string>()).Wait();
-                }
-                */
-
-                if (bytes.Length < 13000000)
+                if (bytes.Length < 49152)
                 {
                     var image = new ItemImage()
                     {
                         Created = DateTime.UtcNow,
                         Modified = DateTime.UtcNow,
                         ImageContentType = file.ContentType,
-                        Name = "IMG_" + file.FileName,
+                        Name = imageName,
                         Bytes = bytes
                     };
 
                     item.Images.Add(image);
+                }
+                else
+                {
+                    await S3Service.UploadImage(imageName, file.ContentType, bytes, new Dictionary<string, string>());
+
+                    item.Images.Add(new ItemImage
+                    {         
+                        Created = DateTime.UtcNow,
+                        Modified = DateTime.UtcNow,
+                        Name = imageName,
+                        FullS3Location = "https://sn-content.s3.eu-west-1.amazonaws.com/Images/" + imageName,
+                        Bytes = new byte[] {},
+                        ImageContentType = file.ContentType
+                    });
                 }
             }
 

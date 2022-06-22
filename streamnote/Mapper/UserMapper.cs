@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Amazon.Runtime.Internal.Util;
 using Streamnote.Relational.Models;
 using Streamnote.Relational.Models.Descriptors;
 

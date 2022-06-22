@@ -24,6 +24,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }
         public byte[] UserImage { get; set; }
+        public string ImageLocation { get; set; }
 
         public List<CommentDescriptor> Comments { get; set; }
     }

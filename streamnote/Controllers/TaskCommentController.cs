@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Streamnote.Relational;
 using Streamnote.Relational.Data;
 using Streamnote.Relational.Models;
@@ -65,11 +66,10 @@ namespace Streamnote.Web.Controllers
 
             if (ModelState.IsValid)
             {
-                Context.Add(comment);
+                var newComment = Context.Add(comment);
                 await Context.SaveChangesAsync();
-                var newComment = Context.TaskComments.FirstOrDefault(s => s.Task.Id == taskId);
 
-                return PartialView("_TaskComment", TaskCommentMapper.MapDescriptor(newComment, user.Id)); ;
+                return PartialView("_TaskComment", TaskCommentMapper.MapDescriptor(newComment.Entity, user.Id)); ;
             }
             throw new Exception();
         }

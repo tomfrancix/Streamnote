@@ -114,6 +114,7 @@ namespace Streamnote.Web.Controllers
             var task = Context.Tasks.Include(t => t.Project).FirstOrDefault(t => t.Id == taskId);
             task.Status = (TodoStatus)status;
             task.Modified = DateTime.UtcNow;
+            
             if (status > 0)
             {
                 task.OwnedByUsername = user.UserName;
@@ -124,28 +125,33 @@ namespace Streamnote.Web.Controllers
             }
 
             try
-                {
-                    Context.Update(task);
-                    await Context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TaskItemExists(task.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+            {
+                Context.Update(task);
+                await Context.SaveChangesAsync();
             }
-                var newTask = Context.Tasks
-                    .Include(t => t.CreatedBy)
-                    .Include(t => t.Steps)
-                    .Include(t => t.Comments).ThenInclude(c => c.User)
-                    .FirstOrDefault(i => i.Id == taskId);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TaskItemExists(task.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return PartialView("_Task", TaskMapper.MapDescriptor(newTask, user.Id)); ;
+            var newTask = Context.Tasks
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Steps)
+                .Include(t => t.Comments).ThenInclude(c => c.User)
+                .FirstOrDefault(i => i.Id == taskId);
+
+            var taskDescriptor = TaskMapper.MapDescriptor(newTask, user.Id);
+
+            taskDescriptor.OwnedByLoggedInUser = taskDescriptor.OwnedByUsername == user.UserName;
+
+            return PartialView("_Task", taskDescriptor);
 
         }
 

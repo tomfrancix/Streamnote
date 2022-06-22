@@ -184,8 +184,26 @@ hr {
     padding: 8px;
     margin: 8px 0;
 }
+ .container {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+
+@media only screen and (min-width: 600px) {
+    .height-90 { height: 90vh; }
+
+    .scrollableOnWideScreen { overflow-y:scroll; }
+
+    .absoluteOnWideScreen {
+        position: absolute;
+        left: 0;
+        right: 0;
+    }
+}
 
 @media only screen and (max-width: 600px) {
+   
     .offset-3 {
         margin-left: 0;
     }
@@ -196,10 +214,7 @@ hr {
     .col-sm-4 {
         width: 33%;
     }
-    .container {
-        padding-left: 5px;
-        padding-right: 5px;
-    }
+    
     .hideOnPhone {
         display: none;
     }
@@ -444,6 +459,10 @@ pre.ql-syntax {
     margin-top: 78px;
 }
 
+.table, tr, thead, tbody, td {
+    border: none;
+}
+
 .background-standard {
     background-color: white;
 }
@@ -452,6 +471,9 @@ pre.ql-syntax {
 }
 .color-standard {
     color: black;
+}
+.background-fade {
+    background-color: rgba(1, 1, 1, 0.1) !important;
 }
 
 body.dark-mode-theme .background-standard, body.dark-mode-theme textarea, body.dark-mode-theme textarea:focus, body.dark-mode-theme input, body.dark-mode-theme input:focus {
@@ -497,7 +519,6 @@ body.dark-mode-theme .btn {
 
 body.dark-mode-theme .table {
     color: white !important;
-    background-color: #161b22 !important;
     border: none;
 }
 
@@ -542,4 +563,8 @@ body.dark-mode-theme .modal-header {
 }
 body.dark-mode-theme .modal-footer {
     border-top: 1px solid rgba(60,60,60,1);
+}
+
+.loading {
+    background: transparent url('http://thinkfuture.com/wp-content/uploads/2013/10/loading_spinner.gif') center no-repeat;
 }

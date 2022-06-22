@@ -8,19 +8,19 @@
             @{
                 if (topic.UserFollowsTopic)
                 {
-                    <a class="@topic.TopicElementId" style="padding: 6px 0 6px 10px;" onclick="unFollowTopic('@topic.Name', '@topic.TopicElementId')">
+                    <a class="@topic.TopicElementId" style="padding: 6px 0 6px 4px;" onclick="unFollowTopic('@topic.Name', '@topic.TopicElementId')">
                         <i class="fa fa-check" style="color: chartreuse"></i>
                     </a>
                 }
                 else
                 {
-                    <a class="@topic.TopicElementId" style="padding: 6px 0 6px 12px;" onclick="followTopic('@topic.Name', '@topic.TopicElementId')">
+                    <a class="@topic.TopicElementId" style="padding: 6px 0 6px 4px;" onclick="followTopic('@topic.Name', '@topic.TopicElementId')">
                         <i class="fa fa-close" style="color: grey"></i>
                     </a>
                 }
             }                                          
             <a class='btn' style="text-align: left; font-size: 0.7em;" href="/Home/Index?topic=@topic.Name">:@topic.Name</a>
-            <span style="float: right; padding: 8px; font-size: 0.7em;">@topic.ItemCount</span>
+            <span style="float: right; padding: 6px 2px; font-size: 0.7em;">@topic.ItemCount</span>
         </span>          
     }
 }

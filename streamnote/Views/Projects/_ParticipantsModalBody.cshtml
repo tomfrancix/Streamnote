@@ -1,0 +1,19 @@
+﻿@model List<Streamnote.Relational.Models.Descriptors.UserNameDescriptor>
+
+            
+<div class="col-sm-6">
+    <input type="text" placeholder="Search users..." name="addParticipantInput" id="addParticipantInput" onkeyup="getPotentialParticipants()"/> 
+    <div id="potentialParticipantSearchResults"> 
+    </div>
+</div>
+<div class="col-sm-6">       
+    <h4 class="modal-title">Participants</h4> 
+    <br/>
+                                                     
+    <span id="addNewParticipants">
+        @Html.Partial("_ParticipantSelectOptions", Model) 
+    </span>
+</div>
+
+
+

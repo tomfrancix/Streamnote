@@ -33,7 +33,7 @@ namespace Streamnote.Relational.Repositories
                 .Include(t => t.Steps)
                 .Include(t => t.Comments).ThenInclude(c => c.User)
                 .Include(t => t.CreatedBy)
-                .Where(t => t.CreatedBy.Id == user.Id && t.Project.Id == projectId);
+                .Where(t => t.Project.Id == projectId);
         }
     }
 }

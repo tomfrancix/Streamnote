@@ -1,4 +1,5 @@
 ﻿@using Streamnote.Relational
+@using Microsoft.AspNetCore.Identity
 @model Streamnote.Relational.Models.Descriptors.TaskDescriptor
       
 <li iden="@Model.Id">
@@ -6,7 +7,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="row">
-                    <div class="task ownTask background-element" style="background-color:@Model.Color">
+                    <div class="task ownTask" style="background-color:@Model.Color">
                         <div class="taskContainer">
                             <div>
                                 <span id="@Model.TitleIdentifier">
@@ -39,38 +40,49 @@
                                 </span>
                                 <div class="btn-group" role="group" aria-label="Basic example" style="position: relative; float: right; right: 20px;">
                                     @{
-                                        if (Model.Status == TodoStatus.Unstarted)
+                                        if (Model.OwnedByLoggedInUser || Model.Status == TodoStatus.Unstarted)
                                         {
+                                            if (Model.Status == TodoStatus.Unstarted)
+                                            {
+                                                <button type="button" class="btn btn-light sortTasksHandle"><i class="fa fa-sort"></i></button>
+                                                <div class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
+                                                <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+
+                                            }
+                                            else if (Model.Status == TodoStatus.Started)
+                                            {
+                                                <button type="button" class="btn btn-light sortTasksHandle" style="transform: translateX(-20px);"><i class="fa fa-sort"></i></button>
+                                                <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 0)" onclick="changeTaskStatus(@Model.Id, 0)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </button>
+                                                <div class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
+                                                <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+
+                                            }
+                                            else if (Model.Status == TodoStatus.Finished)
+                                            {
+                                                <button type="button" class="btn btn-light sortTasksHandle" style="transform: translateX(-20px);"><i class="fa fa-sort"></i></button>
+                                                <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </button>
+                                                <div class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
+                                                <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 3)" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+
+                                            }
+                                            else if (Model.Status == TodoStatus.Delivered)
+                                            {
+                                                <button type="button" class="btn btn-light sortTasksHandle" style="transform: translateX(-20px);"><i class="fa fa-sort"></i></button>
+                                                <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)">
+                                                    <i class="fa fa-chevron-left"></i>
+                                                </button>
+                                                <div class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
+                                                <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 4)" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            }
+                                        }
+                                        else
+                                        {   
                                             <button type="button" class="btn btn-light sortTasksHandle"><i class="fa fa-sort"></i></button>
-                                            <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
-                                    
-                                        } else if   (Model.Status == TodoStatus.Started)
-                                        {
-                                            <button type="button" class="btn btn-light sortTasksHandle" style="transform:translateX(-20px);"><i class="fa fa-sort"></i></button>
-                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 0)" onclick="changeTaskStatus(@Model.Id, 0)">
-                                                <i class="fa fa-chevron-left"></i>
-                                            </button>
-                                            <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
-                                   
-                                        } else if   (Model.Status == TodoStatus.Finished)
-                                        {
-                                            <button type="button" class="btn btn-light sortTasksHandle" style="transform:translateX(-20px);"><i class="fa fa-sort"></i></button>
-                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 1)" onclick="changeTaskStatus(@Model.Id, 1)">
-                                                <i class="fa fa-chevron-left"></i>
-                                            </button>
-                                            <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 3)" onclick="changeTaskStatus(@Model.Id, 3)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
-                                    
-                                        }  else if   (Model.Status == TodoStatus.Delivered)
-                                        {
-                                            <button type="button" class="btn btn-light sortTasksHandle" style="transform:translateX(-20px);"><i class="fa fa-sort"></i></button>
-                                            <button type="button" class="btn btn-light" ontouchstart="changeTaskStatus(@Model.Id, 2)" onclick="changeTaskStatus(@Model.Id, 2)">
-                                                <i class="fa fa-chevron-left"></i>
-                                            </button>
-                                            <div  class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
-                                            <button type="button" ontouchstart="changeTaskStatus(@Model.Id, 4)" onclick="changeTaskStatus(@Model.Id, 4)" class="btn btn-light"><i class="fa fa-chevron-right"></i></button>
+                                            <div class="btn" style="width: 100px; z-index: 0;"> @Model.Status.ToString()</div>
                                         }
                                     }
                                 </div>
@@ -83,7 +95,7 @@
                                 <div class="row">      
                                     <div class="col-sm-12 taskColumn">
                                         <h4>info</h4>
-                                        <table class="table table-bordered table-sm table-striped" style="text-align: center; font-size: 0.8em;">
+                                        <table class="table table-sm table-striped background-fade" style="text-align: center; font-size: 0.8em;">
                                             <thead>
                                             <td>created by</td>
                                             <td>owners username</td>
@@ -123,7 +135,7 @@
                                         <div class="card taskCard" style="background-color: transparent;padding: 0 13px 0 0; border: none;">
                                             <div class="row">
                                                 <div class="col-md-11" style="padding: 0 0 0 8px;">
-                                                    <textarea type="text" class="form-control" id="@Model.EditDescriptionIdentifier" name="description" placeholder="Add a description...">@Model.Description</textarea>
+                                                    <textarea type="text" class="form-control background-fade" id="@Model.EditDescriptionIdentifier" name="description" placeholder="Add a description...">@Model.Description</textarea>
                                                 </div>
                                             </div>
                                             <div class="row">

@@ -409,3 +409,86 @@ function playSound(fileName, volume) {
     changeStatusAudio.volume = volume;
     changeStatusAudio.play();
 }
+
+/**
+ * Add a participant modal.
+ * @param {int} taskId The id of the project.
+ */
+function addParticipantModal(projectId) {
+    $.post({
+            url: "/Projects/GetParticipants",
+            data: {
+                projectId: projectId
+            },
+            dataType: "html"
+        })
+        .done(function (result, status) {
+            $("#addParticipantBody").html("");
+            $("#addParticipantBody").append(result);
+            $("#addParticipantModal").modal('show');
+            var input = $("#addParticipantInput");
+
+            input.focus();
+        });
+}
+
+function getPotentialParticipants() {
+
+        // Execute code here.
+    var query = $("#addParticipantInput").val();
+
+    if (query.length > 2) {
+        var projectId = $("#projectId").val();
+
+        var data = {
+            query: query,
+            projectId: projectId
+        }
+
+        $.post({
+                url: "/Projects/GetPotentialParticipants",
+                data: data
+            })
+            .done(function(results, status) {
+
+                var searchResultsContainer = $("#potentialParticipantSearchResults");
+                searchResultsContainer.empty();
+                searchResultsContainer.html("<br/>");
+                searchResultsContainer.append(results);
+            });
+    }
+};
+
+/**
+ * Add or remove a user as a project participant.
+ * @param {int} projectId
+ * @param {string} userParticipantModalElementIdentifier
+ */
+function addOrRemoveParticipant(username) {
+
+    var projectId = $("#projectId").val();
+
+    $.post({
+            url: "/Projects/AddOrRemoveParticipant",
+            data: {
+                projectId: projectId,
+                username: username
+            }
+        })
+        .done(function (participants, status) {
+
+            new Audio('/sounds/clickSound.wav').play();
+            
+
+            var searchResultsContainer = $("#potentialParticipantSearchResults");
+            searchResultsContainer.empty();
+
+            var selectionContainer = $("#addNewParticipants");
+            selectionContainer.empty();
+            selectionContainer.html(participants);
+
+            var input = $("#addParticipantInput");
+            input.val("");
+            input.focus();
+        });
+}

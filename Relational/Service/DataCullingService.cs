@@ -1,14 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon;
-using Amazon.Runtime;
-using Amazon.S3;
-using Amazon.S3.Model;
-using Amazon.S3.Transfer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Streamnote.Relational.Data;
 using Streamnote.Relational.Interfaces.Services;
 using Streamnote.Relational.Models;
@@ -193,31 +187,62 @@ namespace Streamnote.Relational.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteItem(int id)
+        public async Task<bool> DeleteItem(int id)
         {
-            var item = Context.Items
-                .Include(i => i.Comments)
-                .Include(i => i.Likes)
-                .FirstOrDefault(t => t.Id == id);
-
-            if (item != null)
+            try
             {
-                if (item.Comments.Count > 0)
-                {
-                    DeleteComments(item.Comments);
-                }
+                var item = Context.Items
+                    .Include(i => i.Comments)
+                    .Include(i => i.Likes)
+                    .Include(i => i.Images)
+                    .FirstOrDefault(t => t.Id == id);
 
-                if (item.Likes.Count > 0)
+                if (item != null)
                 {
-                    DeleteLikes(item.Likes);
-                }
+                    if (item.Comments.Count > 0)
+                    {
+                        item = await DeleteComments(item);
+                    }
 
-                Context.Items.Remove(item);
-                Context.SaveChangesAsync();
-                return true;
+                    if (item.Likes.Count > 0)
+                    {
+                        item = await DeleteLikes(item);
+                    }
+
+                    if (item.Images.Count > 0)
+                    {
+                        item = await DeleteImages(item);
+                    }
+
+                    Context.Items.Remove(item);
+                    await Context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Delete a collection of images.
+        /// </summary>
+        /// <param name="images">The images to remove.</param>
+        /// <returns></returns>
+        public async Task<Item> DeleteImages(Item item)
+        {
+            var images = item.Images;
+
+            if (images.Count > 0)
+            {
+                Context.Images.RemoveRange(images);
+                await Context.SaveChangesAsync();
+            }
+
+            return item;
         }
 
         /// <summary>
@@ -225,16 +250,17 @@ namespace Streamnote.Relational.Service
         /// </summary>
         /// <param name="comments">The comments to remove.</param>
         /// <returns></returns>
-        public bool DeleteComments(List<Comment> comments)
+        public async Task<Item> DeleteComments(Item item)
         {
+            var comments = item.Comments;
+
             if (comments.Count > 0)
             {
                 Context.Comments.RemoveRange(comments);
-                Context.SaveChangesAsync();
-                return true;
+                await Context.SaveChangesAsync();
             }
 
-            return false;
+            return item;
         }
 
         /// <summary>
@@ -242,7 +268,7 @@ namespace Streamnote.Relational.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteComment(int id)
+        public async Task<bool> DeleteComment(int id)
         {
             var comment = Context.Comments
                 .FirstOrDefault(t => t.Id == id);
@@ -250,7 +276,7 @@ namespace Streamnote.Relational.Service
             if (comment != null)
             {
                 Context.Comments.Remove(comment);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return true;
             }
 
@@ -262,16 +288,17 @@ namespace Streamnote.Relational.Service
         /// </summary>
         /// <param name="likes">The likes to remove.</param>
         /// <returns></returns>
-        public bool DeleteLikes(List<Like> likes)
+        public async Task<Item> DeleteLikes(Item item)
         {
+            var likes = item.Likes;
+
             if (likes.Count > 0)
             {
                 Context.Likes.RemoveRange(likes);
-                Context.SaveChangesAsync();
-                return true;
+                await Context.SaveChangesAsync();
             }
 
-            return false;
+            return item;
         }
 
         /// <summary>
@@ -279,7 +306,7 @@ namespace Streamnote.Relational.Service
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool DeleteLike(int id)
+        public async Task<bool> DeleteLike(int id)
         {
             var like = Context.Likes
                 .FirstOrDefault(t => t.Id == id);
@@ -287,7 +314,7 @@ namespace Streamnote.Relational.Service
             if (like != null)
             {
                 Context.Likes.Remove(like);
-                Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
                 return true;
             }
 
