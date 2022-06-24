@@ -125,11 +125,13 @@ namespace Streamnote.Web.Controllers
         /// <param name="topics"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<int> CreateOrUpdate(int? id, string title, string content, string isPublic, IFormFile image, string selectedTopics)
-        {                                      
+        public async Task<int> CreateOrUpdate(int? id, string title, string content, string isPublic, IFormFile image,
+            string[] selectedTopics)
+        {
+            var item = new Item();
             if (id is > 0)
             {
-                var existing = ItemRepository.Read((int)id);
+                var existing = await Context.Items.Include(i => i.Topics).FirstOrDefaultAsync(i => i.Id == id);
 
                 if (existing != null)
                 {
@@ -145,15 +147,23 @@ namespace Streamnote.Web.Controllers
 
                     if (ModelState.IsValid)
                     {
-                        await ItemRepository.UpdateItemAsync(existing);
+                        try
+                        {
+                            await ItemRepository.UpdateItemAsync(existing);
+                        }
+                        catch (Exception ex)
+                        {
+                            //
+                        }
                     }
                 }
             }
             else
             {
                 var now = DateTime.UtcNow;
-                var item = new Item
+                item = new Item
                 {
+                    Id = 0,
                     Created = now,
                     Modified = now,
                     Title = title,
@@ -173,12 +183,43 @@ namespace Streamnote.Web.Controllers
 
                 item = await AppendImage(item, image);
 
-
-                id = await ItemRepository.CreateItem(item);
+                try
+                {
+                    return await ItemRepository.CreateItem(item);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(ex.Message);
+                }
             }
 
             return (int)id;
-}
+        }
+
+        /// <summary>
+        /// Upload a thumnail for a post.
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="image"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> UploadThumbnail(int postId, IFormFile image)
+        {
+            if (postId > 0 && image != null)
+            {
+                var item = await Context.Items.FirstOrDefaultAsync(i => i.Id == postId);
+
+                if (item != null)
+                {
+                    item = await AppendImage(item, image); 
+                    Context.Items.Update(item);
+                    await Context.SaveChangesAsync(); 
+                    return RedirectToAction("Edit", new { item.Id });
+                }
+
+            }
+
+            throw new Exception("This image or post wasn't good enough.");
+        }
 
         /// <summary>
         /// Edit an item.
@@ -192,7 +233,10 @@ namespace Streamnote.Web.Controllers
                 return NotFound();
             }
 
-            var item = await Context.Items.Include(i => i.Blocks).FirstOrDefaultAsync(i => i.Id == id);
+            var item = await Context.Items
+                .Include(i => i.Blocks)
+                .Include(i => i.Images)
+                .FirstOrDefaultAsync(i => i.Id == id);
             if (item == null)
             {
                 return NotFound();
@@ -239,33 +283,50 @@ namespace Streamnote.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<Item> AppendTopics(Item item, string selectedTopics)
+        public async Task<Item> AppendTopics(Item item, string[] selectedTopics)
         {
             if (selectedTopics != null)
             {
-                var listOfTopics = selectedTopics.Split(",");
+                var chosenTopics = selectedTopics.ToList();
 
-                foreach (var topic in listOfTopics)
+                var existingTopics = new List<Topic>();
+
+                foreach (var chosenTopic in chosenTopics.Select(t => t.ToLower()))
                 {
-                    var existing = TopicRepository.QueryExistingTopic(topic);
+                    var existingTopic = await Context.Topics.FirstOrDefaultAsync(t => t.Name.ToLower() == chosenTopic);
 
-                    if (existing is { Name: { } })
-                    {
-                        await TopicRepository.IncrementItemCount(existing);
-
-                    }
-                    else
+                    if (existingTopic is null)
                     {
                         var newTopic = new Topic
                         {
-                            Name = topic.ToLower(),
+                            Name = chosenTopic.ToLower(),
                             ItemCount = 1
                         };
 
-                        existing = await TopicRepository.CreateTopic(newTopic);
+                        Context.Add(newTopic);
+                        existingTopics.Add(newTopic);
                     }
 
-                    item.Topics.Add(existing);
+                    if (existingTopic is not null)
+                    {
+                        // Topic exists
+                        if (!item.Topics.Contains(existingTopic))
+                        {
+                            item.Topics.Add(existingTopic);
+                        }
+
+                        existingTopics.Add(existingTopic);
+                    }
+                }
+
+                var itemTopics = item.Topics.ToList();
+
+                foreach (var topic in itemTopics)
+                {
+                    if (!existingTopics.Contains(topic))
+                    {
+                        item.Topics.Remove(topic);
+                    }
                 }
             }
 

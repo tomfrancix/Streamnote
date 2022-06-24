@@ -1,54 +1,53 @@
 ﻿ @model Streamnote.Relational.Models.Descriptors.ItemDescriptor
  
- <tr style="max-height: 200px;">
-            <td style="width: 250px;">
-                @{
-                    if (Model.Image != null && Model.ImageContentType != null && Model.Image.Length > 0)
-                    {
-                        <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%;" />
-                    }
-                    else
-                    {
-                        <img src="~/Images/noimage.jpg" style="width: 100%;"/>
-                    }
-                }
-            </td>
-            <td style="max-height: 200px;">
-                @if (Model.Title != null && Model.Title.Length > 0)
-                {
-                    <strong>@Html.DisplayFor(modelItem => Model.Title)</strong>
-                    <br/>
-                }
-                @if (Model.Content != null && Model.Content.Length > 12)
-                {       
-                    @if (Model.Content != null && Model.Content.Length > 200)
-                    {
-                        @Html.Raw(Model.Content)
-                        <br/>
-                        <a asp-action="Details" asp-route-id="@Model.Id"> Readmore.... </a>
-                        <br/>
-                    } 
-                }           
-                
-                </td>
-            <td>
-                <div style="font-size: 0.7em; text-align: center; padding: 3px 3px 8px 3px;">
+ <tr style="max-height: 200px; max-width: 100%;">
+     <td style="width: 100px; padding: 0;">
+         @{
+             if (Model.Image != null && Model.ImageContentType != null && Model.Image.Length > 0)
+             {
+                     <img src="data:@Model.ImageContentType;base64,@Convert.ToBase64String(Model.Image)" style="width: 100%;" />
+             }
+             else if (Model.ImageLocation is {Length: > 0 })
+             {
+                 <img src="@Model.ImageLocation" style="width: 80px;"/>
+             }
+             else
+             {
+                 <img src="~/Images/noimage.jpg" style="width: 80px;"/> 
+             }
+         }
+     </td>
+     <td style="word-break: break-word;"> 
+         @if (Model.Title != null && Model.Title.Length > 0)
+         {
+             <strong>@Html.DisplayFor(modelItem => Model.Title)</strong>
+             <br/>
+         }
+     </td>
+     <td style="width: 80px;">
+         <div class="dropdown" style="text-align: center;">
+             <button type="button" class="btn btn-sm dropdown-toggle background-fade" data-toggle="dropdown">
+                 <span class="fa fa-plus"> </span>
+             </button>
+             <div class="dropdown-menu background-medium"> 
+                 <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-info" style="margin: 2px; width: 100%;">Edit</a> <br/>
+                 <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-success" style="margin: 2px; width: 100%;">View</a> <br/>
+                 <a class="btn btn-danger deleteItem" data-iden="@Model.Id" data-return="window.location.href" style="margin: 2px; width: 100%;">Delete</a>
+             </div>
+         </div> 
+         <div style="font-size: 0.7em; text-align: center; padding: 3px 3px 8px 3px;">
 
-                    @if (Model.IsPublic)
-                    {
-                        <strong style="color: chartreuse">published <i class="fa fa-check"></i></strong>
-                    }
-                    else
-                    {
-                        <strong style="color: royalblue">draft <i class="fa fa-pencil"></i></strong>
-                    }    
-                    
-                    <strong>comments: @Model.CommentCount</strong><br/>
-                    <strong>likes: @Model.LikeCount</strong><br/>
-                </div>
-                
-                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-light" style="margin: 2px; width: 100%;">Edit</a> <br/>
-                <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-light" style="margin: 2px; width: 100%;">Details</a> <br/>
-                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-warning" style="margin: 2px; width: 100%;">Delete</a>
-            </td>
-        </tr>
+             @if (Model.IsPublic)
+             {
+                 <strong style="color: chartreuse">published</strong>
+             }
+             else
+             {
+                 <strong style="color: hotpink">draft</strong>
+             }
+             <br/>
+             <strong><i class="fa fa-comment"></i> @Model.CommentCount</strong> 
+             <strong><i class="fa fa-thumbs-up"></i> @Model.LikeCount</strong><br/>
+         </div>
+     </td>
+ </tr>

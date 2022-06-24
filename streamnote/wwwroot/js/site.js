@@ -11,21 +11,6 @@ function showUploader() {
 }
 
 /**
- * Display the image that was selected by the uploader.
- * @param {any} event
- */
-function loadFile(event) {
-    var output = document.getElementById('backgroundoutput');
-    output.src = URL.createObjectURL(event.target.files[0]);
-    var el = document.getElementById('imageuploader');
-    el.classList.add("wow");
-    el.classList.add("flipOutX");
-    output.onload = function () {
-        URL.revokeObjectURL(output.src); // free memory
-    }
-};
-
-/**
  * Check if a username is available when a user is initially registering.
  */
 function isUserNameAvailable() {
@@ -258,29 +243,34 @@ $("#publishButton").on("click", function () {
  */
 function createOrUpdateItem(isPublic) {
 
-
+    isPublic = $("#isPublic").is(':checked');
     var title = $("#itemTitleEditor").val();
-    var content = $("#editorOutput").val();
+    var content = $("#metaDescription").val();       
     var modelId = $("#modelId").val();
-    var selectedTopics = $("#selectedTopics").val();
+    var selectedTopics = $(".choices__inner .choices__item.choices__item--selectable");
+    var selectedTopicNames = [];
+    for (var i = 0; i < selectedTopics.length; i++) {
+        var topic = $(selectedTopics[i]).text();
+        selectedTopicNames.push(topic.split("Remove item")[0]);
+    }
      var data =  {
                     title: title,
                     content: content,
                     id: parseInt(modelId),
                     isPublic: isPublic,
-                    selectedTopics: selectedTopics
-                }
+         selectedTopics: selectedTopicNames
+                }      
     if (title.length > 3) {
         $.post({
-                url: "/Item/CreateOrUpdate",
+            url: "/Item/CreateOrUpdate",
                 data: data
             })
-            .done(function (result, status) {
-                $("body").append("<div id='savedFeedback' style='position:absolute;right:0;bottom:0;left:0;width:100vw;padding:8px;text-align:center;background-color:rgba(0,255,0,0.1);color:black;'>saved</div>");
-                setTimeout(function () {
-                    $("#savedFeedback").remove();
+            .done(function (result, status) {   
+                $("#publishButton").val("Saved!");
+                setTimeout(function () { 
+                    $("#publishButton").val("Save and publish");  
                 }, 2000);
-                if (window.location.href.includes("/Item/Create") || isPublic) {
+                if (window.location.href.includes("/Item/Create")) {
                     window.location.href = window.location.href.split("/Item")[0] + "/Item/Edit/" + result;
                 }
             });

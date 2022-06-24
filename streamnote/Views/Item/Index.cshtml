@@ -5,51 +5,34 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-12">
-            <ul class="nav nav-pills nav-justified"">
-                <li class="active nav-item item-options">
-                    <a data-toggle="tab" class="nav-link" href="#published">
-                        <i class="fa fa-check"></i> <br class="hideOnWideScreen"/>
-                        published
-                    </a>
-                </li>
-                <li class="nav-item item-options">
-                    <a data-toggle="tab" class="nav-link" href="#drafts">
-                        <i class="fa fa-pencil"></i><br class="hideOnWideScreen"/>
-                        drafts
-                    </a>
-                </li> 
-                <li class="nav-item item-options" >
-                    <a href="/Item/Create" class="nav-link">
-                        <i class="fa fa-pencil"></i> <br class="hideOnWideScreen"/>
-                        create
-                    </a>
-                </li>
-            </ul>
+    <div class="row">    
+        <div class="col-md-6">
+            <span>published posts</span> 
+            <hr/>
+            <table class="table table-bordered">
+                <tbody>
+                @foreach (var item in Model.Where(i => i.IsPublic))
+                {
 
-            <div class="tab-content">
-                <div id="published" class="tab-pane active">   
-                    <table class="table table-bordered"> 
-                        <tbody>
-                        @foreach (var item in Model.Where(i => i.IsPublic)) {
+                    @Html.Partial("_ScheduleItem", item)
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <span>draft posts</span>
+            <a class="btn btn-sm btn-success" href="/Item/Create" style="float: right; margin-top: -8px;">New Post</a>
+            <hr/>
+            <table class="table table-bordered" style=" max-width: 100%;">
+                <tbody>
+                @foreach (var item in Model.Where(i => !i.IsPublic))
+                {
 
-                            @Html.Partial("_ScheduleItem", item);
-                        }
-                        </tbody>
-                    </table> 
-                </div>
-                <div id="drafts" class="tab-pane fade">   
-                    <table class="table table-bordered">
-                        <tbody>
-                        @foreach (var item in Model.Where(i => !i.IsPublic)) {
-
-                            @Html.Partial("_ScheduleItem", item);
-                        }
-                        </tbody>
-                    </table> 
-                </div>
-            </div>
+                    @Html.Partial("_ScheduleItem", item)
+                }
+                </tbody>
+            </table>
+            <button class="btn btn-sm btn-danger" onclick="deleteAllDrafts()">Delete all draft posts</button>
         </div>
     </div>
 </div>

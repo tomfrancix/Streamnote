@@ -195,6 +195,7 @@ namespace Streamnote.Relational.Service
                     .Include(i => i.Comments)
                     .Include(i => i.Likes)
                     .Include(i => i.Images)
+                    .Include(i => i.Blocks)
                     .FirstOrDefault(t => t.Id == id);
 
                 if (item != null)

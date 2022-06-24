@@ -2,13 +2,13 @@
 
 <div class="row">
     @{
-        if (Model?.Images?[0]?.Bytes == null || Model?.Images?[0]?.ImageContentType == null)
+        if ((Model?.Images?[0]?.Bytes == null || Model?.Images?[0]?.ImageContentType == null) && Model?.ImageLocation is {Length: > 0})
+        { 
+            <img src="@Model.ImageLocation" style="width: 100%;" id="backgroundOutput"/>
+        }     
+        else if (Model?.Images?[0]?.Bytes != null && Model?.Images?[0]?.ImageContentType != null) 
         {
-                <img src="" id="backgroundoutput" style="width: 100%; margin-bottom: -45px;"/>
-        }
-        else
-        {
-                <img src="data:@Model.Images[0].ImageContentType;base64,@Convert.ToBase64String(Model.Images[0].Bytes)" style="width: 100%; margin-bottom: -45px;margin-top: 90px;" />
+            <img src="data:@Model.Images[0]?.ImageContentType;base64,@Convert.ToBase64String(Model.Images[0].Bytes)" id="backgroundOutput" style="width: 100%; margin-bottom: -45px;margin-top: 90px;" />
         }
     }
     <div class="col-md-12">
@@ -18,8 +18,11 @@
             </div>
         </a>
 
-        <div id="imageuploader">
-            <input type="file" name="image" id="imageFileUpload" onchange="loadFile(event)"/>
+        <div id="imageuploader"> 
+            <form asp-action="UploadThumbnail" asp-controller="Item" enctype="multipart/form-data" id="uploadThumbnailForm">
+                <input type="hidden" name="postId" value="@Model.Id"/>
+                <input type="file" name="image" id="imageFileUpload"/>
+            </form>
         </div>
     </div>
 </div>
@@ -32,13 +35,14 @@
         @{
             if (Model != null && Model.Id > 0)
             {
-                               <input type="hidden" id="modelId" name="id" value="@Model.Id"/>
+                <input type="hidden" id="modelId" name="id" value="@Model.Id"/>
             }
         }
         
         <div class="form-group" style="padding-top: 15px;">
-            <input asp-for="Title" id="itemTitleEditor" class="form-control postInput" placeholder="Headline" style="font-weight: bold;text-align: center; font-size: 1.5em; outline: none; border: none;" />
-            <span asp-validation-for="Title" class="text-danger"></span>
+            <input id="itemTitleEditor" class="form-control postInput" placeholder="Headline" value="@Model.Title"
+                   style="font-weight: bold;text-align: center; font-size: 1.5em; outline: none; border: none;" />
+           
         </div>  
         </div>  
         </div> 
@@ -52,7 +56,7 @@
                 {
                     foreach (var block in Model.Blocks)
                     {
-                            @Html.Partial("_NewBlock", block)
+                                @Html.Partial("_NewBlock", block)
                     }
                 }
             }
@@ -63,8 +67,9 @@
                 <span class="fa fa-plus"> </span>
             </button>
             <div class="dropdown-menu background-medium">
-                <a class="dropdown-item background-element" href="#">Add Image</a>
                 <a class="dropdown-item background-element" onclick="addTextBlock(@Model.Id)">Add Text Block</a>
+                <a class="dropdown-item background-element" onclick="addHeaderBlock(@Model.Id)">Add Header Block</a> 
+                <a class="dropdown-item background-element"  onclick="addImageBlock(@Model.Id)">Add Image</a>
             </div>
         </div>   
         <br/>
@@ -80,42 +85,29 @@
         <br/>
         <br/>
         <br/>
-        <div class="background-medium" style="position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; border-top: 1px solid grey;">
+        <div id="postMetaDetails" class="background-medium" style="position: fixed; bottom: 0; left: 0; right: 0; padding: 10px; border-top: 1px solid grey;">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="control-label">Meta description</label>
-                            <textarea name="content" placeholder="Enter a descriptive summary of your blog post..." cols="4" rows="4" style="width: 100%; height: 100px; resize: none;"></textarea>
+                            <textarea name="content" class="background-standard color-standard" id="metaDescription" 
+                            placeholder="Enter a descriptive summary of your blog post..." 
+                            cols="4" rows="4" 
+                            style="width: 100%; height: 100px; resize: none; border: 2px solid rgba(100, 100, 100, 0.2); border-radius: 8px; padding: 5px;">
+@Model.Content
+</textarea>
                         </div>
                     </div>
                     <div class="col-md-6">
                          <div class="form-group">
-                            <label class="control-label">Topics</label>
-                            <input type="text" class="form-control background-standard" id="queryTopics" style="display: inline-block; border: 1px solid rgba(0, 0, 0, 0.1); background-color: rgba(0, 0, 0, 0.02); padding: 3px; margin: 3px;"/>
-
-                            <div id="topicSelect">
-                                <label>Now select a topic from this list:</label> <br/>
-                                <div id="topicSuggestions"></div>
-                                <br/>
-                                <label>Selected topics</label> <br/>
-                                <input type="text" id="selectedTopics" name="selectedTopics" style="display: inline-block; width: 70%; border: none; background-color: rgba(0, 0, 0, 0.02); padding: 3px; margin: 3px;"/>
-                            </div>
-
-                        </div>
+                             <label class="control-label">Topics</label> 
+                             <select id="choice" multiple class="background-standard"></select>
+                         </div>
                         <div class="form-group">
                             <label class="control-label">This post should be public </label>
-                            @{
-                                if (Model != null)
-                                {
-                                        <input type="checkbox" checked="@Model.IsPublic" id="isPublic" name="isPublic" value="true">
-                                }
-                                else
-                                {
-                                        <input type="checkbox" id="isPublic" name="isPublic" value="true">
-                                }
-                            }
-                            <span} asp-validation-for="IsPublic" class="text-danger"></span>
+                            <input type="checkbox" checked="@Model.IsPublic" id="isPublic" name="isPublic" value="true">
+                             <span asp-validation-for="IsPublic" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

@@ -11,6 +11,7 @@ $(document).on("click touchstart", ".deleteItem", function(el) {
     bootbox.alert("Are you sure you want to delete this?",
         function () {
             var id = $(element).data("iden");
+            var returnUrl = $(element).data("return");
             $.post({
                     url: "/Delete/DeleteItem",
                     data: {
@@ -198,3 +199,15 @@ $(document).on("click touchstart", ".deleteMessage", function (el) {
                 });
         });
 });
+
+function deleteAllDrafts() {
+    $.post({
+            url: "/Delete/DeleteAll"
+        })
+        .done(function (result, status) {
+            alert("All draft posts were deleted.");
+        })
+        .fail(function (status) {
+            alert("There was an error deleting your draft posts.\n" + status);
+        });
+}

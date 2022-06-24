@@ -71,7 +71,7 @@ namespace Streamnote.Web.Mapper
                 LikeCount = item.LikeCount,
                 LoggedInUserLikesThis = item.Likes.Any(l => l.User.Id == userId),
                 Topics = TopicMapper.MapDescriptors(item.Topics, userId),
-                ImageLocation = item.Images is { Count: > 0 } ? item.Images[0].FullS3Location : null,
+                ImageLocation = item.Images is { Count: > 0 } ? item.Images[^1].FullS3Location : null,
                 Blocks = BlockMapper.MapDescriptors(item.Blocks)
             };
         }

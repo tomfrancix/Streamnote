@@ -145,12 +145,61 @@ namespace Streamnote.Web.Controllers
             return PartialView("_TopicStream", topicDescriptor);
         }
 
-        /*// POST: TopicController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        /// <summary>
+        /// Get topics from query string.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<TopicSimple>> GetAvailableTopics()
         {
-           
-        }*/
+            var topics = Context.Topics.ToList();
+
+            var availableTopics = new List<TopicSimple>();
+
+            foreach (var topic in topics)
+            {
+                availableTopics.Add(new TopicSimple()
+                {
+                    id = topic.Id,
+                    Name = topic.Name
+                });
+            }
+
+            return availableTopics;
+        }
+
+        /// <summary>
+        /// Get topics from query string.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<TopicSimple>> GetTopicsForItem(int id)
+        {    
+            var availableTopics = new List<TopicSimple>();
+
+            var item = await Context.Items
+                .Include(i => i.Topics)
+                .FirstOrDefaultAsync(i => i.Id == id);
+
+            var topics = item?.Topics?.ToList();
+
+            if (topics is { Count: > 0 })
+            {
+                foreach (var topic in topics)
+                {
+                    availableTopics.Add(new TopicSimple()
+                    {
+                        id = topic.Id,
+                        Name = topic.Name
+                    });
+                }
+            } 
+
+            return availableTopics;
+        } 
+    }
+
+    public class TopicSimple
+    {
+        public int id { get; set; }
+        public string Name { get; set; }
     }
 }

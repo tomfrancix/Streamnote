@@ -40,11 +40,11 @@ namespace Streamnote.Relational.Repositories
             return Context.Topics.FirstOrDefault(t => t.Name.ToLower() == name.ToLower());
         }
 
-        public async Task IncrementItemCount(Topic topic)
+        public void IncrementItemCount(Topic topic)
         {
             topic.ItemCount++;
             Context.Update(topic);
-            await Context.SaveChangesAsync();
+            Context.SaveChanges();
         }
 
         public async Task<Topic> CreateTopic(Topic topic)

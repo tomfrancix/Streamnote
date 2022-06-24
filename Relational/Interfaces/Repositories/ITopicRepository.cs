@@ -10,7 +10,7 @@ namespace Streamnote.Relational.Interfaces.Repositories
 
         Topic QueryExistingTopic(string name);
 
-        Task IncrementItemCount(Topic topic);
+        void IncrementItemCount(Topic topic);
         Task<Topic> CreateTopic(Topic topic);
     }
 }

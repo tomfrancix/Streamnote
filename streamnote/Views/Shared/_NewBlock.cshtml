@@ -2,16 +2,13 @@
 
 <li data-iden="@Model.MainEditorIdentifier">      
     <span id="@Model.OutputContainerIdentifier" class="color-standard output">
-        <span id="@Model.OutputTextIdentifier" class="blockText output" style="font-size: 1.2em; word-wrap: break-word; width: 100%; color: white;">
+        <span id="@Model.OutputTextIdentifier" class="blockText output" style="font-size: 1.2em; word-wrap: break-word; width: 100%; color: white;"  onclick="showBlockEditor(this, '#@Model.OutputContainerIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorOutputIdentifier')">
             
             @if (Model != null)
             {
                 @Html.Raw(Model.Text)
             }
         </span> 
-        <a class="btn background-medium output"  style="float: right; margin-top: -45px; margin-right: -40px;" onclick="showBlockEditor(this, '#@Model.OutputContainerIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorOutputIdentifier')" id="@Model.OpenBlockEditorButtonIdentifier">
-            <span class="fa fa-pencil" style="color: lightgrey;"> </span>
-        </a> 
     </span>
 
     <div class="form-group editorArea" id="@Model.EditorIdentifier">
