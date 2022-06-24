@@ -10,7 +10,7 @@ namespace Streamnote.Relational.Interfaces.Repositories
 
         IQueryable<Item> QueryUsersItems(ApplicationUser user);
 
-        Task CreateItem(Item item);
+        Task<int> CreateItem(Item item);
         Task<Item> UpdateItemAsync(Item item);
         IQueryable<Item> QueryPublicItems(ApplicationUser user);
         IQueryable<Item> FilterItemsByTopic(IQueryable<Item> items, string topic);

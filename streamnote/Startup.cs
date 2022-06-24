@@ -48,6 +48,7 @@ namespace Streamnote.Web
             services.AddTransient<ProjectMapper>();
             services.AddTransient<TaskMapper>();
             services.AddTransient<StepMapper>();
+            services.AddTransient<BlockMapper>();
             services.AddTransient<TaskCommentMapper>();
             services.AddTransient<ImageProcessingHelper>();
             services.AddTransient<DateTimeHelper>();

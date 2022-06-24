@@ -258,6 +258,7 @@ $("#publishButton").on("click", function () {
  */
 function createOrUpdateItem(isPublic) {
 
+
     var title = $("#itemTitleEditor").val();
     var content = $("#editorOutput").val();
     var modelId = $("#modelId").val();
@@ -279,6 +280,9 @@ function createOrUpdateItem(isPublic) {
                 setTimeout(function () {
                     $("#savedFeedback").remove();
                 }, 2000);
+                if (window.location.href.includes("/Item/Create") || isPublic) {
+                    window.location.href = window.location.href.split("/Item")[0] + "/Item/Edit/" + result;
+                }
             });
     }
 }

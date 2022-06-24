@@ -1,0 +1,36 @@
+﻿@model Streamnote.Relational.Models.Descriptors.PostBlockDescriptor
+
+<li data-iden="@Model.MainEditorIdentifier">      
+    <span id="@Model.OutputContainerIdentifier" class="color-standard output">
+        <span id="@Model.OutputTextIdentifier" class="blockText output" style="font-size: 1.2em; word-wrap: break-word; width: 100%; color: white;">
+            
+            @if (Model != null)
+            {
+                @Html.Raw(Model.Text)
+            }
+        </span> 
+        <a class="btn background-medium output"  style="float: right; margin-top: -45px; margin-right: -40px;" onclick="showBlockEditor(this, '#@Model.OutputContainerIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorIdentifier', '#@Model.EditorOutputIdentifier')" id="@Model.OpenBlockEditorButtonIdentifier">
+            <span class="fa fa-pencil" style="color: lightgrey;"> </span>
+        </a> 
+    </span>
+
+    <div class="form-group editorArea" id="@Model.EditorIdentifier">
+        <div id="@Model.MainEditorIdentifier" style="font-size: 1.2em; word-wrap: break-word; width: 100%;">
+
+            @if (Model != null)
+            {
+                @Html.Raw(Model.Text)
+            }
+
+        </div>
+        <input asp-for="Text" type="hidden" class="form-control" id="@Model.EditorOutputIdentifier" placeholder="Compose your post..." rows="20" 
+               style="border: none; outline: none; background-color: rgba(0, 0, 0, 0.02);" value="@Model.Text"/>
+        <span asp-validation-for="Text" class="text-danger"></span>
+        <a class="btn background-medium" style="width: 49%;" onclick="removeBlock(@Model.Id,  '#@Model.EditorIdentifier');">
+            <span class="fa fa-trash"> </span> <span style="margin-left: 8px;">Remove block</span>
+        </a>
+        <a class="btn background-medium" style="width: 49%;" onclick="saveBlock(@Model.Id, '#@Model.MainEditorIdentifier', '#@Model.OutputContainerIdentifier', '#@Model.EditorIdentifier', '#@Model.OutputTextIdentifier', '#@Model.OpenBlockEditorButtonIdentifier')">
+            <span class="fa fa-save"> </span> <span style="margin-left: 8px;">Save block</span>
+        </a>
+    </div> 
+</li>

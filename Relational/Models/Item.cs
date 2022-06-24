@@ -33,5 +33,6 @@ namespace Streamnote.Relational.Models
         public List<Topic> Topics { get; set; }
 
         public List<ItemImage> Images { get; set; }
+        public List<PostBlock> Blocks { get; set; }
     }
 }

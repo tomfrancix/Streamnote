@@ -71,8 +71,23 @@
         </div> 
         @if (Model.IsDetails)
         {    
-            <div class="itemContent">
-                <p  style="white-space: pre-line">@Html.Raw(Model.Content)</p>
+            <div class="container-fluid">
+                <br/>
+                <div class="col-md-8 offset-2">
+                    <div class="row" style="font-size: 1.2em;">
+                        <ul id="listOfBlocks">
+                            @{
+                                if (Model.Blocks is {Count: > 0 })
+                                {
+                                    foreach (var block in Model.Blocks)
+                                    {
+                                        @Html.Raw(block.Text)
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
             </div>   
             <hr/>
         }    

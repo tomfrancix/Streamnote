@@ -28,5 +28,6 @@ namespace Streamnote.Relational.Data
         public DbSet<Step> Steps { get; set; }
         public DbSet<TaskComment> TaskComments { get; set; }
         public DbSet<ItemImage> Images { get; set; }
+        public DbSet<PostBlock> Blocks { get; set; }
     }
 }

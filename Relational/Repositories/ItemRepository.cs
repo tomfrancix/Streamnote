@@ -34,6 +34,7 @@ namespace Streamnote.Relational.Repositories
                 .Include(b => b.User)
                 .Include(b => b.Likes).ThenInclude(u => u.User)
                 .Include(i => i.Images)
+                .Include(i => i.Blocks)
                 .Include(t => t.Topics.Where(t => t.ItemCount > 0)).ThenInclude(t => t.Users)
                 .Where(u => u.User != null);
         }
@@ -80,11 +81,13 @@ namespace Streamnote.Relational.Repositories
         /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public async Task CreateItem(Item item)
+        public async Task<int> CreateItem(Item item)
         {
             Context.Add(item);
             await Context.SaveChangesAsync(); 
             await Context.DisposeAsync();
+
+            return item.Id;
         }
 
         /// <summary>

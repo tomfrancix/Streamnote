@@ -1,4 +1,4 @@
-﻿@model Streamnote.Relational.Models.Item
+﻿@model Streamnote.Relational.Models.Descriptors.ItemDescriptor 
 
 @{
     ViewData["Title"] = "New Post";
@@ -8,8 +8,5 @@
 
 <form asp-action="CreateOrUpdate" enctype="multipart/form-data">
     @Html.Partial("_Editor", Model)
-</form>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+</form> 
 

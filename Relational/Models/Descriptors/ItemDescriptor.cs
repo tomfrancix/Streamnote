@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Mime;
 
 namespace Streamnote.Relational.Models.Descriptors
 {
@@ -20,6 +21,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public virtual List<TopicDescriptor> Topics { get; set; }
         public bool IsDetails { get; set; }
 
+
         public string FullName { get; set; }
         public string UserName { get; set; }
         public string UserImageContentType { get; set; }
@@ -27,5 +29,7 @@ namespace Streamnote.Relational.Models.Descriptors
         public string ImageLocation { get; set; }
 
         public List<CommentDescriptor> Comments { get; set; }
+        public List<ItemImage> Images { get; set; }
+        public List<PostBlockDescriptor> Blocks { get; set; }
     }
 }

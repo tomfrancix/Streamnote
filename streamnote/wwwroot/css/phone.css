@@ -107,7 +107,16 @@
         padding-left: 0;
         padding-right: 0;
     }
-
+    .modal {
+        bottom: 0;
+    }
+    t.navbar-toggler, .navbar-light .navbar-toggler-icon, .navbar-light .navbar-toggler {
+        background-color: transparent;
+    }
+    .projectSelectionOption {
+        margin: 2px 0;
+        padding: 4px;
+    }
 
 
 

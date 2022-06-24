@@ -14,11 +14,13 @@ namespace Streamnote.Web.Mapper
     {
         private readonly TopicMapper TopicMapper;
         private readonly DateTimeHelper DateTimeHelper;
+        private readonly BlockMapper BlockMapper;
 
-        public ItemMapper(TopicMapper topicMapper, DateTimeHelper dateTimeHelper)
+        public ItemMapper(TopicMapper topicMapper, DateTimeHelper dateTimeHelper, BlockMapper blockMapper)
         {
             TopicMapper = topicMapper;
             DateTimeHelper = dateTimeHelper;
+            BlockMapper = blockMapper;
         }
 
         /// <summary>
@@ -69,7 +71,8 @@ namespace Streamnote.Web.Mapper
                 LikeCount = item.LikeCount,
                 LoggedInUserLikesThis = item.Likes.Any(l => l.User.Id == userId),
                 Topics = TopicMapper.MapDescriptors(item.Topics, userId),
-                ImageLocation = item.Images is { Count: > 0 } ? item.Images[0].FullS3Location : null
+                ImageLocation = item.Images is { Count: > 0 } ? item.Images[0].FullS3Location : null,
+                Blocks = BlockMapper.MapDescriptors(item.Blocks)
             };
         }
     }

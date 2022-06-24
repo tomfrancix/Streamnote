@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Streamnote.Relational;
 using Streamnote.Relational.Data;
 using Streamnote.Relational.Helpers;
 using Streamnote.Relational.Interfaces.Repositories;
 using Streamnote.Relational.Interfaces.Services;
 using Streamnote.Web.Mapper;
 using Streamnote.Relational.Models;
+using Streamnote.Relational.Models.Descriptors;
+using WebGrease.Css.Extensions;
 
 namespace Streamnote.Web.Controllers
 {
@@ -31,6 +35,7 @@ namespace Streamnote.Web.Controllers
         private readonly IItemRepository ItemRepository;
         private readonly ITopicRepository TopicRepository;
         private readonly IS3Service S3Service;
+        private readonly BlockMapper BlockMapper;
 
         /// <summary>
         /// Constructor.
@@ -40,7 +45,7 @@ namespace Streamnote.Web.Controllers
         /// <param name="itemMapper"></param>
         /// <param name="commentMapper"></param>
         /// <param name="imageProcessingHelper"></param>
-        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper, IItemRepository itemRepository, ITopicRepository topicRepository, IS3Service s3Service)
+        public ItemController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ItemMapper itemMapper, CommentMapper commentMapper, ImageProcessingHelper imageProcessingHelper, IItemRepository itemRepository, ITopicRepository topicRepository, IS3Service s3Service, BlockMapper blockMapper)
         {
             Context = context;
             UserManager = userManager;
@@ -50,6 +55,7 @@ namespace Streamnote.Web.Controllers
             ItemRepository = itemRepository;
             TopicRepository = topicRepository;
             S3Service = s3Service;
+            BlockMapper = blockMapper;
         }
 
         /// <summary>
@@ -105,7 +111,7 @@ namespace Streamnote.Web.Controllers
         /// <returns></returns>
         public IActionResult Create()
         {
-            return View();
+            return View(new ItemDescriptor());
         }
 
         /// <summary>
@@ -119,7 +125,7 @@ namespace Streamnote.Web.Controllers
         /// <param name="topics"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> CreateOrUpdate(int? id, string title, string content, string isPublic, IFormFile image, string selectedTopics)
+        public async Task<int> CreateOrUpdate(int? id, string title, string content, string isPublic, IFormFile image, string selectedTopics)
         {                                      
             if (id is > 0)
             {
@@ -140,8 +146,6 @@ namespace Streamnote.Web.Controllers
                     if (ModelState.IsValid)
                     {
                         await ItemRepository.UpdateItemAsync(existing);
-
-                        return RedirectToAction(nameof(Index));
                     }
                 }
             }
@@ -169,16 +173,12 @@ namespace Streamnote.Web.Controllers
 
                 item = await AppendImage(item, image);
 
-                if (ModelState.IsValid)
-                {
-                    await ItemRepository.CreateItem(item);
 
-                    return RedirectToAction(nameof(Index));
-                }
+                id = await ItemRepository.CreateItem(item);
             }
 
-            return Json(true);
-        }
+            return (int)id;
+}
 
         /// <summary>
         /// Edit an item.
@@ -192,12 +192,15 @@ namespace Streamnote.Web.Controllers
                 return NotFound();
             }
 
-            var item = await Context.Items.FindAsync(id);
+            var item = await Context.Items.Include(i => i.Blocks).FirstOrDefaultAsync(i => i.Id == id);
             if (item == null)
             {
                 return NotFound();
             }
-            return View(item);
+
+            var user = await UserManager.GetUserAsync(User);
+
+            return View(ItemMapper.MapDescriptor(item, user.Id));
         }
 
         /// <summary>
@@ -324,6 +327,79 @@ namespace Streamnote.Web.Controllers
             }
 
             return item;
+        }
+
+        /// <summary>
+        /// Add a new block to a post.
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<PostBlockDescriptor> AddTextBlock(int postId)
+        {
+            var post = await Context.Items.FindAsync(postId);
+
+            if (post != null)
+            {
+                post.Blocks ??= new List<PostBlock>();
+
+                var newBlock = new PostBlock
+                {         
+                    Created = DateTime.UtcNow,
+                    Modified = DateTime.UtcNow,
+                    Type = BlockType.Text,
+                    Text = "",
+                    Item = post
+                };
+
+                post.Blocks.Add(newBlock);
+
+                await Context.SaveChangesAsync();
+
+                return BlockMapper.MapDescriptor(newBlock);
+            }
+
+            throw new InvalidDataException("This post does not exist: " + postId);
+        }
+
+        /// <summary>
+        /// Add a new block to a post.
+        /// </summary>
+        /// <param name="block"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Task<ActionResult> GetTextBlockHtml(PostBlockDescriptor block)
+        { 
+            return Task.FromResult<ActionResult>(PartialView("_NewBlock", block));
+        }
+
+        /// <summary>
+        /// Update a block on a post.
+        /// </summary>
+        /// <param name="blockId"></param>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task UpdateTextBlock(int blockId, string html)
+        {
+            var block = await Context.Blocks.FindAsync(blockId);
+            block.Modified = DateTime.UtcNow;
+            block.Text = html;
+            await Context.SaveChangesAsync();
+        }
+
+        /// <summary>
+        /// Update a block on a post.
+        /// </summary>
+        /// <param name="blockId"></param>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task DeleteTextBlock(int blockId)
+        {
+            var block = await Context.Blocks.FindAsync(blockId);
+            Context.Blocks.Remove(block);
+            await Context.SaveChangesAsync();
         }
     }
 }
